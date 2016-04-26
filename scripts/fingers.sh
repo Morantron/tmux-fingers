@@ -25,7 +25,7 @@ do
   lines+="$line\n"
 done < /dev/stdin
 
-matches=`echo -e $lines | (grep -oniE "((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]*)|([[:digit:]]+)|([0-9a-f]{7,40})" 2> /dev/null) | sort -u`
+matches=`echo -e $lines | (grep -oniE "((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]*)|([[:digit:]]{5,})|([0-9a-f]{7,40})" 2> /dev/null) | sort -u`
 match_count=`echo "$matches" | wc -l`
 
 output="$lines"
