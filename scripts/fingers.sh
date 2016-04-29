@@ -12,6 +12,7 @@ tmp_path=$3
 ALPHABET=asdfqwertjkluiop
 ALPHABET_SIZE=${#ALPHABET}
 HINTS=(aa as ad af aq aw ae ar at aj ak al au ai ao ap sa ss sd sf sq sw se sr st sj sk sl su si so sp da ds dd df dq dw de dr dt dj dk dl du di do dp fa fs fd ff fq fw fe fr ft fj fk fl fu fi fo fp qa qs qd qf qq qw qe qr qt qj qk ql qu qi qo qp wa ws wd wf wq ww we wr wt wj e r t j k l u i o p)
+BACKSPACE=$'\177'
 
 function clear_screen() {
   clear
@@ -66,7 +67,12 @@ trap "handle_exit" EXIT
 input=''
 while read -r -s -n1 char
 do
-  input="$input$char"
+  if [[ $char == $BACKSPACE ]]; then
+    input=""
+  else
+    input="$input$char"
+  fi
+
   result=`echo -e $match_lookup | grep "^$input:" | cut -f2 -d:`
 
   tmux display-message "$input"
