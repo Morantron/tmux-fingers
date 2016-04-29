@@ -41,14 +41,14 @@ function prompt_fingers_for_pane() {
   local current_pane_id=$1
   local fingers_pane_id=`init_fingers_pane`
   local tmp_path=`mktemp --suffix "tmux-fingers"`
+  chmod 600 "$tmp_path"
+
   wait
 
   capture_pane "$current_pane_id" "$tmp_path"
-  pane_exec $fingers_pane_id "cat $tmp_path | $CURRENT_DIR/fingers.sh $current_pane_id $fingers_pane_id"
+  pane_exec $fingers_pane_id "cat $tmp_path | $CURRENT_DIR/fingers.sh $current_pane_id $fingers_pane_id $tmp_path"
 
   tmux swap-pane -s $current_pane_id -t $fingers_pane_id
-
-  ##rm $tmp_path
 
   echo $fingers_pane_id
 }

@@ -6,6 +6,7 @@ source $DIRNAME/config.sh
 #TODO move this out of here!
 current_pane_id=$1
 fingers_pane_id=$2
+tmp_path=$3
 
 ALPHABET=asdfqwertjkluiop
 ALPHABET_SIZE=${#ALPHABET}
@@ -56,6 +57,7 @@ echo -ne "$output"
 function handle_exit() {
   tmux swap-pane -s $current_pane_id -t $fingers_pane_id
   tmux kill-pane -t $fingers_pane_id
+  rm -rf $tmp_path
 }
 
 trap "handle_exit" EXIT
