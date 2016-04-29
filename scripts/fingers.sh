@@ -1,7 +1,8 @@
 #!/bin/bash
 
-DIRNAME="$(dirname "$0")"
-source $DIRNAME/config.sh
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $CURRENT_DIR/config.sh
+source $CURRENT_DIR/actions.sh
 
 #TODO move this out of here!
 current_pane_id=$1
@@ -74,11 +75,13 @@ do
     clear
     echo -n "$result"
 
-    tmux copy-mode
-    tmux send-key "H" # top of buffer
-    tmux send-key "v" # start selection
-    tmux send-key "$" # end of word
-    tmux send-key "y" # yank
+    start_copy_mode
+    top_of_buffer
+    start_of_line
+    start_selection
+    end_of_line
+    cursor_left
+    copy_selection
 
     tmux swap-pane -s $current_pane_id -t $fingers_pane_id
     tmux kill-pane -t $fingers_pane_id
