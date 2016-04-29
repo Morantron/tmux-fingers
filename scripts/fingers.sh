@@ -1,5 +1,8 @@
 #!/bin/bash
 
+DIRNAME="$(dirname "$0")"
+source $DIRNAME/config.sh
+
 #TODO move this out of here!
 current_pane_id=$1
 fingers_pane_id=$2
@@ -23,15 +26,13 @@ function fancy() {
 
 clear_screen
 
-PATTERNS=
-
 lines=''
 while read -r line
 do
   lines+="$line\n"
 done < /dev/stdin
 
-matches=`echo -e $lines | (grep -oniE "((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]*)|([[:digit:]]{5,})|([0-9a-f]{7,40})" 2> /dev/null) | sort -u`
+matches=`echo -e $lines | (grep -oniE "$PATTERNS" 2> /dev/null) | sort -u`
 match_count=`echo "$matches" | wc -l`
 
 output="$lines"
