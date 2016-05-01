@@ -49,10 +49,10 @@ run-shell ~/clone/path/tmux-fingers.tmux
 Reload TMUX conf by running:
 
 ```
-tmux source-file ~/.tmux.conf
+➜ tmux source-file ~/.tmux.conf
 ```
 
-# Customization
+# Configuration
 
 You can change the key that invokes **tmux-fingers**:
 
@@ -90,4 +90,4 @@ plugins! :clap: :clap:
 
 # License
 
-MIT
+[MIT](https://github.com/Morantron/tmux-fingers/blob/master/LICENSE)
