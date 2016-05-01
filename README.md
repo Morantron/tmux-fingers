@@ -12,7 +12,9 @@ Relevant stuff:
 
 * File paths
 * git SHAs
-* numbers with 4+ digits
+* numbers ( 4+ digits )
+* urls
+* ip addresses
 
 It also works on copy mode, but requires *tmux 2.2* or newer to properly take
 the scroll position into account.
@@ -67,7 +69,7 @@ set -g @fingers-pattern-1 'yolo'
 .
 .
 .
-set -g @fingers-pattern-50 'whatever.*'
+set -g @fingers-pattern-50 'whatever'
 ```
 
 NOTE: patterns are case insensitive, and grep's extended syntax should be used.

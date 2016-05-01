@@ -16,8 +16,10 @@ source "$CURRENT_DIR/utils.sh"
 
 PATTERNS_LIST=(
 "((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]*)"
-"([[:digit:]]{5,})"
+"([[:digit:]]{4,})"
 "([0-9a-f]{7}|[0-9a-f]{40})"
+"(https?://|git@|git://|ssh://|ftp://|file:///)[[:alnum:]?=%/_.:,;~@!#$&()*+-]*"
+"[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}"
 )
 
 IFS=$'\n'
