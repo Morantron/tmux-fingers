@@ -4,10 +4,6 @@ function array_join() {
   local IFS="$1"; shift; echo "$*";
 }
 
-function array_concat() {
-  echo "$*"
-}
-
 function display_message() {
   local original_display_time=$(tmux show-option -gqv display-time)
   tmux set-option -g display-time $2
@@ -29,4 +25,3 @@ function pane_exec() {
   tmux send-keys -t $pane_id "$pane_command"
   tmux send-keys -t $pane_id Enter
 }
-

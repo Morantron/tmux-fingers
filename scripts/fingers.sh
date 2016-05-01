@@ -62,7 +62,6 @@ do
   fi
 
   if [[ $(has_capitals $input) == "1" ]]; then
-    #TODO wtf spaces?
     tmux command-prompt -p "fingers-exec:" "run-shell -t $fingers_pane_id \"$CURRENT_DIR/exec.sh '%%' '$result' '${current_pane_id//%}' '${fingers_pane_id//%}'\""
   else
     copy_result "$result"

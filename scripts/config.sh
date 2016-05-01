@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIRNAME="$(dirname "$0")"
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 function check_pattern() {
   echo "beep beep" | grep -e "$1" 2> /dev/null
@@ -12,7 +12,7 @@ function check_pattern() {
   fi
 }
 
-source "$DIRNAME/utils.sh"
+source "$CURRENT_DIR/utils.sh"
 
 PATTERNS_LIST=(
 "((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]*)"
