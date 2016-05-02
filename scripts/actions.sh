@@ -2,6 +2,7 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TMUX_COPY_MODE=$(tmux show-option -gwv mode-keys)
+HAS_TMUX_YANK=$(tmux list-keys | grep tmux-yank | wc -l)
 
 function start_copy_mode() {
   tmux copy-mode
@@ -48,6 +49,11 @@ function cursor_left() {
 }
 
 function copy_selection() {
+  if [ "$HAS_TMUX_YANK" == "1" ]; then
+    tmux send-keys "y"
+    return
+  fi
+
   if [ "$TMUX_COPY_MODE" == "vi" ]; then
     tmux send-keys "Enter"
   else
