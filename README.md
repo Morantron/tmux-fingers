@@ -2,6 +2,8 @@
 
 **tmux-fingers**: copy pasting with vimium/vimperator like hints.
 
+![yay](http://i.imgur.com/sHadMzr.gif)
+
 # Usage
 
 When called ( `prefix + F` ), it will highlight relevant stuff in the current
