@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/config.sh
@@ -24,8 +24,8 @@ clear_screen
 print_hints
 
 function handle_exit() {
-  tmux swap-pane -s $current_pane_id -t $fingers_pane_id
-  tmux kill-pane -t $fingers_pane_id
+  tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
+  tmux kill-pane -t "$fingers_pane_id"
   rm -rf $tmp_path
 }
 
