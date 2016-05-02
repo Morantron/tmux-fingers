@@ -19,6 +19,11 @@ Relevant stuff:
 It also works on copy mode, but requires *tmux 2.2* or newer to properly take
 the scroll position into account.
 
+# Requirements
+
+* bash 4+
+* tmux 2.1+ ( 2.2 recommended )
+
 # Installation
 
 ## Using [Tmux Plugin Manager](https://github.com/tmux-plugins/tpm)
