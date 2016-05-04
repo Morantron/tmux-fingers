@@ -40,7 +40,7 @@ function prompt_fingers_for_pane() {
   wait
 
   capture_pane "$current_pane_id" "$tmp_path"
-  pane_exec $fingers_pane_id "cat $tmp_path | $CURRENT_DIR/fingers.sh $current_pane_id $fingers_pane_id $tmp_path"
+  pane_exec "$fingers_pane_id" "cat $tmp_path | $CURRENT_DIR/fingers.sh \"$current_pane_id\" \"$fingers_pane_id\" $tmp_path"
 
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
 
