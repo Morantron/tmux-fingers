@@ -33,10 +33,13 @@ function lookup_match() {
 }
 
 lines=''
+OLDIFS=$IFS
+IFS=
 while read -r line
 do
   lines+="$line\n"
 done < /dev/stdin
+IFS=$OLDIFS
 
 matches=$(echo -e $lines | (grep -oniE "$PATTERNS" 2> /dev/null) | sort -u)
 
