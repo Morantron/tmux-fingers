@@ -61,13 +61,8 @@ do
     continue
   fi
 
-  #TODO meeec, still not working
-  #if [[ $(has_capitals $input) == "1" ]]; then
-    #tmux command-prompt -p "fingers-exec:" "run-shell -t $fingers_pane_id $CURRENT_DIR/exec.sh '%%' '$result' '${current_pane_id//%}' '${fingers_pane_id//%}'"
-  #else
   copy_result "$result"
   revert_to_original_pane $current_pane_id $fingers_pane_id
-  #fi
 
   exit 0
 done < /dev/tty
