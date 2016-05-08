@@ -5,6 +5,10 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+function current_ms() {
+  echo $(($(date +%s%N)/1000000))
+}
+
 function log() {
   echo "$1" >> "$CURRENT_DIR/../fingers.log"
 }

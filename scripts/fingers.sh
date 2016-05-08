@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 source $CURRENT_DIR/config.sh
 source $CURRENT_DIR/actions.sh
 source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
 
+LOG_PATH=$CURRENT_DIR/../fingers.log
 FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
 
 current_pane_id=$1
@@ -13,15 +15,6 @@ fingers_pane_id=$2
 tmp_path=$3
 
 BACKSPACE=$'\177'
-
-function clear_screen() {
-  clear
-  tmux clearhist -t "$fingers_pane_id"
-}
-
-function has_capitals() {
-  echo "$1" | grep -c "[A-Z]"
-}
 
 function is_pane_zoomed() {
   local pane_id=$1
@@ -36,12 +29,6 @@ function zoom_pane() {
 
   tmux resize-pane -Z -t "$pane_id"
 }
-
-clear_screen
-print_hints
-pane_was_zoomed=$(is_pane_zoomed "$current_pane_id")
-tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
-[[ $pane_was_zoomed == "1" ]] && zoom_pane "$fingers_pane_id"
 
 function handle_exit() {
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
@@ -68,20 +55,6 @@ function copy_result() {
   fi
 }
 
-function sanitize_input() {
-  local input=$(echo "$(str_to_ascii "$1")" | sed -r "s/ 27 91 [0-9]{2}//")
-  local sanitized=''
-
-  OLDIFS=$IFS
-  IFS=' '
-  for char_code in $input; do
-    sanitized="${sanitized}$(chr "$char_code")"
-  done
-  IFS=$OLDIFS
-
-  echo "$sanitized"
-}
-
 function is_valid_input() {
   local input=$1
   local is_valid=1
@@ -98,10 +71,18 @@ function is_valid_input() {
   echo $is_valid
 }
 
+function hide_cursor() {
+  echo -n $(tput civis)
+}
+
 trap "handle_exit" EXIT
 
-input=''
+pane_was_zoomed=$(is_pane_zoomed "$current_pane_id")
+show_hints_and_swap $current_pane_id $fingers_pane_id
+[[ $pane_was_zoomed == "1" ]] && zoom_pane "$fingers_pane_id"
 
+hide_cursor
+input=''
 while read -rsn1 char; do
   # Escape sequence, flush input
   if [[ "$char" == $'\x1b' ]]; then

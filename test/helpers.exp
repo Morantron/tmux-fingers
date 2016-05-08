@@ -31,7 +31,7 @@ proc init_pane {} {
 
 proc invoke_fingers {} {
   tmux_send "F";
-  sleep 0.5;
+  sleep 1.0;
 }
 
 proc echo_yanked {} {
@@ -39,6 +39,7 @@ proc echo_yanked {} {
   send "echo yanked text is ";
   tmux_send "]";
   send "\r";
+  sleep 0.5;
 }
 
 proc exit_ok {} {

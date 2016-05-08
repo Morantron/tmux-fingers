@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+#TODO split all this crap in lib/ folder
 
 function array_join() {
   local IFS="$1"; shift; echo "$*";
@@ -79,4 +79,18 @@ function pane_exec() {
 
   tmux send-keys -t $pane_id " $pane_command"
   tmux send-keys -t $pane_id Enter
+}
+
+function fingers_tmp() {
+  local tmp_path=$(mktemp "${TMPDIR:-/tmp}/tmux-fingers.XXXXXXXX")
+  chmod 600 "$tmp_path"
+  echo "$tmp_path"
+}
+
+function __awk__() {
+  if hash gawk 2>/dev/null; then
+    gawk "$@"
+  else
+    awk "$@"
+  fi
 }

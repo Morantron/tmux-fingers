@@ -33,8 +33,7 @@ function capture_pane() {
 function prompt_fingers_for_pane() {
   local current_pane_id=$1
   local fingers_pane_id=$(init_fingers_pane)
-  local tmp_path=$(mktemp "${TMPDIR:-/tmp}/tmux-fingers.XXXXXXXX")
-  chmod 600 "$tmp_path"
+  local tmp_path=$(fingers_tmp)
 
   wait
 

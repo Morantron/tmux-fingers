@@ -1,18 +1,26 @@
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1 scope host lo
+    inet 127.0.0.1/8 scope host lo
        valid_lft forever preferred_lft forever
-    inet6 ::1 scope host 
+    inet6 ::1/128 scope host 
        valid_lft forever preferred_lft forever
 2: wlp3s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
     link/ether 78:31:c1:d5:40:ce brd ff:ff:ff:ff:ff:ff
-    inet 192.168.1.39 brd 192.168.1.255 scope global dynamic wlp3s0
-       valid_lft 33919sec preferred_lft 33919sec
-    inet6 fe80::7a31:c1ff:fed5:40ce scope link tentative dadfailed 
+    inet 192.168.1.33/24 brd 192.168.1.255 scope global dynamic wlp3s0
+       valid_lft 40162sec preferred_lft 40162sec
+    inet6 fe80::7a31:c1ff:fed5:40ce/64 scope link tentative dadfailed 
        valid_lft forever preferred_lft forever
-3: vboxnet0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+3: br0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 46:06:f6:15:ea:fb brd ff:ff:ff:ff:ff:ff
+    inet 10.0.3.1/24 brd 10.0.3.255 scope global br0
+       valid_lft forever preferred_lft forever
+4: vboxnet0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
     link/ether 0a:00:27:00:00:00 brd ff:ff:ff:ff:ff:ff
-    inet 10.0.1.1 brd 10.0.1.255 scope global vboxnet0
+    inet 10.0.1.1/24 brd 10.0.1.255 scope global vboxnet0
        valid_lft forever preferred_lft forever
-    inet6 fe80::800:27ff:fe00:0 scope link 
+    inet6 fe80::800:27ff:fe00:0/64 scope link 
        valid_lft forever preferred_lft forever
+5: vboxnet1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 0a:00:27:00:00:01 brd ff:ff:ff:ff:ff:ff
+6: vboxnet2: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 0a:00:27:00:00:02 brd ff:ff:ff:ff:ff:ff
