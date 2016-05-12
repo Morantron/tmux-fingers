@@ -5,6 +5,8 @@ source $CURRENT_DIR/config.sh
 source $CURRENT_DIR/actions.sh
 source $CURRENT_DIR/hints.sh
 
+FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
+
 current_pane_id=$1
 fingers_pane_id=$2
 tmp_path=$3
@@ -32,15 +34,20 @@ function handle_exit() {
 
 function copy_result() {
   local result=$1
-  clear
-  echo -n "$result"
-  start_copy_mode
-  top_of_buffer
-  start_of_line
-  start_selection
-  end_of_line
-  cursor_left
-  copy_selection
+
+  if [ -z $FINGERS_COPY_COMMAND ]; then
+    clear
+    echo -n "$result"
+    start_copy_mode
+    top_of_buffer
+    start_of_line
+    start_selection
+    end_of_line
+    cursor_left
+    copy_selection
+  else
+    echo -n "$result" | $FINGERS_COPY_COMMAND
+  fi
 }
 
 trap "handle_exit" EXIT
