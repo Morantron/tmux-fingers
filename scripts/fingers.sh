@@ -22,6 +22,7 @@ function has_capitals() {
 
 clear_screen
 print_hints
+tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
 
 function handle_exit() {
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
