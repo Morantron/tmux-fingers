@@ -2,7 +2,7 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TMUX_COPY_MODE=$(tmux show-option -gwv mode-keys)
-HAS_TMUX_YANK=$(tmux list-keys | grep tmux-yank | wc -l)
+HAS_TMUX_YANK=$(tmux list-keys | grep -c tmux-yank)
 
 function start_copy_mode() {
   tmux copy-mode
