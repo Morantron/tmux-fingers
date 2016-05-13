@@ -15,7 +15,7 @@ BACKSPACE=$'\177'
 
 function clear_screen() {
   clear
-  tmux clearhist
+  tmux clearhist -t $fingers_pane_id
 }
 
 function has_capitals() {
