@@ -2,7 +2,7 @@
 
 **tmux-fingers**: copy pasting with vimium/vimperator like hints.
 
-![yay](http://i.imgur.com/sHadMzr.gif)
+![yay](http://i.imgur.com/5bSrBew.gif)
 
 # Usage
 
