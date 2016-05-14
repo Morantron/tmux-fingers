@@ -21,6 +21,10 @@ Relevant stuff:
 It also works on copy mode, but requires *tmux 2.2* or newer to properly take
 the scroll position into account.
 
+Additionally, you can install
+[tmux-yank](https://github.com/tmux-plugins/tmux-yank) for system clipboard
+integration.
+
 # Requirements
 
 * bash 4+
@@ -63,10 +67,15 @@ Reload TMUX conf by running:
 
 You can change the key that invokes **tmux-fingers**:
 
+## @fingers-key
+
+F is the default key, but you can set another one.
+
 ```
-# F is the default, but you can set another one
 set -g @fingers-key F
 ```
+
+## @fingers-patterns-N
 
 You can also add additional patterns if you want more stuff to be highlighted:
 
@@ -84,6 +93,17 @@ NOTE: patterns are case insensitive, and grep's extended syntax should be used.
 
 If the introduced regexp contains an error, an error will be shown when
 invoking the plugin.
+
+## @fingers-copy-command
+
+By default **tmux-fingers** will just yank matches using tmux clipboard ( or
+[tmux-yank](https://github.com/tmux-plugins/tmux-yank) if present ).
+
+If you still want to set your own custom command you can do so like this:
+
+```
+set -g @fingers-copy-command 'xclip -selection clipboard'
+```
 
 # Acknowledgements and inspiration
 
