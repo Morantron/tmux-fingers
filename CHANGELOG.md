@@ -1,0 +1,12 @@
+## 0.1.0 - 14 May 2016
+
+* New @fingers-copy-command option.
+* Slightly improved performance ( still work to do).
+* Improved rendering of hints.
+* Fixed tabs not being preserved when showing results.
+* Fixed problem with scrollback history clearing.
+* fingers script is now executed silently to prevent shell history pollution.
+
+## 0.0.1 - 3 May 2016
+
+* Initial release
