@@ -40,8 +40,9 @@ OLDIFS=$IFS
 IFS=$(echo -en "\n\b") # wtf bash?
 for match in $matches ; do
   hint=$(get_hint $i)
-  linenumber=$(echo $match | sed "s/$MATCH_PARSER/\1/")
-  text=$(echo $match | sed "s/$MATCH_PARSER/\2/")
+  linenumber=$(echo $match | sed "s!${MATCH_PARSER//!\\!}!\1!")
+  text=$(echo $match | sed "s!${MATCH_PARSER//!\\!}!\2!")
+
   output=$(echo -ne "$output" | sed "${linenumber}s!${text//!/\\!}!$(highlight ${text//!/\\!}) $(highlight "[${hint//!/\\!}]")!g")
   match_lookup_table[$hint]=$text
   i=$((i + 1))
