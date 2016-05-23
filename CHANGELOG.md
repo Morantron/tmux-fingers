@@ -1,3 +1,11 @@
+## 0.1.2 - 23 May 2016
+
+* Fixed blank screen for certain outputs in BDS/OSX.
+
+## 0.1.1 - 16 May 2016
+
+* Partially fixed for BSD/OSX.
+
 ## 0.1.0 - 14 May 2016
 
 * New @fingers-copy-command option.
