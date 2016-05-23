@@ -31,7 +31,22 @@ do
 done < /dev/stdin
 IFS=$OLDIFS
 
-matches=$(echo -e $lines | (grep -oniE "$PATTERNS" 2> /dev/null) | sort -u)
+# POSIX grep does linenumber on every line with both -o and -n flags set
+normalize_grep_output='
+BEGIN {
+  previous_line_no = 0;
+}
+{
+  if ( $0 ~ /^[0-9]+:/ ) {
+    split($0, split_at_colon, ":")
+    previous_line_no = split_at_colon[0]
+    print $0
+  } else {
+    printf "%d:%s\n", previous_line_no, $0
+  }
+}
+'
+matches=$(echo -e $lines | (grep -oniE "$PATTERNS" 2> /dev/null) | awk $normalize_grep_output | sort -u)
 
 output="$lines"
 i=0
