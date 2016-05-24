@@ -35,18 +35,18 @@ function handle_exit() {
 function copy_result() {
   local result=$1
 
-  if [ -z $FINGERS_COPY_COMMAND ]; then
-    clear
-    echo -n "$result"
-    start_copy_mode
-    top_of_buffer
-    start_of_line
-    start_selection
-    end_of_line
-    cursor_left
-    copy_selection
-  else
-    echo -n "$result" | $FINGERS_COPY_COMMAND
+  clear
+  echo -n "$result"
+  start_copy_mode
+  top_of_buffer
+  start_of_line
+  start_selection
+  end_of_line
+  cursor_left
+  copy_selection
+
+  if [ ! -z "$FINGERS_COPY_COMMAND" ]; then
+    echo -n "$result" | eval "nohup $FINGERS_COPY_COMMAND" > /dev/null
   fi
 }
 
