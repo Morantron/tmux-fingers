@@ -1,3 +1,7 @@
+## 0.1.3 - 24 May 2016
+
+* Fixed issues with @fingers-copy-command and xclip not working properly
+
 ## 0.1.2 - 23 May 2016
 
 * Fixed blank screen for certain outputs in BDS/OSX.
