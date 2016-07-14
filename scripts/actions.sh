@@ -18,7 +18,7 @@ function start_selection() {
 
 function top_of_buffer() {
   if [ "$TMUX_COPY_MODE" == "vi" ]; then
-    tmux send-keys "h"
+    tmux send-keys "H"
   else
     tmux send-keys "M-R"
   fi
@@ -43,8 +43,6 @@ function end_of_line() {
 function cursor_left() {
   if [ "$TMUX_COPY_MODE" == "vi" ]; then
     tmux send-keys "h"
-  else
-    tmux send-keys "Left"
   fi
 }
 
