@@ -1,3 +1,9 @@
+## 0.1.5 - 14 Jul 2016
+
+* Improved rendering of wrapped lines.
+* Fixed more than one match per line in BSD/OSX.
+* Added automated tests.
+
 ## 0.1.4 - 06 Jul 2016
 
 * Fixed tmux-yank integration.
@@ -8,7 +14,7 @@
 
 ## 0.1.2 - 23 May 2016
 
-* Fixed blank screen for certain outputs in BDS/OSX.
+* Fixed blank screen for certain outputs in BSD/OSX.
 
 ## 0.1.1 - 16 May 2016
 
