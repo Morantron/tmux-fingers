@@ -1,0 +1,2 @@
+scripts/debug.sh:# Source this file and call `tail -f fingers.log` when you don't know WTF is
+scripts/hints.sh:IFS=$(echo -en "\n\b") # wtf bash?

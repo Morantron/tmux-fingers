@@ -1,0 +1,8 @@
+dependencies:
+  pre:
+    - if [[ ! -e tmux-2.2 ]]; then sudo bash ./test/provisioning/ubuntu.sh; fi
+    - sudo mkdir -p /home/vagrant/ && sudo chmod a+w /home/vagrant && ln -s $(pwd) /home/vagrant/shared
+    - tmux -V
+test:
+  override:
+    - ./test/run.sh within-vm

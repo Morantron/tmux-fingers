@@ -1,0 +1,24 @@
+#!/usr/bin/env expect
+
+set timeout 1;
+set tmux_prefix "";
+
+source "./test/helpers.exp"
+
+exec "tmux kill-session -t test";
+spawn tmux -f ./test/conf/basic.conf new -s test;
+sleep 0.5;
+
+init_pane
+exec "cat ./test/fixtures/ip-output";
+invoke_fingers;
+send "t";
+echo_yanked;
+
+expect {
+  "yanked text is 10.0.1.255" { exit_ok }
+  timeout { exit_fail }
+}
+
+exit $exit_code;
+
