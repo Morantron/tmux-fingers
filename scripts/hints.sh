@@ -39,7 +39,7 @@ BEGIN {
 {
   if ( $0 ~ /^[0-9]+:/ ) {
     split($0, split_at_colon, ":")
-    previous_line_no = split_at_colon[0]
+    previous_line_no = split_at_colon[1]
     print $0
   } else {
     printf "%d:%s\n", previous_line_no, $0
@@ -47,7 +47,6 @@ BEGIN {
 }
 '
 matches=$(echo -e $lines | (grep -oniE "$PATTERNS" 2> /dev/null) | awk $normalize_grep_output | sort -u)
-
 output="$lines"
 i=0
 
