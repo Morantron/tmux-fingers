@@ -2,7 +2,6 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/utils.sh
-source $CURRENT_DIR/debug.sh
 
 function init_fingers_pane() {
   local pane_id=$(tmux new-window -F "#{pane_id}" -P -d -n "!fingers")
@@ -28,7 +27,7 @@ function capture_pane() {
     end_capture="-"
   fi
 
-  tmux capture-pane -p -t $pane_id -E $end_capture -S $start_capture > $out_path
+  tmux capture-pane -J -p -t $pane_id -E $end_capture -S $start_capture > $out_path
 }
 
 function prompt_fingers_for_pane() {
