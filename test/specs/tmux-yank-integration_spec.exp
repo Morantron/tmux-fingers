@@ -1,0 +1,28 @@
+#!/usr/bin/env expect
+
+set timeout 1;
+set tmux_prefix "";
+
+source "./test/helpers.exp"
+
+exec "tmux kill-session -t test";
+exec "rm -rf /tmp/tmux-yank-result"
+
+spawn tmux -f ./test/conf/tmux-yank.conf new -s test;
+sleep 0.5;
+
+init_pane
+exec "cat ./test/fixtures/grep-output";
+invoke_fingers;
+send "i";
+
+sleep 0.5;
+exec "cat /tmp/tmux-yank-result";
+
+expect {
+  "tmux-yank yolo" { exit_ok }
+  timeout { exit_fail }
+}
+
+exit $exit_code;
+set timeout 1;
