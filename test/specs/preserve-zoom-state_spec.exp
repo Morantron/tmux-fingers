@@ -8,19 +8,24 @@ source "./test/helpers.exp"
 exec "tmux kill-session -t test";
 exec "rm -rf /tmp/tmux-yank-result"
 
-spawn tmux -f ./test/conf/tmux-yank.conf new -s test;
+spawn tmux -f ./test/conf/basic.conf new -s test;
 sleep 0.5;
 
 init_pane
+tmux_send "%"
+tmux_send "%"
+tmux_send "%"
+tmux_send "z"
+
 exec "cat ./test/fixtures/grep-output";
 invoke_fingers;
-send "i";
 
-sleep 0.5;
-exec "cat /tmp/tmux-yank-result";
+send ""
+
+exec "echo \"current pane is \$(tmux list-panes -F '#{?window_zoomed_flag,zoomed,not_zoomed}' | head -1)\""
 
 expect {
-  "tmux-yank yolo" { exit_ok }
+  "current pane is zoomed" { exit_ok }
   timeout { exit_fail }
 }
 

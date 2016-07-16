@@ -15,21 +15,38 @@ BACKSPACE=$'\177'
 
 function clear_screen() {
   clear
-  tmux clearhist -t $fingers_pane_id
+  tmux clearhist -t "$fingers_pane_id"
 }
 
 function has_capitals() {
-  echo $1 | grep [A-Z] | wc -l
+  echo "$1" | grep -c "[A-Z]"
+}
+
+function is_pane_zoomed() {
+  local pane_id=$1
+
+  tmux list-panes \
+    -F "#{pane_id}:#{?pane_active,active,nope}:#{?window_zoomed_flag,zoomed,nope}" \
+    | grep -c "^${pane_id}:active:zoomed$"
+}
+
+function zoom_pane() {
+  local pane_id=$1
+
+  tmux resize-pane -Z -t "$pane_id"
 }
 
 clear_screen
 print_hints
+pane_was_zoomed=$(is_pane_zoomed "$current_pane_id")
 tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
+[[ $pane_was_zoomed == "1" ]] && zoom_pane "$fingers_pane_id"
 
 function handle_exit() {
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
+  [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
   tmux kill-pane -t "$fingers_pane_id"
-  rm -rf $tmp_path
+  rm -rf "$tmp_path"
 }
 
 function copy_result() {
@@ -70,7 +87,7 @@ do
   fi
 
   copy_result "$result"
-  revert_to_original_pane $current_pane_id $fingers_pane_id
+  revert_to_original_pane "$current_pane_id" "$fingers_pane_id"
 
   exit 0
 done < /dev/tty
