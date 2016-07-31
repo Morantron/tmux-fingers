@@ -4,6 +4,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/config.sh
 source $CURRENT_DIR/actions.sh
 source $CURRENT_DIR/hints.sh
+source $CURRENT_DIR/utils.sh
 
 FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
 
@@ -67,13 +68,59 @@ function copy_result() {
   fi
 }
 
+function sanitize_input() {
+  local input=$(echo "$(str_to_ascii "$1")" | sed -r "s/ 27 91 [0-9]{2}//")
+  local sanitized=''
+
+  OLDIFS=$IFS
+  IFS=' '
+  for char_code in $input; do
+    sanitized="${sanitized}$(chr "$char_code")"
+  done
+  IFS=$OLDIFS
+
+  echo "$sanitized"
+}
+
+function is_valid_input() {
+  local input=$1
+  local is_valid=1
+
+  for (( i=0; i<${#input}; i++ )); do
+    char=${input:$i:1}
+
+    if [[ ! $(is_alpha $char) == "1" ]]; then
+      is_valid=0
+      break
+    fi
+  done
+
+  echo $is_valid
+}
+
 trap "handle_exit" EXIT
 
 input=''
-while read -r -s -n1 char
-do
+
+while read -rsn1 char; do
+  # Escape sequence, flush input
+  if [[ "$char" == $'\x1b' ]]; then
+    read -rsn1 -t 0.1 next_char
+
+    if [[ "$next_char" == "[" ]]; then
+      read -rsn1 -t 0.1
+    fi
+
+    continue
+  fi
+
+  if [[ ! $(is_valid_input "$char") == "1" ]]; then
+    continue
+  fi
+
   if [[ $char == "$BACKSPACE" ]]; then
     input=""
+    continue
   else
     input="$input$char"
   fi
