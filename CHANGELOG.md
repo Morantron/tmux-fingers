@@ -1,3 +1,9 @@
+## 0.1.6 - 04 Aug 2016
+
+* Preserve zoom state of pane when prompting hints.
+* More robust input handling ( holding arrow keys does not output random shite
+  any more )
+
 ## 0.1.5 - 14 Jul 2016
 
 * Improved rendering of wrapped lines.
