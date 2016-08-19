@@ -31,6 +31,7 @@ integration.
 
 * bash 4+
 * tmux 2.1+ ( 2.2 recommended )
+* gawk ( optional but recommended )
 
 # Installation
 
@@ -90,11 +91,15 @@ set -g @fingers-pattern-1 'yolo'
 set -g @fingers-pattern-50 'whatever'
 ```
 
-NOTE: patterns are case insensitive, and grep's extended syntax should be used.
+Patterns are case insensitive, and grep's extended syntax ( ERE ) should be used.
 `man grep` for more info.
 
 If the introduced regexp contains an error, an error will be shown when
 invoking the plugin.
+
+It's recommended to install `gawk` for better support of custom
+patterns: some things like interval expressions do not work in built-in `awk`
+in OSX/BSD systems.
 
 ## @fingers-copy-command
 
