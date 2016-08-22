@@ -109,6 +109,7 @@ BEGIN {
   hint_format = "\033[1;33m[%s]\033[0m"
   highlight_format = "\033[1;33m%s\033[0m "
   printf "%s\n", finger_patterns | "cat 1>&4"
+  hint_lookup = ""
 }
 
 {
@@ -142,8 +143,12 @@ BEGIN {
 
     col_pos_correction += (length(sprintf(highlight_format, line_match)) - 1 + length(sprintf(hint_format, hint)) - 1) + 1;
 
-    printf hint ":" line_match "\n" | "cat 1>&3"
+    hint_lookup = hint_lookup hint ":" line_match "\n"
   }
 
   printf "\n%s", output_line
+}
+
+END {
+  print hint_lookup | "cat 1>&3"
 }
