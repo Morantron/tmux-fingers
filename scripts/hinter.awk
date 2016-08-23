@@ -108,7 +108,6 @@ BEGIN {
 
   hint_format = "\033[1;33m[%s]\033[0m"
   highlight_format = "\033[1;33m%s\033[0m "
-  printf "%s\n", finger_patterns | "cat 1>&4"
   hint_lookup = ""
 }
 
