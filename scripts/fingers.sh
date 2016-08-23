@@ -7,7 +7,6 @@ source $CURRENT_DIR/actions.sh
 source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
 
-LOG_PATH=$CURRENT_DIR/../fingers.log
 FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
 
 current_pane_id=$1
