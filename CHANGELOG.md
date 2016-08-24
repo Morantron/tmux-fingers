@@ -1,3 +1,7 @@
+## 0.2.0 - 24 Aug 2016
+
+* Hinter rewritten in awk for improved performance.
+
 ## 0.1.6 - 04 Aug 2016
 
 * Preserve zoom state of pane when prompting hints.
