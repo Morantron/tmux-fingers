@@ -2,6 +2,7 @@ BEGIN {
   n_matches = 0;
   line_pos = 0;
   col_pos = 0;
+  COLLAPSE_HINTS = 1;
 
   HINTS[0] = "p"
   HINTS[1] = "o"
@@ -106,8 +107,16 @@ BEGIN {
 
   finger_patterns = ENVIRON["FINGER_PATTERNS"];
 
-  hint_format = "\033[1;33m[%s]\033[0m"
-  highlight_format = "\033[1;33m%s\033[0m "
+  if (COLLAPSE_HINTS) {
+    hint_format = "\033[30;1;43m%s\033[0m"
+    highlight_format = "\033[1;33m%s\033[0m"
+  } else {
+    hint_format = "\033[1;33m[%s]\033[0m"
+    highlight_format = "\033[1;33m%s\033[0m"
+  }
+
+  compound_format = highlight_format hint_format
+
   hint_lookup = ""
 }
 
@@ -126,21 +135,27 @@ BEGIN {
     pos += RSTART;
 
     col_pos = pos;
+
     line_match = substr(line, RSTART, RLENGTH);
+
+    if (COLLAPSE_HINTS) {
+      hint_len = length(hint)
+      line_match = substr(line_match, hint_len - 1, length(line_match) - hint_len);
+    }
 
     col_pos = col_pos + col_pos_correction
 
     line_pos = NR;
 
 		pre_match = substr(output_line, 0, col_pos - 1);
-    hint_match = sprintf(highlight_format hint_format, line_match, hint);
+    hint_match = sprintf(compound_format, line_match, hint);
 		post_match = substr(output_line, col_pos + RLENGTH, length(line) - 1);
 
     output_line = pre_match hint_match post_match;
 
     line = post_match;
 
-    col_pos_correction += (length(sprintf(highlight_format, line_match)) - 1 + length(sprintf(hint_format, hint)) - 1) + 1;
+    col_pos_correction += length(sprintf(highlight_format, line_match)) + length(sprintf(hint_format, hint)) - 1;
 
     hint_lookup = hint_lookup hint ":" line_match "\n"
   }
