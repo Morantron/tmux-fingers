@@ -6,6 +6,7 @@ source $CURRENT_DIR/config.sh
 source $CURRENT_DIR/actions.sh
 source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
+source $CURRENT_DIR/debug.sh
 
 FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
 
@@ -82,6 +83,16 @@ show_hints_and_swap $current_pane_id $fingers_pane_id
 
 hide_cursor
 input=''
+collapsed_state=1
+
+function toggle_collapsed_state() {
+  if [[ $collapsed_state == "0" ]]; then
+    collapsed_state=1
+  else
+    collapsed_state=0
+  fi
+}
+
 while read -rsn1 char; do
   # Escape sequence, flush input
   if [[ "$char" == $'\x1b' ]]; then
@@ -98,9 +109,13 @@ while read -rsn1 char; do
     continue
   fi
 
+
   if [[ $char == "$BACKSPACE" ]]; then
     input=""
     continue
+  elif [[ $char == "" ]]; then
+    toggle_collapsed_state
+    show_hints "$fingers_pane_id" $collapsed_state
   else
     input="$input$char"
   fi

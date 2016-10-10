@@ -2,7 +2,7 @@ BEGIN {
   n_matches = 0;
   line_pos = 0;
   col_pos = 0;
-  COLLAPSE_HINTS = 1;
+  COLLAPSE_HINTS = ENVIRON["COLLAPSED_HINTS"];
 
   HINTS[0] = "p"
   HINTS[1] = "o"
@@ -110,12 +110,12 @@ BEGIN {
   if (COLLAPSE_HINTS) {
     hint_format = "\033[30;1;43m%s\033[0m"
     highlight_format = "\033[1;33m%s\033[0m"
+    compound_format = hint_format highlight_format
   } else {
     hint_format = "\033[1;33m[%s]\033[0m"
     highlight_format = "\033[1;33m%s\033[0m"
+    compound_format = highlight_format hint_format
   }
-
-  compound_format = highlight_format hint_format
 
   hint_lookup = ""
 }
@@ -141,7 +141,7 @@ BEGIN {
 
     if (COLLAPSE_HINTS) {
       hint_len = length(hint)
-      line_match = substr(line_match, hint_len - 1, length(line_match) - hint_len);
+      line_match = substr(line_match, hint_len + 1, length(line_match) - hint_len);
     }
 
     col_pos = col_pos + col_pos_correction
@@ -149,7 +149,13 @@ BEGIN {
     line_pos = NR;
 
 		pre_match = substr(output_line, 0, col_pos - 1);
-    hint_match = sprintf(compound_format, line_match, hint);
+
+    if (COLLAPSE_HINTS) {
+      hint_match = sprintf(compound_format, hint, line_match);
+    } else {
+      hint_match = sprintf(compound_format, line_match, hint);
+    }
+
 		post_match = substr(output_line, col_pos + RLENGTH, length(line) - 1);
 
     output_line = pre_match hint_match post_match;

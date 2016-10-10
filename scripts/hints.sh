@@ -2,8 +2,11 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/utils.sh
+source $CURRENT_DIR/debug.sh
 
 match_lookup_table=$(fingers_tmp)
+pane_output_temp=$(fingers_tmp)
+flushed_input=0
 
 function clear_screen() {
   local fingers_pane_id=$1
@@ -16,10 +19,26 @@ function lookup_match() {
   echo "$(cat $match_lookup_table | grep "^$input:" | sed "s/^$input://")"
 }
 
+function get_stdin() {
+  if [[ $(cat $pane_output_temp | wc -l) -gt 0 ]]; then
+    cat $pane_output_temp
+  else
+    flushed_input="1"
+    tee $pane_output_temp
+  fi
+}
+
+function show_hints() {
+  local fingers_pane_id=$1
+  local collapsed_hints=$2
+
+  clear_screen "$fingers_pane_id"
+  get_stdin | COLLAPSED_HINTS=$collapsed_hints FINGER_PATTERNS=$PATTERNS __awk__ -f $CURRENT_DIR/hinter.awk 3> $match_lookup_table
+}
+
 function show_hints_and_swap() {
   current_pane_id=$1
   fingers_pane_id=$2
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
-  clear_screen "$fingers_pane_id"
-  cat | FINGER_PATTERNS=$PATTERNS __awk__ -f $CURRENT_DIR/hinter.awk 3> $match_lookup_table
+  show_hints "$fingers_pane_id" 1
 }
