@@ -137,6 +137,7 @@ BEGIN {
     col_pos = pos;
 
     line_match = substr(line, RSTART, RLENGTH);
+    full_line_match = line_match
 
     if (COLLAPSE_HINTS) {
       hint_len = length(hint)
@@ -157,7 +158,7 @@ BEGIN {
 
     col_pos_correction += length(sprintf(highlight_format, line_match)) + length(sprintf(hint_format, hint)) - 1;
 
-    hint_lookup = hint_lookup hint ":" line_match "\n"
+    hint_lookup = hint_lookup hint ":" full_line_match "\n"
   }
 
   printf "\n%s", output_line
