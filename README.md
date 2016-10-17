@@ -34,6 +34,7 @@ While the in **[fingers]** mode, you can use the following shortcuts:
 * `a-z`: yank a highlighted hint.
 * `<space>`: toggle compact hints ( see [@fingers-compact-hints](#fingers-compact-hints) ).
 * `<Ctrl-C>`: exit **[fingers]** mode
+* `<esc>`: exit help or **[fingers]** mode
 * `?`: show help.
 
 # Requirements
