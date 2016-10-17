@@ -94,3 +94,9 @@ function __awk__() {
     awk "$@"
   fi
 }
+
+function clear_screen() {
+  local fingers_pane_id=$1
+  clear
+  tmux clearhist -t $fingers_pane_id
+}

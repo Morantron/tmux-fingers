@@ -7,6 +7,7 @@ source $CURRENT_DIR/actions.sh
 source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
 source $CURRENT_DIR/debug.sh
+source $CURRENT_DIR/help.sh
 
 FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
 
@@ -59,14 +60,18 @@ function is_valid_input() {
   local input=$1
   local is_valid=1
 
-  for (( i=0; i<${#input}; i++ )); do
-    char=${input:$i:1}
+  if [[ $input == "" ]] || [[ $input == "<ESC>" ]] || [[ $input == "?" ]]; then
+    is_valid=1
+  else
+    for (( i=0; i<${#input}; i++ )); do
+      char=${input:$i:1}
 
-    if [[ ! $(is_alpha $char) == "1" ]]; then
-      is_valid=0
-      break
-    fi
-  done
+      if [[ ! $(is_alpha $char) == "1" ]]; then
+        is_valid=0
+        break
+      fi
+    done
+  fi
 
   echo $is_valid
 }
@@ -78,6 +83,7 @@ function hide_cursor() {
 trap "handle_exit" EXIT
 
 compact_state=$FINGERS_COMPACT_HINTS
+help_state=0
 
 pane_was_zoomed=$(is_pane_zoomed "$current_pane_id")
 show_hints_and_swap $current_pane_id $fingers_pane_id $compact_state
@@ -94,6 +100,14 @@ function toggle_compact_state() {
   fi
 }
 
+function toggle_help() {
+  if [[ $help_state == "0" ]]; then
+    help_state=1
+  else
+    help_state=0
+  fi
+}
+
 while read -rsn1 char; do
   # Escape sequence, flush input
   if [[ "$char" == $'\x1b' ]]; then
@@ -101,9 +115,13 @@ while read -rsn1 char; do
 
     if [[ "$next_char" == "[" ]]; then
       read -rsn1 -t 0.1
+      continue
+    elif [[ "$next_char" == "" ]]; then
+      char="<ESC>"
+    else
+      continue
     fi
 
-    continue
   fi
 
   if [[ ! $(is_valid_input "$char") == "1" ]]; then
@@ -113,11 +131,24 @@ while read -rsn1 char; do
   if [[ $char == "$BACKSPACE" ]]; then
     input=""
     continue
+  elif [[ $char == "<ESC>" ]]; then
+    if [[ $help_state == "1" ]]; then
+      toggle_help
+    else
+      exit
+    fi
   elif [[ $char == "" ]]; then
     toggle_compact_state
-    show_hints "$fingers_pane_id" $compact_state
+  elif [[ $char == "?" ]]; then
+    toggle_help
   else
     input="$input$char"
+  fi
+
+  if [[ $help_state == "1" ]]; then
+    show_help "$fingers_pane_id"
+  else
+    show_hints "$fingers_pane_id" $compact_state
   fi
 
   result=$(lookup_match "$input")

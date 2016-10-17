@@ -8,12 +8,6 @@ match_lookup_table=$(fingers_tmp)
 pane_output_temp=$(fingers_tmp)
 flushed_input=0
 
-function clear_screen() {
-  local fingers_pane_id=$1
-  clear
-  tmux clearhist -t $fingers_pane_id
-}
-
 function lookup_match() {
   local input=$1
   echo "$(cat $match_lookup_table | grep "^$input:" | sed "s/^$input://")"
