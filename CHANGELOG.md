@@ -1,3 +1,10 @@
+## 0.3.0 - 17 Oct 2016
+
+* Hints now render in a compacter way, avoiding line wraps for better readability.
+* New @fingers-compact-hints option to customize how hints are rendered.
+* Added shorcuts while in **[fingers]** mode as well as help screen.
+* Signifcantly improved performance by ignoring `.bashrc` and `.bash_profile`. ( It can't get any faster now! )
+
 ## 0.2.0 - 24 Aug 2016
 
 * Hinter rewritten in awk for improved performance.
