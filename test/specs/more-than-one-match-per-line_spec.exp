@@ -16,7 +16,7 @@ send "r";
 echo_yanked;
 
 expect {
-  "yanked text is 10.0.3.1" { exit_ok }
+  "yanked text is 192.168.1.33" { exit_ok }
   timeout { exit_fail }
 }
 
