@@ -114,7 +114,7 @@ BEGIN {
   } else {
     hint_format = "\033[1;33m[%s]\033[0m"
     highlight_format = "\033[1;33m%s\033[0m"
-    compound_format = highlight_format hint_format
+    compound_format = highlight_format " " hint_format
   }
 
   hint_lookup = ""
