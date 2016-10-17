@@ -9,6 +9,8 @@ cat /dev/null > $SPEC_OUTPUT_LOG
 cat /dev/null > $TEST_LOG
 
 if [[ "$target" == "within-vm" ]]; then
+  stty cols 80
+  stty rows 24
   fail_count=0
   for test_file in $(ls $CURRENT_DIR/specs/*_spec.exp); do
     result="* $test_file ..."
