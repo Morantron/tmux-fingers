@@ -29,7 +29,7 @@ integration.
 
 ## Key shortcuts
 
-While the in **[fingers]** mode, you can use the following shortcuts:
+While in **[fingers]** mode, you can use the following shortcuts:
 
 * `a-z`: yank a highlighted hint.
 * `<space>`: toggle compact hints ( see [@fingers-compact-hints](#fingers-compact-hints) ).
