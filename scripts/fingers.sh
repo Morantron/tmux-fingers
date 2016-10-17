@@ -6,7 +6,6 @@ source $CURRENT_DIR/config.sh
 source $CURRENT_DIR/actions.sh
 source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
-source $CURRENT_DIR/debug.sh
 source $CURRENT_DIR/help.sh
 
 FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)

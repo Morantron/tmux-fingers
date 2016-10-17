@@ -2,7 +2,6 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/utils.sh
-source $CURRENT_DIR/debug.sh
 
 match_lookup_table=$(fingers_tmp)
 pane_output_temp=$(fingers_tmp)
