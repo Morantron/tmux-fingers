@@ -8,7 +8,7 @@
 
 # Usage
 
-When called ( `prefix + F` ), it will highlight relevant stuff in the current
+Press ( `prefix + F` ) to enter **[fingers]** mode, it will highlight relevant stuff in the current
 pane along with letter hints. By pressing those letters, the highlighted match
 will be yanked. Less keystrokes == profit!
 
@@ -26,6 +26,15 @@ the scroll position into account.
 Additionally, you can install
 [tmux-yank](https://github.com/tmux-plugins/tmux-yank) for system clipboard
 integration.
+
+## Key shortcuts
+
+While the in **[fingers]** mode, you can use the following shortcuts:
+
+* `a-z`: yank a highlighted hint.
+* `<space>`: toggle compact hints ( see [@fingers-compact-hints](#fingers-compact-hints) ).
+* `<Ctrl-C>`: exit **[fingers]** mode
+* `?`: show help.
 
 # Requirements
 
@@ -72,7 +81,9 @@ You can change the key that invokes **tmux-fingers**:
 
 ## @fingers-key
 
-F is the default key, but you can set another one.
+`default: F`
+
+Customize how to enter copy mode. Always preceded by prefix: `prefix + @fingers-key`
 
 ```
 set -g @fingers-key F
@@ -111,6 +122,35 @@ If you still want to set your own custom command you can do so like this:
 ```
 set -g @fingers-copy-command 'xclip -selection clipboard'
 ```
+
+## @fingers-compact-hints
+
+`default: 1`
+
+By default **tmux-fingers** will show hints a compact format. For example:
+
+<pre>
+/path/to/foo/bar/lol
+
+<i>with <bold>@fingers-compact-hints</bold> set to <bold>1</bold>:</i>
+
+<strong>aw</strong>ath/to/foo/bar/lol
+
+<i>with <bold>@fingers-compact-hints</bold> set to <bold>0</bold>:</i>
+
+/path/to/foo/bar/lol <strong>[aw]</strong>
+</pre>
+
+( _pressing *aw* would yank `/path/to/foo/bar/lol`_ )
+
+While in **[fingers]** mode you can press `<space>` to toggle compact mode on/off.
+
+Compact mode is preferred because it preserves the length of lines and doesn't
+cause line wraps, making it easier to follow.
+
+However for small hints this can be troublesome: a path as small as `/a/b`
+would have half of its original content concealed. If that's the case you can
+quickly toggle off compact mode by pressing `<space>`.
 
 # Acknowledgements and inspiration
 

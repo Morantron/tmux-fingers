@@ -2,7 +2,7 @@ BEGIN {
   n_matches = 0;
   line_pos = 0;
   col_pos = 0;
-  COLLAPSE_HINTS = ENVIRON["COLLAPSED_HINTS"];
+  COMPACT_HINTS = ENVIRON["COMPACT_HINTS"];
 
   HINTS[0] = "p"
   HINTS[1] = "o"
@@ -107,7 +107,7 @@ BEGIN {
 
   finger_patterns = ENVIRON["FINGER_PATTERNS"];
 
-  if (COLLAPSE_HINTS) {
+  if (COMPACT_HINTS) {
     hint_format = "\033[30;1;43m%s\033[0m"
     highlight_format = "\033[1;33m%s\033[0m"
     compound_format = hint_format highlight_format
@@ -139,7 +139,7 @@ BEGIN {
     line_match = substr(line, RSTART, RLENGTH);
     full_line_match = line_match
 
-    if (COLLAPSE_HINTS) {
+    if (COMPACT_HINTS) {
       hint_len = length(hint)
       line_match = substr(line_match, hint_len + 1, length(line_match) - hint_len);
     }
@@ -150,7 +150,7 @@ BEGIN {
 
 		pre_match = substr(output_line, 0, col_pos - 1);
 
-    if (COLLAPSE_HINTS) {
+    if (COMPACT_HINTS) {
       hint_match = sprintf(compound_format, hint, line_match);
     } else {
       hint_match = sprintf(compound_format, line_match, hint);

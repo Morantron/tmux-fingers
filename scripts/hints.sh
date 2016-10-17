@@ -30,10 +30,10 @@ function get_stdin() {
 
 function show_hints() {
   local fingers_pane_id=$1
-  local collapsed_hints=$2
+  local compact_hints=$2
 
   clear_screen "$fingers_pane_id"
-  get_stdin | COLLAPSED_HINTS=$collapsed_hints FINGER_PATTERNS=$PATTERNS __awk__ -f $CURRENT_DIR/hinter.awk 3> $match_lookup_table
+  get_stdin | COMPACT_HINTS=$compact_hints FINGER_PATTERNS=$PATTERNS __awk__ -f $CURRENT_DIR/hinter.awk 3> $match_lookup_table
 }
 
 function show_hints_and_swap() {

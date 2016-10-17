@@ -83,13 +83,13 @@ show_hints_and_swap $current_pane_id $fingers_pane_id
 
 hide_cursor
 input=''
-collapsed_state=1
+compact_state=1
 
-function toggle_collapsed_state() {
-  if [[ $collapsed_state == "0" ]]; then
-    collapsed_state=1
+function toggle_compact_state() {
+  if [[ $compact_state == "0" ]]; then
+    compact_state=1
   else
-    collapsed_state=0
+    compact_state=0
   fi
 }
 
@@ -109,13 +109,12 @@ while read -rsn1 char; do
     continue
   fi
 
-
   if [[ $char == "$BACKSPACE" ]]; then
     input=""
     continue
   elif [[ $char == "" ]]; then
-    toggle_collapsed_state
-    show_hints "$fingers_pane_id" $collapsed_state
+    toggle_compact_state
+    show_hints "$fingers_pane_id" $compact_state
   else
     input="$input$char"
   fi
