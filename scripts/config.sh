@@ -41,7 +41,7 @@ else
 fi
 
 IFS=$'\n'
-USER_DEFINED_PATTERNS=($(tmux show-options -g | grep ^@fingers-pattern | sed 's/^@fingers-pattern-[0-9] "\(.*\)"$/(\1)/'))
+USER_DEFINED_PATTERNS=($(tmux show-options -g | sed -n 's/^@fingers-pattern-[0-9]\{1,\} "\(.*\)"$/(\1)/p'))
 unset IFS
 
 PATTERNS_LIST=("${PATTERNS_LIST[@]}" "${USER_DEFINED_PATTERNS[@]}")
