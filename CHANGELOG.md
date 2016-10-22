@@ -1,3 +1,7 @@
+## 0.3.1 - 22 Oct 2016
+
+* Fixed parsing of @fingers-pattern-N option not working for more than one digit ( thanks @sunaku ! )
+
 ## 0.3.0 - 17 Oct 2016
 
 * Hints now render in a compacter way, avoiding line wraps for better readability.
