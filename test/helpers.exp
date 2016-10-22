@@ -42,6 +42,11 @@ proc echo_yanked {} {
   sleep 0.5;
 }
 
+proc tmux_paste {} {
+  tmux_send "]";
+  sleep 0.5;
+}
+
 proc exit_ok {} {
   global exit_code
   set exit_code 0;
