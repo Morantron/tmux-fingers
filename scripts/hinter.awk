@@ -124,14 +124,14 @@ BEGIN {
   line = $0;
   pos = 0;
   col_pos = 0;
-	col_pos_correction = 0;
+  col_pos_correction = 0;
 
-	output_line = line;
+  output_line = line;
 
   while (match(line, finger_patterns)) {
     n_matches += 1;
 
-		hint = HINTS[n_matches - 1]
+    hint = HINTS[n_matches - 1]
     pos += RSTART;
 
     col_pos = pos;
@@ -148,7 +148,7 @@ BEGIN {
 
     line_pos = NR;
 
-		pre_match = substr(output_line, 0, col_pos - 1);
+    pre_match = substr(output_line, 0, col_pos - 1);
 
     if (COMPACT_HINTS) {
       hint_match = sprintf(compound_format, hint, line_match);
@@ -156,7 +156,7 @@ BEGIN {
       hint_match = sprintf(compound_format, line_match, hint);
     }
 
-		post_match = substr(output_line, col_pos + RLENGTH, length(line) - 1);
+    post_match = substr(output_line, col_pos + RLENGTH, length(line) - 1);
 
     output_line = pre_match hint_match post_match;
 
