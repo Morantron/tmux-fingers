@@ -1,3 +1,8 @@
+## 0.3.2 - 25 Oct 2016
+
+* Now hints are unique. If a match has several occurrences it will always have
+  the same hint.
+
 ## 0.3.1 - 22 Oct 2016
 
 * Fixed parsing of @fingers-pattern-N option not working for more than one digit ( thanks @sunaku ! )

@@ -12,7 +12,7 @@ sleep 0.5;
 init_pane
 exec "cat ./test/fixtures/ip-output";
 invoke_fingers;
-send "r";
+send "t";
 echo_yanked;
 
 expect {
