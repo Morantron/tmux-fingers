@@ -134,6 +134,25 @@ If you still want to set your own custom command you can do so like this:
 set -g @fingers-copy-command 'xclip -selection clipboard'
 ```
 
+## @fingers-hint-labels
+
+```
+default: "
+  p  o  i  u  l  k  j  t  r  e  wj wt wr we ww wq wf wd ws wa qp qo qi qu ql
+  qk qj qt qr qe qw qq qf qd qs qa fp fo fi fu fl fk fj ft fr fe fw fq ff fd
+  fs fa dp do di du dl dk dj dt dr de dw dq df dd ds da sp so si su sl sk sj
+  st sr se sw sq sf sd ss sa ap ao ai au al ak aj at ar ae aw aq af ad as aa
+"
+```
+
+By default *tmux-fingers* will flag matches using the hints listed above.
+
+You can override these hints, using your own labels for them, like this:
+
+```
+set -g @fingers-hint-labels " a b c ... " # put your hints in the string
+```
+
 ## @fingers-compact-hints
 
 `default: 1`

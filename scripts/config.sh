@@ -90,6 +90,13 @@ fingers_defaults=( \
   [fingers-hint-position-nocompact]="right" \
   [fingers-hint-format-nocompact]="#[fg=yellow,bold][%s]" \
   [fingers-highlight-format-nocompact]="#[fg=yellow,nobold,dim]%s" \
+
+  [fingers-hint-labels]='
+    p  o  i  u  l  k  j  t  r  e  wj wt wr we ww wq wf wd ws wa qp qo qi qu ql
+    qk qj qt qr qe qw qq qf qd qs qa fp fo fi fu fl fk fj ft fr fe fw fq ff fd
+    fs fa dp do di du dl dk dj dt dr de dw dq df dd ds da sp so si su sl sk sj
+    st sr se sw sq sf sd ss sa ap ao ai au al ak aj at ar ae aw aq af ad as aa
+  ' \
 )
 
 set_tmux_env 'fingers-patterns'
@@ -105,7 +112,7 @@ set_tmux_env 'fingers-hint-format-nocompact' process_format
 set_tmux_env 'fingers-highlight-format-nocompact' process_format
 
 
-for option in fingers-{hint,highlight}-format{,-nocompact}; do
+for option in fingers-{hint,highlight}-{format{,-nocompact},labels}; do
   env_name="$(envify "$option")_NOCOLOR"
   option_value="$(read_from_config "$option")"
   default_value="${fingers_defaults[$option]}"
