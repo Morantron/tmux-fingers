@@ -12,7 +12,7 @@ FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
 
 current_pane_id=$1
 fingers_pane_id=$2
-tmp_path=$3
+pane_input_temp=$3
 
 BACKSPACE=$'\177'
 
@@ -34,7 +34,7 @@ function handle_exit() {
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
   [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
   tmux kill-pane -t "$fingers_pane_id"
-  rm -rf "$tmp_path"
+  rm -rf "$pane_input_temp" "$pane_output_temp" "$match_lookup_table"
 }
 
 function copy_result() {
