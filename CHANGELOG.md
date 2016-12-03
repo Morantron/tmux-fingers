@@ -1,3 +1,8 @@
+## 0.3.5 - 03 Dec 2016
+
+* Reverted wrong commit, it was the `.bash_history` what was broken. Never code
+  without enough coffee in your veins.
+
 ## 0.3.4 - 03 Dec 2016
 
 * Oops, reverted tmp files fix, as it messes up with window name.
