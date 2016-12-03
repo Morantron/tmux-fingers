@@ -7,10 +7,6 @@ match_lookup_table=$(fingers_tmp)
 pane_output_temp=$(fingers_tmp)
 flushed_input=0
 
-# exporting them so they can be properly deleted at fingers.sh handle_exit trap
-export match_lookup_table
-export pane_output_temp
-
 function lookup_match() {
   local input=$1
   echo "$(cat $match_lookup_table | grep "^$input:" | sed "s/^$input://")"
