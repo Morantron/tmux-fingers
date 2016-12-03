@@ -1,3 +1,8 @@
+## 0.3.3 - 03 Dec 2016
+
+* Fixed `.bash_history` pollution.
+* Now all tmp files are properly deleted.
+
 ## 0.3.2 - 25 Oct 2016
 
 * Now hints are unique. If a match has several occurrences it will always have
