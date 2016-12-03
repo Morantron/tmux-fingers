@@ -1,3 +1,7 @@
+## 0.3.4 - 03 Dec 2016
+
+* Oops, reverted tmp files fix, as it messes up with window name.
+
 ## 0.3.3 - 03 Dec 2016
 
 * Fixed `.bash_history` pollution.
