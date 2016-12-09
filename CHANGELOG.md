@@ -1,3 +1,8 @@
+## 0.3.6 - 09 Dec 2016
+
+* Yep, finally fixed `.bash_history` pollution properly. With coffee and
+  everything.
+
 ## 0.3.5 - 03 Dec 2016
 
 * Reverted wrong commit, it was the `.bash_history` what was broken. Never code
@@ -19,14 +24,17 @@
 
 ## 0.3.1 - 22 Oct 2016
 
-* Fixed parsing of @fingers-pattern-N option not working for more than one digit ( thanks @sunaku ! )
+* Fixed parsing of @fingers-pattern-N option not working for more than one
+  digit ( thanks @sunaku ! )
 
 ## 0.3.0 - 17 Oct 2016
 
-* Hints now render in a compacter way, avoiding line wraps for better readability.
+* Hints now render in a compacter way, avoiding line wraps for better
+  readability.
 * New @fingers-compact-hints option to customize how hints are rendered.
 * Added shorcuts while in **[fingers]** mode as well as help screen.
-* Signifcantly improved performance by ignoring `.bashrc` and `.bash_profile`. ( It can't get any faster now! )
+* Signifcantly improved performance by ignoring `.bashrc` and `.bash_profile`.
+  ( It can't get any faster now! )
 
 ## 0.2.0 - 24 Aug 2016
 
