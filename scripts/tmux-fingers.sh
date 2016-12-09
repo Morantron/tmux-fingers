@@ -4,7 +4,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/utils.sh
 
 function init_fingers_pane() {
-  local pane_id=$(tmux new-window -F "#{pane_id}" -P -d -n "[fingers]" 'bash --norc --noprofile')
+  local pane_id=$(tmux new-window -F "#{pane_id}" -P -d -n "[fingers]" 'HISTFILE=/dev/null bash --norc --noprofile')
   echo $pane_id
 }
 
@@ -38,7 +38,10 @@ function prompt_fingers_for_pane() {
   wait
 
   capture_pane "$current_pane_id" "$tmp_path"
-  pane_exec "$fingers_pane_id" "cat $tmp_path | $CURRENT_DIR/fingers.sh \"$current_pane_id\" \"$fingers_pane_id\" $tmp_path"
+
+  local original_rename_setting=$(tmux show-window-option -gv automatic-rename)
+  tmux set-window-option automatic-rename off
+  pane_exec "$fingers_pane_id" "cat $tmp_path | $CURRENT_DIR/fingers.sh \"$current_pane_id\" \"$fingers_pane_id\" $tmp_path $original_rename_setting"
 
   echo $fingers_pane_id
 }

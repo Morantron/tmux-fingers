@@ -13,6 +13,7 @@ FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
 current_pane_id=$1
 fingers_pane_id=$2
 pane_input_temp=$3
+original_rename_setting=$4
 
 BACKSPACE=$'\177'
 
@@ -34,6 +35,7 @@ function handle_exit() {
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
   [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
   tmux kill-pane -t "$fingers_pane_id"
+  tmux set-window-option automatic-rename "$original_rename_setting"
   rm -rf "$pane_input_temp" "$pane_output_temp" "$match_lookup_table"
 }
 
