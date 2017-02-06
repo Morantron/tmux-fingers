@@ -26,7 +26,7 @@ if [[ $(supports_intervals_in_awk) == "1" ]]; then
   PATTERNS_LIST=(
   "((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]+)"
   "([[:digit:]]{4,})"
-  "([0-9a-f]{7}|[0-9a-f]{40})"
+  "([0-9a-f]{7,40})"
   "((https?://|git@|git://|ssh://|ftp://|file:///)[[:alnum:]?=%/_.:,;~@!#$&()*+-]*)"
   "([[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3})"
   )
