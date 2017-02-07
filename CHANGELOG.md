@@ -1,3 +1,7 @@
+## 0.3.7 - 07 Feb 2017
+
+* Match SHAs of variable size. ( thanks @jacob-keller ! )
+
 ## 0.3.6 - 09 Dec 2016
 
 * Yep, finally fixed `.bash_history` pollution properly. With coffee and
