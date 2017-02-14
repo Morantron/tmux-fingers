@@ -1,3 +1,7 @@
+## 0.3.8 - 14 Feb 2017
+
+* Fixed support for fish shell.
+
 ## 0.3.7 - 07 Feb 2017
 
 * Match SHAs of variable size. ( thanks @jacob-keller ! )
