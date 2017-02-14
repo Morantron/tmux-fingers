@@ -100,3 +100,18 @@ function clear_screen() {
   clear
   tmux clearhist -t $fingers_pane_id
 }
+
+function current_shell() {
+  echo "$SHELL" | grep -o "\w*$"
+}
+
+function init_pane_cmd() {
+  init_bash="bash --norc --noprofile"
+  if [[ $(current_shell) == "fish" ]]; then
+    set_env="set -x HISTFILE /dev/null; "
+  else
+    set_env="HISTFILE=/dev/null "
+  fi
+
+  echo "$set_env $init_bash"
+}

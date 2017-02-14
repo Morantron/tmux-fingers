@@ -1,0 +1,23 @@
+#!/usr/bin/env expect
+
+set timeout 1;
+set tmux_prefix "";
+
+source "./test/helpers.exp"
+
+exec "tmux kill-session -t test";
+spawn sudo -u fishman SHELL=/usr/bin/fish tmux -f /home/vagrant/shared/test/conf/fish.conf new -s test;
+
+init_pane_fish
+exec "cat ./test/fixtures/grep-output";
+invoke_fingers;
+sleep 30
+send "i";
+echo_yanked;
+
+expect {
+  "yanked text is scripts/hints.sh" { exit_ok }
+  timeout { exit_fail }
+}
+
+exit $exit_code;

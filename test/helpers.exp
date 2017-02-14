@@ -29,6 +29,12 @@ proc init_pane {} {
   exec "export PS1='# '; clear";
 }
 
+proc init_pane_fish {} {
+  tmux_send "c";
+  exec "function fish_prompt; echo '# '; end"
+  exec "clear"
+}
+
 proc invoke_fingers {} {
   tmux_send "F";
   sleep 1.0;

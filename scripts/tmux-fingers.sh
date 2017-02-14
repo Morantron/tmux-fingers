@@ -4,7 +4,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/utils.sh
 
 function init_fingers_pane() {
-  local pane_id=$(tmux new-window -F "#{pane_id}" -P -d -n "[fingers]" 'HISTFILE=/dev/null bash --norc --noprofile')
+  local pane_id=$(tmux new-window -F "#{pane_id}" -P -d -n "[fingers]" "$(init_pane_cmd)")
   echo $pane_id
 }
 
