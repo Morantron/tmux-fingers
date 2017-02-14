@@ -106,12 +106,12 @@ BEGIN {
   finger_patterns = ENVIRON["FINGER_PATTERNS"];
 
   if (COMPACT_HINTS) {
-    hint_format = "\033[30;1;43m%s\033[0m"
-    highlight_format = "\033[1;33m%s\033[0m"
+    hint_format = ENVIRON["FINGERS_HINT_FORMAT"]
+    highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT"]
     compound_format = hint_format highlight_format
   } else {
-    hint_format = "\033[1;33m[%s]\033[0m"
-    highlight_format = "\033[1;33m%s\033[0m "
+    hint_format = ENVIRON["FINGERS_HINT_FORMAT_SECONDARY"]
+    highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_SECONDARY"]
     compound_format = highlight_format hint_format
   }
 
