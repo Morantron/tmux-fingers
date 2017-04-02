@@ -30,7 +30,7 @@ function show_hints() {
   local compact_hints=$2
 
   clear_screen "$fingers_pane_id"
-  get_stdin | COMPACT_HINTS=$compact_hints FINGER_PATTERNS=$PATTERNS __awk__ -f $CURRENT_DIR/hinter.awk 3> $match_lookup_table
+  get_stdin | COMPACT_HINTS=$compact_hints FINGER_PATTERNS=$PATTERNS gawk -f $CURRENT_DIR/hinter.awk 3> $match_lookup_table
 }
 
 function show_hints_and_swap() {
