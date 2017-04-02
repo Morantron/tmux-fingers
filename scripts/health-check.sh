@@ -68,7 +68,9 @@ function perform_health_check() {
       : # waiting for-tmux
     done
 
-    tmux run "echo -e 'tmux-fingers health-check:\\n\\n'; cat $health_tmp"
+    log_health "For more info check $HELP_LINK"
+    log_health "To skip this check add \"set -g @fingers-skip-health-check 1\" to your tmux conf"
+    tmux run "echo -e \"tmux-fingers health-check:\"; cat $health_tmp"
   fi
 
   rm -rf "$health_tmp"
