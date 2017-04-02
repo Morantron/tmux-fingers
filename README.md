@@ -39,9 +39,9 @@ While in **[fingers]** mode, you can use the following shortcuts:
 
 # Requirements
 
-* bash 4+
 * tmux 2.1+ ( 2.2 recommended )
-* gawk ( optional but recommended )
+* bash 4+
+* gawk
 
 # Installation
 
