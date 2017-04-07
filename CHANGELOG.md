@@ -1,3 +1,8 @@
+## 0.4.0 - 07 Apr 2017
+
+* `gawk` is now a required dependency.
+* Added a system health check on startup.
+
 ## 0.3.8 - 14 Feb 2017
 
 * Fixed support for fish shell.
