@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pkg install -y bash tmux expect fish
+pkg install -y bash tmux expect fish gawk
 chsh -s bash vagrant
 
 echo "fishman" | pw user add -n fishman -h 0 -s "/usr/local/bin/fish"
