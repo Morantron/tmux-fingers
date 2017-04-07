@@ -26,3 +26,11 @@ This probably means you are running OSX, which ships with *bash 3*. In order to 
 ## tmux version is too old
 
 You can install latest *tmux* from source, check https://github.com/tmux/tmux
+
+## How to skip the check
+
+If can't skip this check by adding the following in your .tmux.conf file:
+
+```
+set -g @fingers-skip-health-check '1'
+```
