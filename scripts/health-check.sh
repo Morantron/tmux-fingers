@@ -4,7 +4,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/utils.sh
 
 REQUIRED_BASH_MAJOR=4
-REQUIRED_TMUX_MAJOR=2
+REQUIRED_GAWK_MAJOR=4
 RECOMMENDED_TMUX_MINOR=3
 HELP_LINK="https://github.com/Morantron/tmux-fingers/blob/master/docs/health-check.md"
 
@@ -19,6 +19,14 @@ function is_tmux_ready() {
   else
     echo 0
   fi
+}
+
+function version_major() {
+  echo "$1" | cut -f1 -d. | grep -Eo "[0-9]"
+}
+
+function version_minor() {
+  echo "$1" | cut -f2 -d. | grep -Eo "[0-9]"
 }
 
 function program_exists() {
@@ -98,34 +106,41 @@ function dump_log() {
 function perform_health_check() {
   local healthy=1
 
+  # BASH_VERSION is a global
+  local TMUX_VERSION=$(tmux -V | grep -Eio "[0-9]+(\.[0-9a-z])*$")
+  local GAWK_VERSION=""
+
+  if [[ $(program_exists "gawk") = "1" ]]; then
+    GAWK_VERSION=$(gawk -W version | grep -Eo "[0-9]+\.[0-9]\.[0-9]" | head -n 1)
+  fi
+
   FINGERS_SKIP_HEALTH_CHECK=$(tmux show-option -gqv @fingers-skip-health-check)
 
   if [[ $FINGERS_SKIP_HEALTH_CHECK -eq 1 ]]; then
     return
   fi
 
-  if [[ $(program_exists "gawk") = "0" ]]; then
-    log_message "* 'gawk' not found"
+  if [[ $(program_exists "gawk") = 0 ]]; then
+    log_message "  * 'gawk' not found"
     healthy=0
   fi
 
-  BASH_MAJOR=$(echo "$BASH_VERSION" | grep -Eo "^[0-9]")
-
-  if [[ "$BASH_MAJOR" -lt "$REQUIRED_BASH_MAJOR" ]]; then
-    log_message "  * Bash version \"$BASH_VERSION\" is too old."
+  if [[ $(version_major "$BASH_VERSION") -lt "$REQUIRED_BASH_MAJOR" ]]; then
+    log_message "  * bash version \"$BASH_VERSION\" is too old. bash $REQUIRED_BASH_MAJOR.x+ is required."
     healthy=0
   fi
 
-  TMUX_VERSION=$(tmux -V | grep -Eio "[0-9]+(\.[0-9a-z])*$")
-  TMUX_MAJOR=$(echo "$TMUX_VERSION" | cut -f1 -d.)
-  TMUX_MINOR=$(echo "$TMUX_VERSION" | cut -f2 -d. | grep -Eo "[0-9]")
-
-  if [[ $TMUX_MAJOR -lt $REQUIRED_TMUX_MAJOR ]]; then
-    log_message "  * tmux version \"$TMUX_VERSION\" is too old."
+  if [[ $(program_exists "gawk") = 1 ]] && [[ $(version_major "$GAWK_VERSION") -lt "$REQUIRED_GAWK_MAJOR" ]]; then
+    log_message "  * gawk version \"$GAWK_VERSION\" is too old. gawk $REQUIRED_GAWK_MAJOR.x+ is required."
     healthy=0
   fi
 
-  if [[ $TMUX_MAJOR -eq $REQUIRED_TMUX_MAJOR ]] && [[ $TMUX_MINOR -lt $RECOMMENDED_TMUX_MINOR ]]; then
+  if [[ $(version_major "$TMUX_VERSION") -lt $REQUIRED_TMUX_MAJOR ]]; then
+    log_message "  * tmux version \"$TMUX_VERSION\" is too old. tmux $REQUIRED_TMUX_MAJOR.$RECOMMENDED_TMUX_MINOR+ is required."
+    healthy=0
+  fi
+
+  if [[ $(version_major "$TMUX_VERSION") -eq $REQUIRED_TMUX_MAJOR ]] && [[ $(version_minor "$TMUX_VERSION") -lt $RECOMMENDED_TMUX_MINOR ]]; then
     echo "  * WARNING: tmux 2.2+ is recommended"
   fi
 
