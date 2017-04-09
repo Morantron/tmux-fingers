@@ -1,3 +1,8 @@
+## 0.4.1 - 09 Apr 2017
+
+* Looks like `gawk` should be 4+ for things to go smooth.
+* Improved output of system health check.
+
 ## 0.4.0 - 07 Apr 2017
 
 * `gawk` is now a required dependency.
