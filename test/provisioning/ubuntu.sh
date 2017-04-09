@@ -2,6 +2,7 @@
 
 apt-get remove -y tmux
 apt-get install -y libevent-dev libncurses5-dev expect fish
+apt-get install -y gawk
 
 useradd -m -p "$(perl -e "print crypt('fishman','sa');")" -s "/usr/bin/fish" fishman
 
