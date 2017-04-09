@@ -1,6 +1,6 @@
 dependencies:
   pre:
-    - if [[ ! -e tmux-2.2 ]]; then sudo bash ./test/provisioning/ubuntu.sh; fi
+    - sudo bash ./test/provisioning/ubuntu.sh
     - sudo mkdir -p /home/vagrant/ && sudo chmod a+w /home/vagrant && ln -s $(pwd) /home/vagrant/shared
     - tmux -V
     - gawk -W version
