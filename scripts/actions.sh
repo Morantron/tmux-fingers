@@ -10,7 +10,7 @@ function start_copy_mode() {
 
 function start_selection() {
   if [ "$TMUX_COPY_MODE" == "vi" ]; then
-    tmux send-keys "Space"
+    tmux send-keys -X begin-selection
   else
     tmux send-keys "C-Space"
   fi
@@ -18,7 +18,7 @@ function start_selection() {
 
 function top_of_buffer() {
   if [ "$TMUX_COPY_MODE" == "vi" ]; then
-    tmux send-keys "H"
+    tmux send-keys -X top-line
   else
     tmux send-keys "M-R"
   fi
@@ -26,7 +26,7 @@ function top_of_buffer() {
 
 function start_of_line() {
   if [ "$TMUX_COPY_MODE" == "vi" ]; then
-    tmux send-keys "0"
+    tmux send-keys -X start-of-line
   else
     tmux send-keys "C-a"
   fi
@@ -34,7 +34,7 @@ function start_of_line() {
 
 function end_of_line() {
   if [ "$TMUX_COPY_MODE" == "vi" ]; then
-    tmux send-keys "$"
+    tmux send-keys -X end-of-line
   else
     tmux send-keys "C-e"
   fi
@@ -42,7 +42,7 @@ function end_of_line() {
 
 function cursor_left() {
   if [ "$TMUX_COPY_MODE" == "vi" ]; then
-    tmux send-keys "h"
+    tmux send-keys -X cursor-left
   fi
 }
 
@@ -53,7 +53,7 @@ function copy_selection() {
   fi
 
   if [ "$TMUX_COPY_MODE" == "vi" ]; then
-    tmux send-keys "Enter"
+    tmux send-keys -X copy-selection-and-cancel
   else
     tmux send-keys "M-w"
   fi
