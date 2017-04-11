@@ -3,7 +3,6 @@
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source $CURRENT_DIR/config.sh
-source $CURRENT_DIR/actions.sh
 source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
 source $CURRENT_DIR/help.sh
@@ -37,24 +36,6 @@ function handle_exit() {
   tmux kill-pane -t "$fingers_pane_id"
   tmux set-window-option automatic-rename "$original_rename_setting"
   rm -rf "$pane_input_temp" "$pane_output_temp" "$match_lookup_table"
-}
-
-function copy_result() {
-  local result=$1
-
-  clear
-  echo -n "$result"
-  start_copy_mode
-  top_of_buffer
-  start_of_line
-  start_selection
-  end_of_line
-  cursor_left
-  copy_selection
-
-  if [ ! -z "$FINGERS_COPY_COMMAND" ]; then
-    echo -n "$result" | eval "nohup $FINGERS_COPY_COMMAND" > /dev/null
-  fi
 }
 
 function is_valid_input() {
@@ -152,15 +133,20 @@ while read -rsn1 char; do
     show_hints "$fingers_pane_id" $compact_state
   fi
 
-  result=$(lookup_match "$input")
-
-  tmux display-message "$input"
+  result=$(lookup_match "$input" | head -n 1)
 
   if [[ -z $result ]]; then
     continue
   fi
 
-  copy_result "$result"
+  tmux display-message "'$result' copied!"
+
+  if [ ! -z "$FINGERS_COPY_COMMAND" ]; then
+    echo -n "$result" | eval "nohup $FINGERS_COPY_COMMAND" > /dev/null
+  else
+    tmux set-buffer "$result"
+  fi
+
   revert_to_original_pane "$current_pane_id" "$fingers_pane_id"
 
   exit 0
