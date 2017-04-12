@@ -90,6 +90,16 @@ function toggle_help() {
   fi
 }
 
+function copy_result() {
+  local result="$1"
+
+  tmux set-buffer "$result"
+
+  if [ ! -z "$FINGERS_COPY_COMMAND" ]; then
+    echo -n "$result" | eval "nohup $FINGERS_COPY_COMMAND" > /dev/null
+  fi
+}
+
 while read -rsn1 char; do
   # Escape sequence, flush input
   if [[ "$char" == $'\x1b' ]]; then
@@ -133,19 +143,13 @@ while read -rsn1 char; do
     show_hints "$fingers_pane_id" $compact_state
   fi
 
-  result=$(lookup_match "$input" | head -n 1)
+  result=$(lookup_match "$input")
 
   if [[ -z $result ]]; then
     continue
   fi
 
-  tmux display-message "'$result' copied!"
-
-  if [ ! -z "$FINGERS_COPY_COMMAND" ]; then
-    echo -n "$result" | eval "nohup $FINGERS_COPY_COMMAND" > /dev/null
-  else
-    tmux set-buffer "$result"
-  fi
+  copy_result "$result"
 
   revert_to_original_pane "$current_pane_id" "$fingers_pane_id"
 
