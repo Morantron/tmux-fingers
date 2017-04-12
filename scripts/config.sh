@@ -14,6 +14,25 @@ function check_pattern() {
   fi
 }
 
+function identity_fn() {
+  echo -ne "$1"
+}
+
+function export_option() {
+  local option_name="$(echo $1 | tr '[:lower:]' '[:upper:]' | sed "s/-/_/g")"
+  local default_value="$2"
+  local transform_fn="$3"
+
+  local option_value=$(tmux show-option -gqv "@$1")
+  local final_value="${option_value:-$default_value}"
+
+  if [[ ! -z "$transform_fn" ]]; then
+    final_value="$($transform_fn "$final_value")"
+  fi
+
+  eval "export ${option_name}=\"$(echo -e "$final_value")\""
+}
+
 source "$CURRENT_DIR/utils.sh"
 
 PATTERNS_LIST=(
@@ -45,12 +64,19 @@ done
 PATTERNS=$(array_join "|" "${PATTERNS_LIST[@]}")
 export PATTERNS
 
-DEFAULT_FINGER_COMPACT_HINTS=1
-FINGERS_COMPACT_HINTS=$(tmux show-option -gqv @fingers-compact-hints)
-FINGERS_COMPACT_HINTS=${FINGERS_COMPACT_HINTS:-$DEFAULT_FINGER_COMPACT_HINTS}
-export FINGERS_COMPACT_HINTS
+export_option 'fingers-compact-hints' 1
+export_option 'fingers-hint-format' 1
+export_option 'fingers-copy-command' ""
 
-export FINGERS_HINT_FORMAT=$(echo -e "\033[30;1;43m%s\033[0m")
-export FINGERS_HIGHLIGHT_FORMAT=$(echo -e "\033[1;33m%s\033[0m")
-export FINGERS_HINT_FORMAT_SECONDARY=$(echo -e "\033[1;33m[%s]\033[0m")
-export FINGERS_HIGHLIGHT_FORMAT_SECONDARY=$(echo -e "\033[1;33m%s\033[0m ")
+function process_format () {
+  echo -ne "$($CURRENT_DIR/print.sh "$1")"
+}
+
+echo "wtf: $(process_format "#[fg=yellow]%s")" >> $CURRENT_DIR/../fingers.log
+
+export_option 'fingers-hint-format' "#[fg=yellow,bold,reverse]%%s" process_format
+export_option 'fingers-highlight-format' "#[fg=yellow,bold]%%s" process_format
+export_option 'fingers-hint-format-secondary' "#[fg=yellow,bold][%%s]" process_format
+export_option 'fingers-highlight-format-secondary' " #[fg=yellow,bold]%%s" process_format
+
+printenv | grep FINGERS >> $CURRENT_DIR/../fingers.log

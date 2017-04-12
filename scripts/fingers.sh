@@ -8,8 +8,6 @@ source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
 source $CURRENT_DIR/help.sh
 
-FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
-
 current_pane_id=$1
 fingers_pane_id=$2
 pane_input_temp=$3
