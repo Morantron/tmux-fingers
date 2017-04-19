@@ -12,7 +12,7 @@ if [[ "$target" == "within-vm" ]]; then
   stty cols 80
   stty rows 24
   fail_count=0
-  for test_file in $(ls $CURRENT_DIR/specs/*_spec.exp); do
+  for test_file in $(ls $CURRENT_DIR/specs/*_spec.sh); do
     result="* $test_file ..."
     sleep 1
     echo "Running $test_file" >> $SPEC_OUTPUT_LOG
