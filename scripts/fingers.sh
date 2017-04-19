@@ -9,6 +9,9 @@ source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
 source $CURRENT_DIR/help.sh
 
+FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
+HAS_TMUX_YANK=$([ "$(tmux list-keys | grep -c tmux-yank)" == "0" ]; echo $?)
+
 current_pane_id=$1
 fingers_pane_id=$2
 pane_input_temp=$3
@@ -97,6 +100,12 @@ function copy_result() {
 
   if [ ! -z "$FINGERS_COPY_COMMAND" ]; then
     echo -n "$result" | eval "nohup $FINGERS_COPY_COMMAND" > /dev/null
+  fi
+
+  if [[ $HAS_TMUX_YANK = 1 ]]; then
+    tmux_yank_copy_command=$(tmux list-keys -t vi-copy | grep "vi-copy *y" | sed 's/.*copy-pipe "\(.*\)".*/\1/g')
+
+    echo -n "$result" | eval "nohup $tmux_yank_copy_command" > /dev/null
   fi
 }
 
