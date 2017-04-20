@@ -1,7 +1,7 @@
 #!/bin/sh
 
 sudo aptitude update
-sudo aptitude install -y expect fish gawk
+sudo aptitude install -y fish gawk
 
 useradd -m -p "$(perl -e "print crypt('fishman','sa');")" -s "/usr/bin/fish" fishman
 
