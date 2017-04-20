@@ -1,3 +1,8 @@
+## 0.5.0 - 20 Apr 2017
+
+* Added support for tmux of the future ( greater than 2.3 ). Thanks @fcsonline!
+* Tests rewritten in bash. Bye bye `expect` tool!
+
 ## 0.4.1 - 09 Apr 2017
 
 * Looks like `gawk` should be 4+ for things to go smooth.
