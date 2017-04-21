@@ -17,6 +17,7 @@ tmuxomatic__exec "cat ./test/fixtures/grep-output"
 
 invoke_fingers
 tmuxomatic send-keys C-c
+tmuxomatic__sleep 1
 
 tmuxomatic__exec "echo \"current pane is \$(tmux list-panes -F '#{?window_zoomed_flag,zoomed,not_zoomed}' | head -1)\""
 tmuxomatic__expect "current pane is zoomed"

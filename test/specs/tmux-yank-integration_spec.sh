@@ -13,7 +13,7 @@ tmuxomatic__exec "cat ./test/fixtures/grep-output"
 invoke_fingers
 tmuxomatic send-keys "i"
 
-sleep 10
+tmuxomatic__sleep 1
 tmuxomatic__exec "cat /tmp/tmux-yank-result"
 
 tmuxomatic__expect "tmux-yank yolo"

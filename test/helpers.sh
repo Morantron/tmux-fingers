@@ -9,11 +9,11 @@ function test_clean_up() {
 
 function tmux_send() {
   local key=$1
-  sleep 0.5
+  tmuxomatic__sleep 1
   tmuxomatic send-keys "$TMUX_PREFIX"
-  sleep 0.5
+  tmuxomatic__sleep 1
   tmuxomatic send-keys "$key"
-  sleep 0.5
+  tmuxomatic__sleep 1
 }
 
 function tmux_paste() {
@@ -33,11 +33,11 @@ function init_pane_fish() {
 
 function invoke_fingers() {
   tmux_send "F"
-  sleep 1.0
+  tmuxomatic__sleep 1
 }
 
 function echo_yanked() {
-  sleep 0.5
+  tmuxomatic__sleep 1
   tmuxomatic__exec "clear"
   tmuxomatic send-keys "echo yanked text is "
   tmux_paste
