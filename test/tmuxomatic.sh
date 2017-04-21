@@ -58,7 +58,7 @@ function tmuxomatic__expect() {
       TMUXOMATIC_EXIT_CODE=0
       break
     fi
-    sleep 0.5
+    tmuxomatic__sleep 1
   done
 
   if [[ $n_matches -le 0 ]]; then
@@ -72,6 +72,14 @@ function tmuxomatic__expect() {
     tmuxomatic capture-pane -p > "$log_output_path"
     echo "Timeout :( See log at $log_output_path"
     TMUXOMATIC_EXIT_CODE=1
+  fi
+}
+
+function tmuxomatic__sleep() {
+  if [[ -z $CI ]]; then
+    sleep "$1"
+  else
+    sleep "$(($1 * 5))"
   fi
 }
 
