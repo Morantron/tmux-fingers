@@ -1,6 +1,6 @@
 BEGIN {
   n_matches = 0;
-  COMPACT_HINTS = ENVIRON["COMPACT_HINTS"];
+  COMPACT_HINTS = ENVIRON["FINGERS_COMPACT_HINTS"];
 
   HINTS[0] = "p"
   HINTS[1] = "o"
@@ -103,7 +103,7 @@ BEGIN {
   HINTS[98] = "as"
   HINTS[99] = "aa"
 
-  finger_patterns = ENVIRON["FINGER_PATTERNS"];
+  finger_patterns = ENVIRON["FINGERS_PATTERNS"];
 
   if (COMPACT_HINTS) {
     hint_format = ENVIRON["FINGERS_HINT_FORMAT"]

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $CURRENT_DIR/utils.sh
+CONF_CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $CONF_CURRENT_DIR/utils.sh
 
 # TODO empty patterns are invalid
 function check_pattern() {
@@ -14,11 +14,7 @@ function check_pattern() {
   fi
 }
 
-function identity_fn() {
-  echo -ne "$1"
-}
-
-function export_option() {
+function set_option() {
   local option_name="$(echo $1 | tr '[:lower:]' '[:upper:]' | sed "s/-/_/g")"
   local default_value="$2"
   local transform_fn="$3"
@@ -30,10 +26,12 @@ function export_option() {
     final_value="$($transform_fn "$final_value")"
   fi
 
-  eval "export ${option_name}=\"$(echo -e "$final_value")\""
+  tmux setenv "$option_name" "$(echo -ne "$final_value")"
 }
 
-source "$CURRENT_DIR/utils.sh"
+function process_format () {
+  echo -e "$($CONF_CURRENT_DIR/print.sh "$1")\e[0m"
+}
 
 PATTERNS_LIST=(
 "((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]+)"
@@ -62,21 +60,14 @@ for pattern in "${PATTERNS_LIST[@]}" ; do
 done
 
 PATTERNS=$(array_join "|" "${PATTERNS_LIST[@]}")
-export PATTERNS
 
-export_option 'fingers-compact-hints' 1
-export_option 'fingers-hint-format' 1
-export_option 'fingers-copy-command' ""
+set_option 'fingers-patterns' "$PATTERNS"
+set_option 'fingers-compact-hints' 1
+set_option 'fingers-copy-command' ""
+set_option 'fingers-hint-format' "#[fg=yellow,bold,reverse]%%s" process_format
+set_option 'fingers-highlight-format' "#[fg=yellow,bold]%%s" process_format
+set_option 'fingers-hint-format-secondary' "[%%s]" process_format
+set_option 'fingers-highlight-format-secondary' " #%%s" process_format
 
-function process_format () {
-  echo -ne "$($CURRENT_DIR/print.sh "$1")"
-}
-
-echo "wtf: $(process_format "#[fg=yellow]%s")" >> $CURRENT_DIR/../fingers.log
-
-export_option 'fingers-hint-format' "#[fg=yellow,bold,reverse]%%s" process_format
-export_option 'fingers-highlight-format' "#[fg=yellow,bold]%%s" process_format
-export_option 'fingers-hint-format-secondary' "#[fg=yellow,bold][%%s]" process_format
-export_option 'fingers-highlight-format-secondary' " #[fg=yellow,bold]%%s" process_format
-
-printenv | grep FINGERS >> $CURRENT_DIR/../fingers.log
+# TODO add fingers_bg
+# TODO add fingers_fg

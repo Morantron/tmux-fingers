@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+# TODO load fingers env
+eval "$(tmux show-env -s | grep ^FINGERS)"
+
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source $CURRENT_DIR/config.sh
 source $CURRENT_DIR/actions.sh
 source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
@@ -163,3 +165,5 @@ while read -rsn1 char; do
 
   exit 0
 done < /dev/tty
+
+log "fingers.sh end"
