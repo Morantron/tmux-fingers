@@ -3,6 +3,8 @@
 CONF_CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CONF_CURRENT_DIR/utils.sh
 
+TMUX_PRINTER="$CONF_CURRENT_DIR/../vendor/tmux-printer/tmux-printer"
+
 # TODO empty patterns are invalid
 function check_pattern() {
   echo "beep beep" | grep -e "$1" 2> /dev/null
@@ -30,7 +32,7 @@ function set_option() {
 }
 
 function process_format () {
-  echo -e "$($CONF_CURRENT_DIR/print.sh "$1")\e[0m"
+  echo -e "$($TMUX_PRINTER "$1")\e[0m"
 }
 
 PATTERNS_LIST=(

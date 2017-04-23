@@ -1,0 +1,3 @@
+[submodule "vendor/tmux-printer"]
+	path = vendor/tmux-printer
+	url = https://github.com/morantron/tmux-printer
