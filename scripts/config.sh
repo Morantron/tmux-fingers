@@ -28,7 +28,7 @@ function set_option() {
     final_value="$($transform_fn "$final_value")"
   fi
 
-  tmux setenv "$option_name" "$(echo -ne "$final_value")"
+  tmux setenv -g "$option_name" "$final_value"
 }
 
 function process_format () {

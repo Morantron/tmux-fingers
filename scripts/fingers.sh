@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # TODO load fingers env
-eval "$(tmux show-env -s | grep ^FINGERS)"
+eval "$(tmux show-env -g -s | grep ^FINGERS)"
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
