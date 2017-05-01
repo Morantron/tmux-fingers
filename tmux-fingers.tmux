@@ -2,7 +2,8 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source $CURRENT_DIR/scripts/config.sh
+# tmux run-shell does not have color support
+tmux new-session -d "$CURRENT_DIR/scripts/config.sh"
 
 DEFAULT_FINGERS_KEY="F"
 FINGERS_KEY=$(tmux show-option -gqv @fingers-key)

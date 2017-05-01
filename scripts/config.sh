@@ -32,7 +32,7 @@ function set_option() {
 }
 
 function process_format () {
-  echo -e "$($TMUX_PRINTER "$1")\e[0m"
+  echo -ne "$($TMUX_PRINTER "$1")"
 }
 
 PATTERNS_LIST=(
@@ -66,10 +66,10 @@ PATTERNS=$(array_join "|" "${PATTERNS_LIST[@]}")
 set_option 'fingers-patterns' "$PATTERNS"
 set_option 'fingers-compact-hints' 1
 set_option 'fingers-copy-command' ""
-set_option 'fingers-hint-format' "#[fg=yellow,bold,reverse]%%s" process_format
-set_option 'fingers-highlight-format' "#[fg=yellow,bold]%%s" process_format
-set_option 'fingers-hint-format-secondary' "#[fg=yellow,bold] [%%s]" process_format
-set_option 'fingers-highlight-format-secondary' "#[fg=yellow,bold]%%s" process_format
+set_option 'fingers-hint-format' "#[fg=yellow,bold,reverse]%s" process_format
+set_option 'fingers-highlight-format' "#[fg=yellow,bold]%s" process_format
+set_option 'fingers-hint-format-secondary' "#[fg=yellow,bold] [%s]" process_format
+set_option 'fingers-highlight-format-secondary' "#[fg=yellow,bold]%s" process_format
 
 # TODO add fingers_bg
 # TODO add fingers_fg
