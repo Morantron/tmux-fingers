@@ -103,19 +103,23 @@ BEGIN {
   HINTS[99] = "aa"
 
   finger_patterns = ENVIRON["FINGERS_PATTERNS"];
-  fingers_hint_position = ENVIRON["FINGERS_HINT_POSITION"];
   fingers_compact_hints = ENVIRON["FINGERS_COMPACT_HINTS"];
 
+  if (fingers_compact_hints)
+    fingers_hint_position = ENVIRON["FINGERS_HINT_POSITION_COMPACT"];
+  else
+    fingers_hint_position = ENVIRON["FINGERS_HINT_POSITION"];
+
   if (fingers_compact_hints) {
+    hint_format = ENVIRON["FINGERS_HINT_FORMAT_COMPACT"]
+    highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_COMPACT"]
+    hint_format_nocolor = ENVIRON["FINGERS_HINT_FORMAT_COMPACT_NOCOLOR"]
+    highlight_format_nocolor = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_COMPACT_NOCOLOR"]
+  } else {
     hint_format = ENVIRON["FINGERS_HINT_FORMAT"]
     hint_format_nocolor = ENVIRON["FINGERS_HINT_FORMAT_NOCOLOR"]
     highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT"]
     highlight_format_nocolor = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_NOCOLOR"]
-  } else {
-    hint_format = ENVIRON["FINGERS_HINT_FORMAT_SECONDARY"]
-    highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_SECONDARY"]
-    hint_format_nocolor = ENVIRON["FINGERS_HINT_FORMAT_SECONDARY_NOCOLOR"]
-    highlight_format_nocolor = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_SECONDARY_NOCOLOR"]
   }
 
   if (fingers_hint_position == "left")
