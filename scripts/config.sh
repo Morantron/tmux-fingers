@@ -86,8 +86,8 @@ fingers_defaults=( \
   [fingers-hint-format]="#[fg=yellow,bold][%s]" \
   [fingers-highlight-format]="#[fg=yellow,bold,dim]%s" \
   [fingers-hint-position-compact]="left" \
-  [fingers-hint-format-compact]="#[fg=yellow,bold,reverse]%s" \
-  [fingers-highlight-format-compact]="#[fg=yellow,bold]%s" \
+  [fingers-hint-format-compact]="#[fg=yellow,bold]%s" \
+  [fingers-highlight-format-compact]="#[fg=yellow,bold,dim]%s" \
 )
 
 set_tmux_env 'fingers-patterns'
