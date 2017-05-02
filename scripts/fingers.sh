@@ -164,5 +164,3 @@ while read -rsn1 char; do
 
   exit 0
 done < /dev/tty
-
-log "fingers.sh end"
