@@ -1,3 +1,11 @@
+## 0.6.0 - 02 May 2017
+
+* Refactored configuration script. Now `.tmux.conf` must be re-sourced for changes to take effect.
+* Added custom color support. Included in options `@fingers-hint-format` and `@fingers-highlight-format`.
+* Configurable hint position with options `@fingers-hint-position`.
+* All options above are available with `-nocompact` suffix to use when `@fingers-compact-hints` is set to 0.
+* Fixed issue #26.
+
 ## 0.5.0 - 20 Apr 2017
 
 * Added support for tmux of the future ( greater than 2.3 ). Thanks @fcsonline!
