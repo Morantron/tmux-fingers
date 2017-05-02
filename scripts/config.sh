@@ -82,6 +82,7 @@ fingers_defaults=( \
   [fingers-patterns]="$PATTERNS" \
   [fingers-compact-hints]=1 \
   [fingers-copy-command]="" \
+  [fingers-hint-position]="left" \
   [fingers-hint-format]="#[fg=yellow,bold,reverse]%s" \
   [fingers-highlight-format]="#[fg=yellow,bold]%s" \
   [fingers-hint-format-secondary]="#[fg=yellow,bold] [%s]" \
@@ -91,6 +92,7 @@ fingers_defaults=( \
 set_tmux_env 'fingers-patterns'
 set_tmux_env 'fingers-compact-hints'
 set_tmux_env 'fingers-copy-command'
+set_tmux_env 'fingers-hint-position'
 set_tmux_env 'fingers-hint-format' process_format
 set_tmux_env 'fingers-highlight-format' process_format
 set_tmux_env 'fingers-hint-format-secondary' process_format
