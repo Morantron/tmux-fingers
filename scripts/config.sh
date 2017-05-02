@@ -5,6 +5,8 @@ source $CONF_CURRENT_DIR/utils.sh
 
 TMUX_PRINTER="$CONF_CURRENT_DIR/../vendor/tmux-printer/tmux-printer"
 
+declare -A fingers_defaults
+
 # TODO empty patterns are invalid
 function check_pattern() {
   echo "beep beep" | grep -e "$1" 2> /dev/null
@@ -16,12 +18,17 @@ function check_pattern() {
   fi
 }
 
-function set_option() {
-  local option_name="$(echo $1 | tr '[:lower:]' '[:upper:]' | sed "s/-/_/g")"
-  local default_value="$2"
-  local transform_fn="$3"
+function envify() {
+  echo $1 | tr '[:lower:]' '[:upper:]' | sed "s/-/_/g"
+}
 
-  local option_value=$(tmux show-option -gqv "@$1")
+function set_tmux_env() {
+  local option_name="$(envify $1)"
+  local default_value="${fingers_defaults[$1]}"
+  local transform_fn="$2"
+
+  option_value=$(read_from_config "$1")
+
   local final_value="${option_value:-$default_value}"
 
   if [[ ! -z "$transform_fn" ]]; then
@@ -31,8 +38,16 @@ function set_option() {
   tmux setenv -g "$option_name" "$final_value"
 }
 
+function read_from_config() {
+  tmux show-option -gqv "@$1"
+}
+
 function process_format () {
   echo -ne "$($TMUX_PRINTER "$1")"
+}
+
+function strip_format () {
+  echo "$1" | sed "s/#\[[^]]*\]//g"
 }
 
 PATTERNS_LIST=(
@@ -63,13 +78,27 @@ done
 
 PATTERNS=$(array_join "|" "${PATTERNS_LIST[@]}")
 
-set_option 'fingers-patterns' "$PATTERNS"
-set_option 'fingers-compact-hints' 1
-set_option 'fingers-copy-command' ""
-set_option 'fingers-hint-format' "#[fg=yellow,bold,reverse]%s" process_format
-set_option 'fingers-highlight-format' "#[fg=yellow,bold]%s" process_format
-set_option 'fingers-hint-format-secondary' "#[fg=yellow,bold] [%s]" process_format
-set_option 'fingers-highlight-format-secondary' "#[fg=yellow,bold]%s" process_format
+fingers_defaults=( \
+  [fingers-patterns]="$PATTERNS" \
+  [fingers-compact-hints]=1 \
+  [fingers-copy-command]="" \
+  [fingers-hint-format]="#[fg=yellow,bold,reverse]%s" \
+  [fingers-highlight-format]="#[fg=yellow,bold]%s" \
+  [fingers-hint-format-secondary]="#[fg=yellow,bold] [%s]" \
+  [fingers-highlight-format-secondary]="#[fg=yellow,bold]%s" \
+)
 
-# TODO add fingers_bg
-# TODO add fingers_fg
+set_tmux_env 'fingers-patterns'
+set_tmux_env 'fingers-compact-hints'
+set_tmux_env 'fingers-copy-command'
+set_tmux_env 'fingers-hint-format' process_format
+set_tmux_env 'fingers-highlight-format' process_format
+set_tmux_env 'fingers-hint-format-secondary' process_format
+set_tmux_env 'fingers-highlight-format-secondary' process_format
+
+for option in fingers-{hint,highlight}-format{,-secondary}; do
+  env_name="$(envify "$option")_NOCOLOR"
+  option_value="$(read_from_config "$option")"
+  default_value="${fingers_defaults[$option]}"
+  tmux setenv -g "$env_name" "$(strip_format "${option_value:-$default_value}")"
+done

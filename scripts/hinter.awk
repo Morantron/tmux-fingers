@@ -107,11 +107,15 @@ BEGIN {
 
   if (COMPACT_HINTS) {
     hint_format = ENVIRON["FINGERS_HINT_FORMAT"]
+    hint_format_nocolor = ENVIRON["FINGERS_HINT_FORMAT_NOCOLOR"]
     highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT"]
+    highlight_format_nocolor = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_NOCOLOR"]
     compound_format = hint_format highlight_format
   } else {
     hint_format = ENVIRON["FINGERS_HINT_FORMAT_SECONDARY"]
     highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_SECONDARY"]
+    hint_format_nocolor = ENVIRON["FINGERS_HINT_FORMAT_SECONDARY_NOCOLOR"]
+    highlight_format_nocolor = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_SECONDARY_NOCOLOR"]
     compound_format = highlight_format hint_format
   }
 
@@ -139,7 +143,7 @@ BEGIN {
     hint_lookup = hint_lookup hint ":" line_match "\n"
 
     if (COMPACT_HINTS) {
-      hint_len = length(hint)
+      hint_len = length(sprintf(hint_format_nocolor, hint))
       line_match = substr(line_match, hint_len + 1, length(line_match) - hint_len);
       hint_match = sprintf(compound_format, hint, line_match);
     } else {
