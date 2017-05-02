@@ -82,12 +82,14 @@ fingers_defaults=( \
   [fingers-patterns]="$PATTERNS" \
   [fingers-compact-hints]=1 \
   [fingers-copy-command]="" \
-  [fingers-hint-position]="right" \
-  [fingers-hint-format]="#[fg=yellow,bold][%s]" \
+
+  [fingers-hint-position]="left" \
+  [fingers-hint-format]="#[fg=yellow,bold]%s" \
   [fingers-highlight-format]="#[fg=yellow,bold,dim]%s" \
-  [fingers-hint-position-compact]="left" \
-  [fingers-hint-format-compact]="#[fg=yellow,bold]%s" \
-  [fingers-highlight-format-compact]="#[fg=yellow,bold,dim]%s" \
+
+  [fingers-hint-position-nocompact]="right" \
+  [fingers-hint-format-nocompact]="#[fg=yellow,bold][%s]" \
+  [fingers-highlight-format-nocompact]="#[fg=yellow,bold,dim]%s" \
 )
 
 set_tmux_env 'fingers-patterns'
@@ -98,11 +100,12 @@ set_tmux_env 'fingers-hint-position'
 set_tmux_env 'fingers-hint-format' process_format
 set_tmux_env 'fingers-highlight-format' process_format
 
-set_tmux_env 'fingers-hint-position-compact'
-set_tmux_env 'fingers-hint-format-compact' process_format
-set_tmux_env 'fingers-highlight-format-compact' process_format
+set_tmux_env 'fingers-hint-position-nocompact'
+set_tmux_env 'fingers-hint-format-nocompact' process_format
+set_tmux_env 'fingers-highlight-format-nocompact' process_format
 
-for option in fingers-{hint,highlight}-format{,-compact}; do
+
+for option in fingers-{hint,highlight}-format{,-nocompact}; do
   env_name="$(envify "$option")_NOCOLOR"
   option_value="$(read_from_config "$option")"
   default_value="${fingers_defaults[$option]}"

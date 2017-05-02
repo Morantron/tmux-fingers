@@ -128,7 +128,7 @@ set -g @fingers-copy-command 'xclip -selection clipboard'
 
 `default: 1`
 
-By default **tmux-fingers** will show hints a compact format. For example:
+By default **tmux-fingers** will show hints in a compact format. For example:
 
 <pre>
 /path/to/foo/bar/lol
