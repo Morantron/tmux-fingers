@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO load fingers env
 eval "$(tmux show-env -g -s | grep ^FINGERS)"
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -11,6 +10,7 @@ source $CURRENT_DIR/help.sh
 
 FINGERS_COPY_COMMAND=$(tmux show-option -gqv @fingers-copy-command)
 HAS_TMUX_YANK=$([ "$(tmux list-keys | grep -c tmux-yank)" == "0" ]; echo $?)
+tmux_yank_copy_command=$(tmux_list_vi_copy_keys | grep -E "(vi-copy|copy-mode-vi) *y" | sed 's/.*copy-pipe\(-and-cancel\)\? *"\(.*\)".*/\2/g')
 
 current_pane_id=$1
 fingers_pane_id=$2
@@ -103,8 +103,6 @@ function copy_result() {
   fi
 
   if [[ $HAS_TMUX_YANK = 1 ]]; then
-    tmux_yank_copy_command=$(tmux list-keys -t vi-copy | grep "vi-copy *y" | sed 's/.*copy-pipe "\(.*\)".*/\1/g')
-
     echo -n "$result" | eval "nohup $tmux_yank_copy_command" > /dev/null
   fi
 }

@@ -107,3 +107,13 @@ function init_pane_cmd() {
 
   echo "$set_env $init_bash"
 }
+
+function tmux_list_vi_copy_keys() {
+  output=$(tmux list-keys -t vi-copy 2> /dev/null)
+
+  if [[ -z $output ]]; then
+    output=$(tmux list-keys -Tcopy-mode-vi)
+  fi
+
+  echo "$output"
+}
