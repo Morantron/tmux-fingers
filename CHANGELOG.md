@@ -1,3 +1,7 @@
+## 0.6.1 - 17 May 2017
+
+* Fixed `tmux-yank` integration with tmux 2.4 in backwards compatible way.
+
 ## 0.6.0 - 02 May 2017
 
 * Refactored configuration script. Now `.tmux.conf` must be re-sourced for changes to take effect.
