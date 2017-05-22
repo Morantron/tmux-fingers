@@ -103,7 +103,7 @@ function copy_result() {
   fi
 
   if [[ $HAS_TMUX_YANK = 1 ]]; then
-    echo -n "$result" | eval "nohup $tmux_yank_copy_command" > /dev/null
+    echo -n "$result" | eval "$tmux_yank_copy_command" > /dev/null
   fi
 }
 
