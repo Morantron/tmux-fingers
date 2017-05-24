@@ -43,6 +43,14 @@ While in **[fingers]** mode, you can use the following shortcuts:
 * bash 4+
 * gawk
 
+*Warning*: From Ubuntu 16.10, `mawk` is installed by default, instead of `gawk`. Installing `gawk` will fix the following error:
+
+```shell
+awk: run time error: regular expression compile failed (missing operand)
+((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]+)|([[:digit:]][[:digit:]][[:digit:]][[:digit:]]([[:digit:]])*)|([0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]|[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f])|((https?://|git@|git://|ssh://|ftp://|file:///)[[:alnum:]?=%/_.:,;~@!#$&()*+-]*)|([[:digit:]][[:digit:]]?[[:digit:]]?\.[[:digit:]][[:digit:]]?[[:digit:]]?\.[[:digit:]][[:digit:]]?[[:digit:]]?\.[[:digit:]][[:digit:]]?[[:digit:]]?)
+        FILENAME="-" FNR=1 NR=1
+```
+
 # Installation
 
 ## Using [Tmux Plugin Manager](https://github.com/tmux-plugins/tpm)
