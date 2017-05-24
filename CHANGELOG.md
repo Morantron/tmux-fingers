@@ -1,3 +1,7 @@
+## 0.6.2 - 24 May 2017
+
+* Fixed issues with `tmux-yank` in Mac OS ( thanks @john-kurkowski ! )
+
 ## 0.6.1 - 17 May 2017
 
 * Fixed `tmux-yank` integration with tmux 2.4 in backwards compatible way.
