@@ -16,6 +16,8 @@ current_pane_id=$1
 fingers_pane_id=$2
 pane_input_temp=$3
 original_rename_setting=$4
+original_status_left=$(tmux show-option -qv status-left)
+original_status_left_style=$(tmux show-option -qv status-left-style)
 
 BACKSPACE=$'\177'
 
@@ -38,6 +40,16 @@ function handle_exit() {
   [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
   tmux kill-pane -t "$fingers_pane_id"
   tmux set-window-option automatic-rename "$original_rename_setting"
+  if [[ $original_status_left ]]; then
+    tmux set-option status-left "$original_status_left"
+  else
+    tmux set-option -u status-left
+  fi
+  if [[ $original_status_left_style ]]; then
+    tmux set-option status-left "$original_status_left_style"
+  else
+    tmux set-option -u status-left-style
+  fi
   rm -rf "$pane_input_temp" "$pane_output_temp" "$match_lookup_table"
 }
 
@@ -77,6 +89,12 @@ show_hints_and_swap $current_pane_id $fingers_pane_id $compact_state
 hide_cursor
 input=''
 
+function toggle_command() {
+  let current_command_idx=$current_command_idx+1
+  let current_command_idx=$(expr $current_command_idx % ${#fingers_commands[@]})
+  refresh_status_left
+}
+
 function toggle_compact_state() {
   if [[ $compact_state == "0" ]]; then
     compact_state=1
@@ -93,6 +111,15 @@ function toggle_help() {
   fi
 }
 
+function apply() {
+  IFS='|' read -r -a current_command <<< ${fingers_commands[$current_command_idx]}
+  if [[ ${current_command[1]} == "yank" ]]; then
+    copy_result "$1"
+  else
+    echo -n "$1" | ${current_command[1]}
+  fi
+}
+
 function copy_result() {
   local result="$1"
 
@@ -106,6 +133,34 @@ function copy_result() {
     echo -n "$result" | eval "$tmux_yank_copy_command" > /dev/null
   fi
 }
+
+function refresh_status_left() {
+  IFS='|' read -r -a current_command <<< ${fingers_commands[$current_command_idx]}
+  tmux set-option status-left "  ${current_command[0]}  "
+  if [[ -n "${current_command[2]}" ]]; then
+    tmux set-option status-left-style "${current_command[2]}"
+  else
+    tmux set-option -u status-left-style
+  fi
+}
+
+
+function read_fingers_command() {
+  IFS=';' read -r -a temp_fingers_commands <<< "$(tmux show-option -gqv @fingers-commands)"
+  fingers_commands[0]=YANK\|yank
+  for i in ${!temp_fingers_commands[@]}; do
+    let new_i=i+1
+    fingers_commands[$new_i]=${temp_fingers_commands[$i]}
+  done
+  if [[ -n $(tmux show-option -gqv @fingers-default-command) ]]; then
+    current_command_idx=$(tmux show-option -gqv @fingers-default-command)
+  else
+    current_command_idx=0
+  fi
+}
+
+read_fingers_command
+refresh_status_left
 
 while read -rsn1 char; do
   # Escape sequence, flush input
@@ -140,6 +195,8 @@ while read -rsn1 char; do
     toggle_compact_state
   elif [[ $char == "?" ]]; then
     toggle_help
+  elif [[ $char == "C" ]]; then
+    toggle_command
   else
     input="$input$char"
   fi
@@ -156,7 +213,7 @@ while read -rsn1 char; do
     continue
   fi
 
-  copy_result "$result"
+  apply "$result"
 
   revert_to_original_pane "$current_pane_id" "$fingers_pane_id"
 

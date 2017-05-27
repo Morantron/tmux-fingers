@@ -35,6 +35,7 @@ While in **[fingers]** mode, you can use the following shortcuts:
 * `<space>`: toggle compact hints ( see [@fingers-compact-hints](#fingers-compact-hints) ).
 * `<Ctrl-C>`: exit **[fingers]** mode
 * `<esc>`: exit help or **[fingers]** mode
+* `C`: change command to execute
 * `?`: show help.
 
 # Requirements
@@ -82,6 +83,8 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 
 * [@fingers-key](#fingers-key)
 * [@fingers-patterns-N](#fingers-patterns-N)
+* [@fingers-commands](#fingers-commands)
+* [@fingers-default-command](#fingers-default-command)
 * [@fingers-copy-command](#fingers-copy-command)
 * [@fingers-compact-hints](#fingers-compact-hints)
 * [@fingers-hint-position](#fingers-hint-position)
@@ -122,8 +125,30 @@ Patterns are case insensitive, and grep's extended syntax ( ERE ) should be used
 If the introduced regexp contains an error, an error will be shown when
 invoking the plugin.
 
+## @fingers-commands
+
+By default **tmux-fingers** will just yank matches to tmux buffer (or do a custom yank command, see [@fingers-copy-command](#fingers-copy-command)).
+
+To add more commands you can:
+
+```
+set -g @fingers-commands 'OPEN|xargs open;EDIT|xargs tmux new-window vim'
+```
+This will add the command "OPEN" and "EDIT" to the default "YANK" command. To control the style of the status line when a command is chosen, add another "|" with the style like this:
+
+```
+set -g @fingers-commands 'OPEN|xargs open|fg=black,bg=red;EDIT|xargs tmux new-window vim|fg=black,bg=white'
+```
+
+## @fingers-default-command
+
+`default: 0`
+
+The default command to use when starting fingers. The value "0" will always be the built-it "YANK" command. See [@fingers-commands](#fingers-commands) for more details.
+
 ## @fingers-copy-command
 
+The command to execute when applying the default "YANK" command.
 By default **tmux-fingers** will just yank matches using tmux clipboard ( or
 [tmux-yank](https://github.com/tmux-plugins/tmux-yank) if present ).
 
