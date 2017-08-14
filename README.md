@@ -61,13 +61,14 @@ the plugin!
 Clone the repo:
 
 ```
-➜ git clone https://github.com/Morantron/tmux-fingers ~/clone/path
+# Use --recursive flag to also fetch submodules
+➜ git clone --recursive https://github.com/Morantron/tmux-fingers ~/.tmux/plugins/tmux-fingers
 ```
 
 Source it in your `.tmux.conf`:
 
 ```
-run-shell ~/clone/path/tmux-fingers.tmux
+run-shell ~/.tmux/plugins/tmux-fingers/tmux-fingers.tmux
 ```
 
 Reload TMUX conf by running:
