@@ -19,6 +19,10 @@ original_rename_setting=$4
 
 BACKSPACE=$'\177'
 
+function force_dim_support() {
+  tmux set -sa terminal-overrides ",*:dim=\\E[2m"
+}
+
 function is_pane_zoomed() {
   local pane_id=$1
 
@@ -70,6 +74,7 @@ trap "handle_exit" EXIT
 compact_state=$FINGERS_COMPACT_HINTS
 help_state=0
 
+force_dim_support
 pane_was_zoomed=$(is_pane_zoomed "$current_pane_id")
 show_hints_and_swap $current_pane_id $fingers_pane_id $compact_state
 [[ $pane_was_zoomed == "1" ]] && zoom_pane "$fingers_pane_id"
