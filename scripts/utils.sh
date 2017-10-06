@@ -117,3 +117,23 @@ function tmux_list_vi_copy_keys() {
 
   echo "$output"
 }
+
+function is_dir_empty() {
+  local dir_path="$1"
+
+  if [[ $(ls -1 "$dir_path" | wc -l) -gt 0 ]]; then
+    echo 0
+  else
+    echo 1
+  fi
+}
+
+function resolve_path() {
+  local path=$1
+
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "$(stat -f "%N" "$path")"
+  else
+    echo "$(readlink -f "$path")"
+  fi
+}

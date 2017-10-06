@@ -149,6 +149,15 @@ function perform_health_check() {
     healthy=0
   fi
 
+  if [[ $(is_dir_empty "$CURRENT_DIR/../vendor/tmux-printer") == "1" ]]; then
+    log_message "  * Submodules not initialized properly. Please run:"
+    log_message ""
+    log_message "      cd $TMUX_FINGERS_ROOT"
+    log_message "      git submodule update --init --recursive"
+    log_message "      tmux source ~/.tmux.conf"
+    healthy=0
+  fi
+
   if [[ $healthy -eq 0 ]]; then
     while [[ $(is_tmux_ready) = 0 ]]; do
       : # waiting for-tmux
