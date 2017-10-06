@@ -164,9 +164,8 @@ function perform_health_check() {
     done
 
     log_message ""
-    log_message "For a better tmux-fingers experience, please install the required versions."
+    log_message "Follow this link for help on fixing issues:"
     log_message ""
-    log_message "For more info check:"
     log_message "  $HELP_LINK"
     log_message ""
     log_message "To skip this check add \"set -g @fingers-skip-health-check '1'\" to your tmux conf"
@@ -177,6 +176,7 @@ function perform_health_check() {
     tmux run "cat $health_tmp"
   fi
 
+  sleep 0.5
   rm -rf "$health_tmp"
 }
 
