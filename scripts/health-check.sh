@@ -158,6 +158,17 @@ function perform_health_check() {
     healthy=0
   fi
 
+  if [[ $(version_major "$TMUX_VERSION") -le "2" ]] && \
+     [[ $(version_minor "$TMUX_VERSION") -lt "6" ]] && \
+     [[ "$OSTYPE" == "darwin"* ]] && \
+     [[ $(program_exists "reattach-to-user-namespace") == "0" ]];
+  then
+    log_message "  * It's recommended to install 'reattach-to-user-namespace' for better"
+    log_message "    clipboard integration in OSX."
+    log_message "    Please run 'brew install reattach-to-user-namespace'"
+    healthy=0
+  fi
+
   if [[ $healthy -eq 0 ]]; then
     while [[ $(is_tmux_ready) = 0 ]]; do
       : # waiting for-tmux
