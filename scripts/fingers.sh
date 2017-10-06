@@ -90,7 +90,7 @@ function toggle_compact_state() {
   fi
 }
 
-function toggle_help() {
+function toggle_help_state() {
   if [[ $help_state == "0" ]]; then
     help_state=1
   else
@@ -132,19 +132,22 @@ while read -rsn1 char; do
     continue
   fi
 
+  prev_help_state="$help_state"
+  prev_compact_state="$compact_state"
+
   if [[ $char == "$BACKSPACE" ]]; then
     input=""
     continue
   elif [[ $char == "<ESC>" ]]; then
     if [[ $help_state == "1" ]]; then
-      toggle_help
+      toggle_help_state
     else
       exit
     fi
   elif [[ $char == "" ]]; then
     toggle_compact_state
   elif [[ $char == "?" ]]; then
-    toggle_help
+    toggle_help_state
   else
     input="$input$char"
   fi
@@ -152,7 +155,9 @@ while read -rsn1 char; do
   if [[ $help_state == "1" ]]; then
     show_help "$fingers_pane_id"
   else
-    show_hints "$fingers_pane_id" $compact_state
+    if [[ "$prev_compact_state" != "$compact_state" ]]; then
+      show_hints "$fingers_pane_id" "$compact_state"
+    fi
   fi
 
   result=$(lookup_match "$input")
