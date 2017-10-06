@@ -34,3 +34,11 @@ If can't skip this check by adding the following in your .tmux.conf file:
 ```
 set -g @fingers-skip-health-check '1'
 ```
+
+## Wrong $TERM value
+
+Tmux fingers works better with proper 256 support. Set `@default-terminal` to either `screen-256color` or `xterm-256color`.
+
+```
+set -g @default-terminal "screen-256color"
+```

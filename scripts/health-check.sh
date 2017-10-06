@@ -144,6 +144,11 @@ function perform_health_check() {
     echo "  * WARNING: tmux 2.2+ is recommended"
   fi
 
+  if [[ "$TERM" != "screen-256color" ]] && [[ "$TERM" != "xterm-256color" ]]; then
+    log_message "  * Wrong \$TERM value '$TERM'."
+    healthy=0
+  fi
+
   if [[ $healthy -eq 0 ]]; then
     while [[ $(is_tmux_ready) = 0 ]]; do
       : # waiting for-tmux
