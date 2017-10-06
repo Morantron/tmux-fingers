@@ -32,10 +32,12 @@ function version_minor() {
 function program_exists() {
   local prog="$1"
 
-  if [[ $(which "$prog" &> /dev/null) ]]; then
-    echo "0"
-  else
+  which "$prog" &> /dev/null
+
+  if [[ $? == "0" ]]; then
     echo "1"
+  else
+    echo "0"
   fi
 }
 
