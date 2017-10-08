@@ -7,14 +7,15 @@ REQUIRED_BASH_MAJOR=4
 REQUIRED_GAWK_MAJOR=4
 RECOMMENDED_TMUX_MINOR=3
 HELP_LINK="https://github.com/Morantron/tmux-fingers/blob/master/docs/health-check.md"
+TMUX_FINGERS_ROOT="$(resolve_path "$CURRENT_DIR/..")"
 
 health_tmp=$(fingers_tmp)
 log_messages=()
 
 function is_tmux_ready() {
-  local num_windows=$(tmux list-windows | wc -l)
+  local attached_sessions="$(tmux list-sessions -F "#{session_id}:#{session_attached}" | grep ':1$' | wc -l)"
 
-  if [[ $num_windows -gt 0 ]]; then
+  if [[ $attached_sessions -gt 0 ]]; then
     echo 1
   else
     echo 0
@@ -172,10 +173,6 @@ function perform_health_check() {
   fi
 
   if [[ $healthy -eq 0 ]]; then
-    while [[ $(is_tmux_ready) = 0 ]]; do
-      : # waiting for-tmux
-    done
-
     log_message ""
     log_message "Follow this link for help on fixing issues:"
     log_message ""
@@ -186,7 +183,14 @@ function perform_health_check() {
 
     dump_log
 
-    tmux run "cat $health_tmp"
+    while [[ $(is_tmux_ready) = 0 ]]; do
+      : # waiting for-tmux
+    done
+
+    local health_window_id=$(tmux new-window -P -n "[tmux-fingers health-check]" "tmux wait-for -S health_output && cat $health_tmp | less")
+    tmux wait-for health_output
+    tmux split-window -t "$health_window_id" -v -l 15 -c "$TMUX_FINGERS_ROOT"
+    tmux select-window -t "$health_window_id"
   fi
 
   sleep 0.5
