@@ -1,3 +1,10 @@
+## 0.6.3 - 08 Oct 2017
+
+* Fixed more issues with clipboard integration, works now on OSX and Linux.
+* Fixed line-jumping with user input
+* Improved color defaults, for better readability when no dimmed colours are supported.
+* Improved feedback, added checks and fixed issues of system health-check.
+
 ## 0.6.2 - 24 May 2017
 
 * Fixed issues with `tmux-yank` in Mac OS ( thanks @john-kurkowski ! )
