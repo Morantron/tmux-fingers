@@ -158,6 +158,7 @@ function perform_health_check() {
     log_message ""
     log_message "    set -g default-terminal 'screen-256color'"
     log_message "    tmux source ~/.tmux.conf"
+    log_message ""
     healthy=0
   fi
 
@@ -167,6 +168,7 @@ function perform_health_check() {
     log_message "      cd $TMUX_FINGERS_ROOT"
     log_message "      git submodule update --init --recursive"
     log_message "      tmux source ~/.tmux.conf"
+    log_message ""
     healthy=0
   fi
 
@@ -176,8 +178,10 @@ function perform_health_check() {
      [[ $(program_exists "reattach-to-user-namespace") == "0" ]];
   then
     log_message "  * It's recommended to install 'reattach-to-user-namespace' for better"
-    log_message "    clipboard integration in OSX."
-    log_message "    Please run 'brew install reattach-to-user-namespace'"
+    log_message "    clipboard integration in OSX. Please run:"
+    log_message ""
+    log_message "    brew install reattach-to-user-namespace"
+    log_message ""
     healthy=0
   fi
 
