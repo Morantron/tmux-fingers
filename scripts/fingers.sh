@@ -19,6 +19,7 @@ original_rename_setting=$4
 
 BACKSPACE=$'\177'
 
+# TODO not sure this is truly working
 function force_dim_support() {
   tmux set -sa terminal-overrides ",*:dim=\\E[2m"
 }
