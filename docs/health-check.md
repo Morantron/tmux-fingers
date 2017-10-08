@@ -42,3 +42,25 @@ Tmux fingers works better with proper 256 support. Set `@default-terminal` to ei
 ```
 set -g @default-terminal "screen-256color"
 ```
+
+## submodules not initialized properly
+
+This could happen after an update from a tmux-fingers version prior to 0.6.x,
+ensure that all tmux-fingers dependencies are installed properly by running the
+following:
+
+```
+cd ~/.tmux/plugins/tmux-fingers
+git submodule update --init --recursive"
+tmux source ~/.tmux.conf"
+```
+
+## reattach-to-user-namespace is recommended
+
+If you are using tmux 2.5 or less and OSX, it's recommended that you install `reattach-to-user-namespace` in for system clipboard integration.
+
+```
+brew install reattach-to-user-namespace
+```
+
+Remember that you need to install [tmux-yank](https://github.com/tmux-plugins/tmux-yank) as well.
