@@ -10,6 +10,7 @@ HELP_LINK="https://github.com/Morantron/tmux-fingers/blob/master/docs/health-che
 TMUX_FINGERS_ROOT="$(resolve_path "$CURRENT_DIR/..")"
 
 health_tmp=$(fingers_tmp)
+tmux_term_tmp=$(fingers_tmp)
 log_messages=()
 
 function is_tmux_ready() {
@@ -147,8 +148,16 @@ function perform_health_check() {
     echo "  * WARNING: tmux 2.2+ is recommended"
   fi
 
-  if [[ "$TERM" != "screen-256color" ]] && [[ "$TERM" != "xterm-256color" ]]; then
-    log_message "  * Wrong \$TERM value '$TERM'."
+  tmux run-shell -b "tmux wait-for -S tmux_term_value && echo \"\$TERM\" > $tmux_term_tmp"
+  tmux wait-for tmux_term_value
+  TMUX_TERM=$(cat "$tmux_term_tmp")
+
+  # TODO it would be better to check for 256color or true color support
+  if [[ "$TMUX_TERM" == "screen" ]]; then
+    log_message "  * Wrong \$TERM value '$TMUX_TERM'. Please add this to your .tmux.conf:"
+    log_message ""
+    log_message "    set -g default-terminal 'screen-256color'"
+    log_message "    tmux source ~/.tmux.conf"
     healthy=0
   fi
 
@@ -195,6 +204,7 @@ function perform_health_check() {
 
   sleep 0.5
   rm -rf "$health_tmp"
+  rm -rf "$tmux_term_tmp"
 }
 
 perform_health_check
