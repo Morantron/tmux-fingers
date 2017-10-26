@@ -50,7 +50,7 @@ function is_valid_input() {
   local input=$1
   local is_valid=1
 
-  if [[ $input == "" ]] || [[ $input == "<ESC>" ]] || [[ $input == "?" ]]; then
+  if [[ $input == "" ]] || [[ $input == "<ESC>" ]] || [[ $input == "?" ]] || [[ $input == "q" ]]; then
     is_valid=1
   else
     for (( i=0; i<${#input}; i++ )); do
@@ -145,7 +145,7 @@ while read -rsn1 char; do
   if [[ $char == "$BACKSPACE" ]]; then
     input=""
     continue
-  elif [[ $char == "<ESC>" ]]; then
+  elif [[ $char == "<ESC>" || $char == "q" ]]; then
     if [[ $help_state == "1" ]]; then
       toggle_help_state
     else
