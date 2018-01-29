@@ -4,8 +4,22 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/utils.sh
 
 function init_fingers_pane() {
-  local pane_id=$(tmux new-window -F "#{pane_id}" -P -d -n "[fingers]" "$(init_pane_cmd)")
-  echo $pane_id
+  local fingers_ids=$(tmux new-window -F "#{pane_id}:#{window_id}" -P -d -n "[fingers]" "$(init_pane_cmd)")
+  local fingers_pane_id=$(echo "$fingers_ids" | cut -f1 -d:)
+  local fingers_window_id=$(echo "$fingers_ids" | cut -f2 -d:)
+
+  local current_size=$(tmux list-panes -F "#{pane_width}:#{pane_height}:#{?pane_active,active,nope}" | grep active)
+  local current_width=$(echo "$current_size" | cut -f1 -d:)
+  local current_height=$(echo "$current_size" | cut -f2 -d:)
+
+  local current_window_size=$(tmux list-windows -F "#{window_width}:#{window_height}:#{?window_active,active,nope}" | grep active)
+  local current_window_width=$(echo "$current_window_size" | cut -f1 -d:)
+  local current_window_height=$(echo "$current_window_size" | cut -f2 -d:)
+
+  tmux split-window -d -t "$fingers_pane_id" -h -l "$(expr "$current_window_width" - "$current_width" - 1)" '/bin/nop'
+  tmux split-window -d -t "$fingers_pane_id" -l "$(expr "$current_window_height" - "$current_height" - 1)" '/bin/nop'
+
+  echo "$fingers_pane_id:$fingers_window_id"
 }
 
 function capture_pane() {
@@ -32,7 +46,9 @@ function capture_pane() {
 
 function prompt_fingers_for_pane() {
   local current_pane_id=$1
-  local fingers_pane_id=$(init_fingers_pane)
+  local fingers_init_data=$(init_fingers_pane)
+  local fingers_pane_id=$(echo "$fingers_init_data" | cut -f1 -d':')
+  local fingers_window_id=$(echo "$fingers_init_data" | cut -f2 -d':')
   local tmp_path=$(fingers_tmp)
 
   wait
@@ -41,7 +57,7 @@ function prompt_fingers_for_pane() {
 
   local original_rename_setting=$(tmux show-window-option -gv automatic-rename)
   tmux set-window-option automatic-rename off
-  pane_exec "$fingers_pane_id" "cat $tmp_path | $CURRENT_DIR/fingers.sh \"$current_pane_id\" \"$fingers_pane_id\" $tmp_path $original_rename_setting"
+  pane_exec "$fingers_pane_id" "cat $tmp_path | $CURRENT_DIR/fingers.sh \"$current_pane_id\" \"$fingers_pane_id\" \"$fingers_window_id\" $tmp_path $original_rename_setting"
 
   echo $fingers_pane_id
 }

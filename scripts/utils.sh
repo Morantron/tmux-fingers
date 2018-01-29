@@ -69,8 +69,9 @@ function display_message() {
 function revert_to_original_pane() {
   local current_pane_id=$1
   local fingers_pane_id=$2
+  local fingers_window_id=$3
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
-  tmux kill-pane -t "$fingers_pane_id"
+  tmux kill-window -t "$fingers_window_id"
 }
 
 function pane_exec() {
