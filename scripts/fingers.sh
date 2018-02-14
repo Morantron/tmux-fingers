@@ -111,8 +111,11 @@ function copy_result() {
     exec_prefix=""
   fi
 
-  if [ ! -z "$FINGERS_COPY_COMMAND" ]; then
-    is_uppercase=$(echo "$input" | grep -E '^[a-z]+$' &> /dev/null; echo $?)
+  is_uppercase=$(echo "$input" | grep -E '^[a-z]+$' &> /dev/null; echo $?)
+
+  if [[ $is_uppercase == "1" ]] && [ ! -z "$FINGERS_COPY_COMMAND_UPPERCASE" ]; then
+    tmux run-shell -b "echo -n \"$result\" | IS_UPPERCASE=$is_uppercase HINT=$hint $exec_prefix $FINGERS_COPY_COMMAND_UPPERCASE > /dev/null"
+  elif [ ! -z "$FINGERS_COPY_COMMAND" ]; then
     tmux run-shell -b "echo -n \"$result\" | IS_UPPERCASE=$is_uppercase HINT=$hint $exec_prefix $FINGERS_COPY_COMMAND > /dev/null"
   fi
 
