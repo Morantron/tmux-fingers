@@ -102,6 +102,7 @@ function toggle_help_state() {
 
 function copy_result() {
   local result="$1"
+  local hint="$2"
 
   tmux set-buffer "$result"
 
@@ -112,7 +113,8 @@ function copy_result() {
   fi
 
   if [ ! -z "$FINGERS_COPY_COMMAND" ]; then
-    tmux run-shell -b "echo -n \"$result\" | $exec_prefix $FINGERS_COPY_COMMAND > /dev/null"
+    is_uppercase=$(echo "$input" | grep -E '^[a-z]+$' &> /dev/null; echo $?)
+    tmux run-shell -b "echo -n \"$result\" | IS_UPPERCASE=$is_uppercase HINT=$hint $exec_prefix $FINGERS_COPY_COMMAND > /dev/null"
   fi
 
   if [[ $HAS_TMUX_YANK = 1 ]]; then
