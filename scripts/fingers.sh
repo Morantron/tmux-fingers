@@ -106,17 +106,17 @@ function copy_result() {
   tmux set-buffer "$result"
 
   if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    tmux_yank_prefix="nohup"
+    exec_prefix="nohup"
   else
-    tmux_yank_prefix=""
+    exec_prefix=""
   fi
 
   if [ ! -z "$FINGERS_COPY_COMMAND" ]; then
-    echo -n "$result" | eval "nohup $FINGERS_COPY_COMMAND" > /dev/null
+    tmux run-shell -b "echo -n \"$result\" | $exec_prefix $FINGERS_COPY_COMMAND > /dev/null"
   fi
 
   if [[ $HAS_TMUX_YANK = 1 ]]; then
-    echo -n "$result" | eval "$tmux_yank_prefix $tmux_yank_copy_command" > /dev/null
+    tmux run-shell -b "echo -n \"$result\" | $exec_prefix $tmux_yank_copy_command > /dev/null"
   fi
 }
 
