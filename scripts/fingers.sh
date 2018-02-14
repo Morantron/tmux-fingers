@@ -175,7 +175,7 @@ while read -rsn1 char; do
     continue
   fi
 
-  copy_result "$result"
+  copy_result "$result" "$input"
 
   revert_to_original_pane "$current_pane_id" "$fingers_pane_id" "$fingers_window_id"
 
