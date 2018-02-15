@@ -1,3 +1,10 @@
+## 0.7.0 - 15 Feb 2018
+
+* Fixed issue when invoking fingers from an unzoomed pane. Fixes #44
+* Fixed issues with `@fingers-copy-command`, now commands like `xdg-open` work.
+* Added `@fingers-copy-command-uppercase` option. This command will be called
+  when holding <kbd>SHIFT</kbd> while selecting hint. Fixes #43
+
 ## 0.6.3 - 08 Oct 2017
 
 * Fixed more issues with clipboard integration, works now on OSX and Linux.

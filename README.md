@@ -8,7 +8,7 @@
 
 # Usage
 
-Press ( `prefix + F` ) to enter **[fingers]** mode, it will highlight relevant stuff in the current
+Press ( <kbd>prefix</kbd> + <kbd>F</kbd> ) to enter **[fingers]** mode, it will highlight relevant stuff in the current
 pane along with letter hints. By pressing those letters, the highlighted match
 will be yanked. Less keystrokes == profit!
 
@@ -31,11 +31,11 @@ integration.
 
 While in **[fingers]** mode, you can use the following shortcuts:
 
-* `a-z`: yank a highlighted hint.
-* `<space>`: toggle compact hints ( see [@fingers-compact-hints](#fingers-compact-hints) ).
-* `<Ctrl-C>`: exit **[fingers]** mode
-* `<esc>`: exit help or **[fingers]** mode
-* `?`: show help.
+* <kbd>a</kbd>-<kbd>z</kbd>: yank a highlighted hint.
+* <kbd>SPACE</kbd>: toggle compact hints ( see [@fingers-compact-hints](#fingers-compact-hints) ).
+* <kbd>CTRL</kbd> + <kbd>c</kbd>: exit **[fingers]** mode
+* <kbd>ESC</kbd>: exit help or **[fingers]** mode
+* <kbd>?</kbd>: show help.
 
 # Requirements
 
@@ -53,7 +53,7 @@ Add the following to your list of TPM plugins in `.tmux.conf`:
 set -g @plugin 'Morantron/tmux-fingers'
 ```
 
-Hit `prefix + I` to fetch and source the plugin. You should now be able to use
+Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin. You should now be able to use
 the plugin!
 
 ## Manual
@@ -84,6 +84,7 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 * [@fingers-key](#fingers-key)
 * [@fingers-patterns-N](#fingers-patterns-N)
 * [@fingers-copy-command](#fingers-copy-command)
+* [@fingers-copy-command-uppercase](#fingers-copy-command-uppercase)
 * [@fingers-compact-hints](#fingers-compact-hints)
 * [@fingers-hint-position](#fingers-hint-position)
 * [@fingers-hint-position-nocompact](#fingers-hint-position-nocompact)
@@ -125,6 +126,8 @@ invoking the plugin.
 
 ## @fingers-copy-command
 
+`default: NONE`
+
 By default **tmux-fingers** will just yank matches using tmux clipboard ( or
 [tmux-yank](https://github.com/tmux-plugins/tmux-yank) if present ).
 
@@ -132,6 +135,25 @@ If you still want to set your own custom command you can do so like this:
 
 ```
 set -g @fingers-copy-command 'xclip -selection clipboard'
+```
+
+This command will also receive the following:
+
+  *  `IS_UPPERCASE`: environment variable set to `1` or `0` depending on how the hint was introduced.
+  *  `HINT`: environment variable the selected letter hint itself ( ex: `q`, `as`, etc... ).
+  * `stdin`: copied text will be piped to `@fingers-copy-command`.
+
+## @fingers-copy-command-uppercase
+
+`default: NONE`
+
+Same as [@fingers-copy-command](#fingers-copy-command) but it's only triggered
+when input is introduced in uppercase letters.
+
+For example, this open links in browser when holding <kbd>SHIFT</kbd> while selecting the hint:
+
+```
+set -g @fingers-copy-command-uppercase 'xargs xdg-open'
 ```
 
 ## @fingers-compact-hints
@@ -154,14 +176,14 @@ By default **tmux-fingers** will show hints in a compact format. For example:
 
 ( _pressing *aw* would yank `/path/to/foo/bar/lol`_ )
 
-While in **[fingers]** mode you can press `<space>` to toggle compact mode on/off.
+While in **[fingers]** mode you can press <kbd>SPACE</kbd> to toggle compact mode on/off.
 
 Compact mode is preferred because it preserves the length of lines and doesn't
 cause line wraps, making it easier to follow.
 
 However for small hints this can be troublesome: a path as small as `/a/b`
 would have half of its original content concealed. If that's the case you can
-quickly toggle off compact mode by pressing `<space>`.
+quickly toggle off compact mode by pressing <kbd>SPACE</kbd>.
 
 ## @fingers-hint-position
 
