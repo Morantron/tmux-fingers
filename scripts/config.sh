@@ -51,7 +51,7 @@ function strip_format () {
 }
 
 PATTERNS_LIST=(
-"((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]+)"
+"((^|^\.|[[:space:]\']|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]+)"
 "([[:digit:]]{4,})"
 "([0-9a-f]{7,40})"
 "((https?://|git@|git://|ssh://|ftp://|file:///)[[:alnum:]?=%/_.:,;~@!#$&()*+-]*)"
