@@ -13,7 +13,9 @@ export pane_output_temp
 
 function lookup_match() {
   local input=$1
-  echo "$(cat $match_lookup_table | grep -i "^$input:" | sed "s/^$input://i" | head -n 1)"
+
+  input="$(echo "$input" | tr "A-Z" "a-z")"
+  echo "$(cat $match_lookup_table | grep -i "^$input:" | sed "s/^$input://" | head -n 1)"
 }
 
 function get_stdin() {
