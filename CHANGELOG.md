@@ -1,3 +1,8 @@
+## 0.7.1 - 11 Mar 2018
+
+* Fixed bug with sed BSD/OSX.
+* Fixes in BSD tests.
+
 ## 0.7.0 - 15 Feb 2018
 
 * Fixed issue when invoking fingers from an unzoomed pane. Fixes #44
