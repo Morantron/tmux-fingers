@@ -114,13 +114,13 @@ function copy_result() {
   is_uppercase=$(echo "$input" | grep -E '^[a-z]+$' &> /dev/null; echo $?)
 
   if [[ $is_uppercase == "1" ]] && [ ! -z "$FINGERS_COPY_COMMAND_UPPERCASE" ]; then
-    tmux run-shell -b "echo -n \"$result\" | IS_UPPERCASE=$is_uppercase HINT=$hint $exec_prefix $FINGERS_COPY_COMMAND_UPPERCASE > /dev/null"
+    tmux run-shell -b "printf \"$result\" | IS_UPPERCASE=$is_uppercase HINT=$hint $exec_prefix $FINGERS_COPY_COMMAND_UPPERCASE > /dev/null"
   elif [ ! -z "$FINGERS_COPY_COMMAND" ]; then
-    tmux run-shell -b "echo -n \"$result\" | IS_UPPERCASE=$is_uppercase HINT=$hint $exec_prefix $FINGERS_COPY_COMMAND > /dev/null"
+    tmux run-shell -b "printf \"$result\" | IS_UPPERCASE=$is_uppercase HINT=$hint $exec_prefix $FINGERS_COPY_COMMAND > /dev/null"
   fi
 
   if [[ $HAS_TMUX_YANK = 1 ]]; then
-    tmux run-shell -b "echo -n \"$result\" | $exec_prefix $tmux_yank_copy_command > /dev/null"
+    tmux run-shell -b "printf \"$result\" | $exec_prefix $tmux_yank_copy_command > /dev/null"
   fi
 }
 
