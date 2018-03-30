@@ -1,3 +1,7 @@
+## 0.7.2 - 30 Mar 2018
+
+* Fix portability issues when copying results. Fixes #47
+
 ## 0.7.1 - 11 Mar 2018
 
 * Fixed bug with sed BSD/OSX.
