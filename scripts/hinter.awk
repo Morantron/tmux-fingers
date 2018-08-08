@@ -102,8 +102,8 @@ BEGIN {
   HINTS[98] = "as"
   HINTS[99] = "aa"
 
-  finger_patterns = ENVIRON["FINGERS_PATTERNS"];
-  fingers_compact_hints = ENVIRON["FINGERS_COMPACT_HINTS"];
+  finger_patterns         = ENVIRON["FINGERS_PATTERNS"];
+  fingers_compact_hints   = ENVIRON["FINGERS_COMPACT_HINTS"];
 
   if (fingers_compact_hints)
     fingers_hint_position = ENVIRON["FINGERS_HINT_POSITION"];
@@ -111,14 +111,14 @@ BEGIN {
     fingers_hint_position = ENVIRON["FINGERS_HINT_POSITION_NOCOMPACT"];
 
   if (fingers_compact_hints) {
-    hint_format = ENVIRON["FINGERS_HINT_FORMAT"]
-    hint_format_nocolor = ENVIRON["FINGERS_HINT_FORMAT_NOCOLOR"]
-    highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT"]
+    hint_format              = ENVIRON["FINGERS_HINT_FORMAT"]
+    hint_format_nocolor      = ENVIRON["FINGERS_HINT_FORMAT_NOCOLOR"]
+    highlight_format         = ENVIRON["FINGERS_HIGHLIGHT_FORMAT"]
     highlight_format_nocolor = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_NOCOLOR"]
   } else {
-    hint_format = ENVIRON["FINGERS_HINT_FORMAT_NOCOMPACT"]
-    highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_NOCOMPACT"]
-    hint_format_nocolor = ENVIRON["FINGERS_HINT_FORMAT_NOCOMPACT_NOCOLOR"]
+    hint_format              = ENVIRON["FINGERS_HINT_FORMAT_NOCOMPACT"]
+    highlight_format         = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_NOCOMPACT"]
+    hint_format_nocolor      = ENVIRON["FINGERS_HINT_FORMAT_NOCOMPACT_NOCOLOR"]
     highlight_format_nocolor = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_NOCOMPACT_NOCOLOR"]
   }
 
@@ -139,7 +139,7 @@ BEGIN {
   while (match(line, finger_patterns)) {
     pos += RSTART;
     col_pos = pos + col_pos_correction
-    pre_match = substr(output_line, 0, col_pos - 1);
+     pre_match = substr(output_line, 0, col_pos - 1);
     post_match = substr(output_line, col_pos + RLENGTH, length(line) - 1);
     line_match = substr(line, RSTART, RLENGTH);
 
