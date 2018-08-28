@@ -42,13 +42,14 @@ function zoom_pane() {
 function revert_to_original_pane() {
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
   tmux kill-window -t "$fingers_window_id"
-  [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
   tmux set-window-option automatic-rename "$original_rename_setting"
 
   if [[ ! -z "$last_pane_id" ]]; then
     tmux select-pane -t "$last_pane_id"
     tmux select-pane -t "$current_pane_id"
   fi
+
+  [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
 }
 
 function handle_exit() {
