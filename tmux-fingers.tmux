@@ -3,9 +3,7 @@
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 tmux run -b "$CURRENT_DIR/scripts/health-check.sh"
-
-# tmux run-shell does not have color support
-tmux new-session -d "bash --norc --noprofile $CURRENT_DIR/scripts/config.sh"
+tmux run -b "bash --norc --noprofile $CURRENT_DIR/scripts/config.sh"
 
 DEFAULT_FINGERS_KEY="F"
 FINGERS_KEY=$(tmux show-option -gqv @fingers-key)
