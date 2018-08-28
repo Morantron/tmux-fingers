@@ -13,9 +13,10 @@ tmux_yank_copy_command=$(tmux_list_vi_copy_keys | grep -E "(vi-copy|copy-mode-vi
 
 current_pane_id=$1
 fingers_pane_id=$2
-fingers_window_id=$2
-pane_input_temp=$4
-original_rename_setting=$5
+last_pane_id=$3
+fingers_window_id=$4
+pane_input_temp=$5
+original_rename_setting=$6
 
 BACKSPACE=$'\177'
 
@@ -38,11 +39,20 @@ function zoom_pane() {
   tmux resize-pane -Z -t "$pane_id"
 }
 
-function handle_exit() {
+function revert_to_original_pane() {
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
-  [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
   tmux kill-window -t "$fingers_window_id"
+  [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
   tmux set-window-option automatic-rename "$original_rename_setting"
+
+  if [[ ! -z "$last_pane_id" ]]; then
+    tmux select-pane -t "$last_pane_id"
+    tmux select-pane -t "$current_pane_id"
+  fi
+}
+
+function handle_exit() {
+  revert_to_original_pane
   rm -rf "$pane_input_temp" "$pane_output_temp" "$match_lookup_table"
 }
 
@@ -180,7 +190,7 @@ while read -rsn1 char; do
 
   copy_result "$result" "$input"
 
-  revert_to_original_pane "$current_pane_id" "$fingers_pane_id" "$fingers_window_id"
+  revert_to_original_pane
 
   exit 0
 done < /dev/tty

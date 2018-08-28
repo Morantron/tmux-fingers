@@ -70,8 +70,16 @@ function revert_to_original_pane() {
   local current_pane_id=$1
   local fingers_pane_id=$2
   local fingers_window_id=$3
+  local last_pane_id=$4
+  local pane_was_zoomed=$5
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
   tmux kill-window -t "$fingers_window_id"
+  [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
+
+  if [[ ! -z "$last_pane_id" ]]; then
+    tmux select-pane -t "$last_pane_id"
+    tmux select-pane -t "$current_pane_id"
+  fi
 }
 
 function pane_exec() {
