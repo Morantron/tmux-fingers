@@ -1,3 +1,10 @@
+## 0.8.0 - 28 Aug 2018
+
+* New default pattern for kubernetes resource ( thanks @ryankemper ! )
+* New default pattern for hexadecimal numbers ( thanks @ysf ! )
+* Fixed broken "tmux last-pane" behavior ( Fixes #48 )
+* Fixed broken "tmux attach" behavior ( Fixes #54 )
+
 ## 0.7.2 - 30 Mar 2018
 
 * Fix portability issues when copying results. Fixes #47
