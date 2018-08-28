@@ -4,6 +4,7 @@
 * New default pattern for hexadecimal numbers ( thanks @ysf ! )
 * Fixed broken "tmux last-pane" behavior ( Fixes #48 )
 * Fixed broken "tmux attach" behavior ( Fixes #54 )
+* Upgraded to CircleCI 2.0 and started using master/develop branching model.
 
 ## 0.7.2 - 30 Mar 2018
 
