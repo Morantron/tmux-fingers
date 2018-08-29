@@ -114,6 +114,8 @@ function copy_result() {
   local result="$1"
   local hint="$2"
 
+  result="$(echo $result)"
+  [[ -z $result ]] && retun
   tmux set-buffer "$result"
 
   if [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -130,7 +132,7 @@ function copy_result() {
     tmux run-shell -b "printf \"$result\" | IS_UPPERCASE=$is_uppercase HINT=$hint $exec_prefix $FINGERS_COPY_COMMAND > /dev/null"
   fi
 
-  if [[ $HAS_TMUX_YANK = 1 ]]; then
+  if [[ $HAS_TMUX_YANK = 1 ]] && [ ! -z "$tmux_yank_copy_command" ]; then
     tmux run-shell -b "printf \"$result\" | $exec_prefix $tmux_yank_copy_command > /dev/null"
   fi
 }
