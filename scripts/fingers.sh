@@ -23,6 +23,7 @@ BACKSPACE=$'\177'
 
 # TODO not sure this is truly working
 function force_dim_support() {
+  tmux show -s terminal-overrides | command grep -q -F "dim=\\\\E[2m" && return
   tmux set -sa terminal-overrides ",*:dim=\\E[2m"
 }
 
