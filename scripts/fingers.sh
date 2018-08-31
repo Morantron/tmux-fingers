@@ -169,6 +169,7 @@ while read -rsn1 char; do
     if [[ $help_state == "1" ]]; then
       toggle_help_state
     else
+      handle_exit
       exit
     fi
   elif [[ $char == "" ]]; then
@@ -195,7 +196,8 @@ while read -rsn1 char; do
 
   copy_result "$result" "$input"
 
-  revert_to_original_pane
+  handle_exit
 
   exit 0
 done < /dev/tty
+
