@@ -111,7 +111,7 @@ function perform_health_check() {
   local healthy=1
 
   # BASH_VERSION is a global
-  local TMUX_VERSION=$(tmux -V | grep -Eio "[0-9]+(\.[0-9a-z])*$")
+  local TMUX_VERSION=$(tmux -V | grep -Eio "([0-9]+(\.[0-9]))(?:-rc)?$")
   local GAWK_VERSION=""
 
   if [[ $(program_exists "gawk") = "1" ]]; then
