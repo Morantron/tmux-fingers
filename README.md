@@ -12,13 +12,14 @@ Press ( <kbd>prefix</kbd> + <kbd>F</kbd> ) to enter **[fingers]** mode, it will 
 pane along with letter hints. By pressing those letters, the highlighted match
 will be yanked. Less keystrokes == profit!
 
-Relevant stuff:
+Here is a list of the stuff highlighted by default.
 
 * File paths
 * git SHAs
 * numbers ( 4+ digits )
-* urls
-* ip addresses
+* hex numbers
+* IP addresses
+* kubernetes resources
 
 It also works on copy mode, but requires *tmux 2.2* or newer to properly take
 the scroll position into account.
