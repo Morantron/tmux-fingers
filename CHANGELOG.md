@@ -1,3 +1,9 @@
+## 0.9.0 - 08 Nov 2018
+
+* Removed health check from startup, now needs to be run manually.
+* Fixed health check handling of tmux rc versions ( thanks @ysf ! ).
+* Tweaked hexadecimal default pattern ( thanks @giadomelio ! ).
+
 ## 0.8.0 - 28 Aug 2018
 
 * New default pattern for kubernetes resource ( thanks @ryankemper ! )
