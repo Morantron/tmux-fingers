@@ -1,8 +1,12 @@
 # Health check troubleshooting
 
-*tmux-fingers* performs a health check on startup to ensure that your system has all dependencies needed to run smoothly.
+`health-check.sh` performs a checks to ensure that your system has all dependencies needed to run smoothly.
 
 They are not much, and in most GNU/linux environments these are the defaults anyway.
+
+To run the check you need to run the following command.
+
+`$ /path/to/tmux-fingers/scripts/health-check.sh`
 
 ## gawk not found
 
@@ -26,14 +30,6 @@ This probably means you are running OSX, which ships with *bash 3*. In order to 
 ## tmux version is too old
 
 You can install latest *tmux* from source, check https://github.com/tmux/tmux
-
-## How to skip the check
-
-If can't skip this check by adding the following in your .tmux.conf file:
-
-```
-set -g @fingers-skip-health-check '1'
-```
 
 ## Wrong $TERM value
 

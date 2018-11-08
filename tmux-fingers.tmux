@@ -2,7 +2,6 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-tmux run -b "$CURRENT_DIR/scripts/health-check.sh"
 tmux run -b "bash --norc --noprofile $CURRENT_DIR/scripts/config.sh"
 
 DEFAULT_FINGERS_KEY="F"

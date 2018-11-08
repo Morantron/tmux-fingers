@@ -225,6 +225,14 @@ Custom format for the highlighted match. See [@fingers-hint-format](#fingers-hin
 
 Same as above, used when `@fingers-compact-hints` is set to `0`.
 
+# Troubleshooting
+
+If you encounter any problems you can run the following command to automatically detect common problems:
+
+` $ /path/to/tmux-fingers/scripts/health-check.sh`
+
+More info in [health-check.md](./docs/health-check.md)
+
 # Acknowledgements and inspiration
 
 This plugin is heavily inspired by
