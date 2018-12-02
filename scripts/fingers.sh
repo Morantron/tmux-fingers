@@ -20,6 +20,12 @@ original_rename_setting=$6
 
 BACKSPACE=$'\177'
 
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  EXEC_PREFIX="nohup"
+else
+  EXEC_PREFIX=""
+fi
+
 # TODO not sure this is truly working
 function force_dim_support() {
   tmux set -sa terminal-overrides ",*:dim=\\E[2m"
@@ -41,7 +47,6 @@ function zoom_pane() {
 
 function revert_to_original_pane() {
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
-  tmux kill-window -t "$fingers_window_id"
   tmux set-window-option automatic-rename "$original_rename_setting"
 
   if [[ ! -z "$last_pane_id" ]]; then
@@ -50,6 +55,7 @@ function revert_to_original_pane() {
   fi
 
   [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
+
 }
 
 function handle_exit() {
@@ -116,30 +122,25 @@ function copy_result() {
 
   tmux set-buffer "$result"
 
-  if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    exec_prefix="nohup"
-  else
-    exec_prefix=""
+  if [[ $HAS_TMUX_YANK = 1 ]]; then
+    tmux run-shell -b "printf \"$result\" | $EXEC_PREFIX $tmux_yank_copy_command"
   fi
+}
+
+function run_fingers_copy_command() {
+  local result="$1"
+  local hint="$2"
 
   is_uppercase=$(echo "$input" | grep -E '^[a-z]+$' &> /dev/null; echo $?)
 
-  copy_command_parameters=<<-EOS
-    printf \"$result\" |
-      IS_UPPERCASE=$is_uppercase
-      HINT=$hint
-      CURRENT_PANE_ID=$current_pane_id
-      $exec_prefix
-  EOS
-
   if [[ $is_uppercase == "1" ]] && [ ! -z "$FINGERS_COPY_COMMAND_UPPERCASE" ]; then
-    tmux run-shell -b "$copy_command_parameters $FINGERS_COPY_COMMAND_UPPERCASE"
+    command_to_run="$FINGERS_COPY_COMMAND_UPPERCASE"
   elif [ ! -z "$FINGERS_COPY_COMMAND" ]; then
-    tmux run-shell -b "$copy_command_parameters $FINGERS_COPY_COMMAND"
+    command_to_run="$FINGERS_COPY_COMMAND"
   fi
 
-  if [[ $HAS_TMUX_YANK = 1 ]]; then
-    tmux run-shell -b "printf \"$result\" | $exec_prefix $tmux_yank_copy_command"
+  if [[ ! -z "$command_to_run" ]]; then
+    tmux run-shell -b "export IS_UPPERCASE=\"$is_uppercase\" HINT=\"$hint\" && printf \"$result\" | $EXEC_PREFIX $command_to_run"
   fi
 }
 
@@ -198,8 +199,7 @@ while read -rsn1 char; do
   fi
 
   copy_result "$result" "$input"
-
   revert_to_original_pane
-
-  exit 0
+  run_fingers_copy_command "$result" "$input"
+  tmux kill-window -t "$fingers_window_id"
 done < /dev/tty

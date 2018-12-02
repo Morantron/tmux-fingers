@@ -129,8 +129,10 @@ invoking the plugin.
 
 `default: NONE`
 
-By default **tmux-fingers** will just yank matches using tmux clipboard ( or
-[tmux-yank](https://github.com/tmux-plugins/tmux-yank) if present ).
+By default **tmux-fingers** will just yank matches using tmux clipboard. For
+system clipboard integration you'll also need to install
+[tmux-yank](https://github.com/tmux-plugins/tmux-yank).
+
 
 If you still want to set your own custom command you can do so like this:
 
@@ -140,8 +142,8 @@ set -g @fingers-copy-command 'xclip -selection clipboard'
 
 This command will also receive the following:
 
-  *  `IS_UPPERCASE`: environment variable set to `1` or `0` depending on how the hint was introduced.
-  *  `HINT`: environment variable the selected letter hint itself ( ex: `q`, `as`, etc... ).
+  * `IS_UPPERCASE`: environment variable set to `1` or `0` depending on how the hint was introduced.
+  * `HINT`: environment variable the selected letter hint itself ( ex: `q`, `as`, etc... ).
   * `stdin`: copied text will be piped to `@fingers-copy-command`.
 
 ## @fingers-copy-command-uppercase
@@ -155,6 +157,12 @@ For example, this open links in browser when holding <kbd>SHIFT</kbd> while sele
 
 ```
 set -g @fingers-copy-command-uppercase 'xargs xdg-open'
+```
+
+Or, for automatically pasting:
+
+```
+set -g @fingers-copy-command-uppercase 'tmux paste-buffer'
 ```
 
 ## @fingers-compact-hints
