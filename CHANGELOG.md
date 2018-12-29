@@ -1,3 +1,9 @@
+## 0.10.0 - 29 Dec 2018
+
+* New default pattern for uuids ( thanks @kidd ! ).
+* `@fingers-copy-command` ( and uppercase alternative )  can now be configured
+  to automatically paste copied stuff ( thanks @kidd also ! ).
+
 ## 0.9.0 - 08 Nov 2018
 
 * Removed health check from startup, now needs to be run manually.
