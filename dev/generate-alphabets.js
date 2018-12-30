@@ -30,9 +30,11 @@ const spit = ({path, hints}) => {
 
 const byLength = (a, b) => Math.sign(a.length - b.length)
 
+const DISALLOWED_CHARACTERS = /[cimq]/
+
 async function main() {
   Object.keys(alphabetsDefinition).forEach(async alphabetName => {
-    const alphabet = alphabetsDefinition[alphabetName].split('')
+    const alphabet = alphabetsDefinition[alphabetName].split('').filter(char => !char.match(DISALLOWED_CHARACTERS))
 
     if (alphabet.length !== uniq(alphabet).length) {
       console.error(`ERROR: ${alphabetName} contains duplicate characters`);
@@ -66,7 +68,7 @@ async function main() {
 
       spit({
         path: outputPath,
-        hints
+        hints: hints.reverse()
       })
     })
   })

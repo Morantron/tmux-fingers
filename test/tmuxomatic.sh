@@ -16,6 +16,10 @@ function tmuxomatic__exec() {
   tmuxomatic send-keys Enter
 }
 
+function tmuxomatic__skip() {
+  exit 2
+}
+
 function tmuxomatic__begin() {
   tmuxomatic list-sessions &> /dev/null
 
@@ -27,11 +31,11 @@ function tmuxomatic__begin() {
 
     tmux_version=$(get_tmux_version)
 
-    if [[ $(version_major "$tmux_version") -ge "2" ]] && [[ $(version_minor "$tmux_version") -lt "9" ]]; then
+    if [[ $(version_compare_ge "$tmux_version" "2.9") == 1 ]]; then
+      tmuxomatic resize-window -x 80 -y 24
+    else
       tmuxomatic set-window-option force-width 80
       tmuxomatic set-window-option force-height 24
-    else
-      tmuxomatic resize-window -x 80 -y 24
     fi
 
     tmuxomatic__exec "export TMUX=''"
@@ -89,17 +93,12 @@ function tmuxomatic__expect() {
   fi
 }
 
-# TODO ideally specs shouldn't have any sleeps, but life is hard! Since
-# ci machines are usually kind of slow, sleeps need to be longer there.
+# TODO 
 #
 # Ideally tmuxomatic__exec should now when a command has finished by using
 # "tmux wait", or alert-silence hook, or some tmux sorcery like that.
 function tmuxomatic__sleep() {
-  if [[ -z $CI ]]; then
-    sleep "$1"
-  else
-    sleep "$(($1 * 5))"
-  fi
+  sleep "$1"
 }
 
 # TODO not working in BSD, therefore end hook not being called and :skull:

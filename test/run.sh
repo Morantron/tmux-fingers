@@ -16,12 +16,18 @@ else
 fi
 
 if [[ "$target" == "within-vm" ]]; then
+  # clean previous ogs
+  rm -rf $CURRENT_DIR/../tmuxomatic*
+
   stty cols 80
   stty rows 24
   fail_count=0
   for version in "${VERSIONS[@]}"; do
     $CURRENT_DIR/use-tmux.sh "$version"
     echo "Running tests in tmux $version"
+
+    pgrep tmux | xargs kill -9
+
     for test_file in $(ls $CURRENT_DIR/specs/*_spec.sh); do
       result="* $test_file ..."
       sleep 1
@@ -30,15 +36,23 @@ if [[ "$target" == "within-vm" ]]; then
       while [[ $tries -lt $MAX_RETRIES ]]; do
         echo "Running $test_file" >> $SPEC_OUTPUT_LOG
         $test_file &>> $TEST_LOG
-        success=$?
+        exit_code=$?
 
-        if [[ $success ]]; then
+        if [[ $exit_code -eq 0 ]]; then
           break
         fi
+
+        if [[ $exit_code -eq 2 ]]; then
+          break
+        fi
+
+        tries=$((tries + 1))
       done
 
-      if [[ $success ]]; then
+      if [[ $exit_code -eq 0 ]]; then
         result="$result OK"
+      elif [[ $exit_code -eq 2 ]]; then
+        result="$result SKIP"
       else
         fail_count=$((fail_count + 1))
         result="$result FAIL"
@@ -52,6 +66,7 @@ if [[ "$target" == "within-vm" ]]; then
   if [[ $fail_count -gt 0 ]]; then
     echo "Displaying tmuxomatic logs"
     cat $CURRENT_DIR/../tmuxomatic*
+    cat $CURRENT_DIR/../test.log
   fi
 
   exit $fail_count
@@ -59,10 +74,7 @@ elif [[ -z "$target" ]]; then
   $CURRENT_DIR/run.sh ubuntu
   ubuntu_fail_count=$?
 
-  $CURRENT_DIR/run.sh bsd
-  bsd_fail_count=$?
-
-  total_fail_count=$((ubuntu_fail_count + bsd_fail_count))
+  total_fail_count=$((ubuntu_fail_count))
 
   if [[ $total_fail_count == 0 ]]; then
     echo "All tests passed, awesome!"
@@ -75,5 +87,5 @@ elif [[ -z "$target" ]]; then
 else
   echo "Running tests on $target"
   vagrant up "$target" &>> /dev/null
-  vagrant ssh "$target" -c "cd shared && xvfb-run ./test/run.sh within-vm" 2> /dev/null
+  vagrant ssh "$target" -c "cd shared && ./test/run.sh within-vm" 2> /dev/null
 fi

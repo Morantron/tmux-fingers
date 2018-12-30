@@ -3,10 +3,6 @@
 # this assumes tmuxomatic has been already sourced
 TMUX_PREFIX=C-a
 
-function test_clean_up() {
-  tmuxomatic__exec "tmux kill-session -t test"
-}
-
 function tmux_send() {
   local key=$1
   tmuxomatic__sleep 1
@@ -27,7 +23,9 @@ function init_pane() {
 
 function init_pane_fish() {
   tmux_send "c"
+  tmuxomatic__sleep 1
   tmuxomatic__exec "function fish_prompt; echo '# '; end"
+  tmuxomatic__sleep 1
   tmuxomatic__exec "clear"
 }
 
@@ -53,5 +51,6 @@ function begin_hook() {
 }
 
 function end_hook() {
+  sudo rm -rf /tmp/fingers-*
   tmuxomatic__exec  "tmux kill-session -t test"
 }

@@ -15,6 +15,10 @@ function chr() {
   printf "\\$(printf '%03o' "$1")"
 }
 
+function escape_quotes() {
+  echo $1 | sed 's/"/\\"/g' | sed "s/'/\\'/g"
+}
+
 function is_between() {
   local value=$1
   local lower=$2
@@ -167,6 +171,34 @@ function version_minor() {
   echo "$1" | cut -f2 -d. | grep -Eo "[0-9]"
 }
 
+function version_compare_ge() {
+  local NUMBER_OF_VERSION_COMPONENTS=2
+  local version=$1
+  local target=$2
+
+  if [[ $version == $target ]]; then
+    echo 1
+  else
+    local result=0
+
+    for i in $(seq 1 "$NUMBER_OF_VERSION_COMPONENTS"); do
+      version_component=$(echo "$version" | cut -f "$i" -d'.')
+      target_component=$(echo "$target" | cut -f "$i" -d'.')
+
+      if [[ "$version_component" -gt "$target_component" ]]; then
+        result=1
+        break
+      elif [[ "$version_component" -lt "$target_component" ]]; then
+        result=0
+        break
+      elif [[ "$version_component" -eq "$target_component" ]]; then
+        continue
+      fi
+    done
+  fi
+
+  echo $result
+}
 
 function get_tmux_version() {
   echo "$(tmux -V | grep -Eio "([0-9]+(\.[0-9]))(?:-rc)?")"

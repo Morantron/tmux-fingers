@@ -88,6 +88,8 @@ function dump_log() {
 }
 
 function perform_health_check() {
+  #TODO warn about deprecated options
+
   local healthy=1
 
   # BASH_VERSION is a global

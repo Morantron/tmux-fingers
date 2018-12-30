@@ -72,6 +72,7 @@ function default_copy_command () {
 }
 
 function default_open_command () {
+  # TODO open is OSX only I think
   if [[ $(program_exists "open") = "1" ]]; then
     echo "xargs open"
   elif [[ $(program_exists "xdg-open") = "1" ]]; then
@@ -92,11 +93,13 @@ PATTERNS_LIST=(
 "(deployment.app|binding|componentstatuse|configmap|endpoint|event|limitrange|namespace|node|persistentvolumeclaim|persistentvolume|pod|podtemplate|replicationcontroller|resourcequota|secret|serviceaccount|service|mutatingwebhookconfiguration.admissionregistration.k8s.io|validatingwebhookconfiguration.admissionregistration.k8s.io|customresourcedefinition.apiextension.k8s.io|apiservice.apiregistration.k8s.io|controllerrevision.apps|daemonset.apps|deployment.apps|replicaset.apps|statefulset.apps|tokenreview.authentication.k8s.io|localsubjectaccessreview.authorization.k8s.io|selfsubjectaccessreviews.authorization.k8s.io|selfsubjectrulesreview.authorization.k8s.io|subjectaccessreview.authorization.k8s.io|horizontalpodautoscaler.autoscaling|cronjob.batch|job.batch|certificatesigningrequest.certificates.k8s.io|events.events.k8s.io|daemonset.extensions|deployment.extensions|ingress.extensions|networkpolicies.extensions|podsecuritypolicies.extensions|replicaset.extensions|networkpolicie.networking.k8s.io|poddisruptionbudget.policy|clusterrolebinding.rbac.authorization.k8s.io|clusterrole.rbac.authorization.k8s.io|rolebinding.rbac.authorization.k8s.io|role.rbac.authorization.k8s.io|storageclasse.storage.k8s.io)[[:alnum:]_#$%&+=/@-]+"
 )
 
-IFS=$'\n'
-USER_DEFINED_PATTERNS=($(tmux show-options -g | sed -n 's/^@fingers-pattern-[0-9]\{1,\} "\(.*\)"$/(\1)/p'))
-unset IFS
+if [[ $(tmux show-options -g | grep -q @fingers-pattern && echo $?) ]]; then
+  IFS=$'\n'
+  USER_DEFINED_PATTERNS=($(tmux show-options -gv | sed -n -e "$(echo "$(tmux show-options -g | grep -n '@fingers-pattern' | cut -f1 -d: | xargs | sed 's/ /p;/g')p")"))
+  unset IFS
 
-PATTERNS_LIST=("${PATTERNS_LIST[@]}" "${USER_DEFINED_PATTERNS[@]}")
+  PATTERNS_LIST=("${PATTERNS_LIST[@]}" "${USER_DEFINED_PATTERNS[@]}")
+fi
 
 i=0
 for pattern in "${PATTERNS_LIST[@]}" ; do
@@ -115,8 +118,11 @@ PATTERNS=$(array_join "|" "${PATTERNS_LIST[@]}")
 fingers_defaults=( \
   [fingers-patterns]="$PATTERNS" \
   [fingers-compact-hints]=1 \
-  [fingers-copy-command]="$(default_copy_command)" \
-  [fingers-copy-command-uppercase]="$(default_open_command)" \
+
+  [fingers-main-action]=":copy:" \
+  [fingers-ctrl-action]=":open:" \
+  [fingers-shift-action]=":paste:" \
+  [fingers-alt-action]="" \
 
   [fingers-hint-position]="left" \
   [fingers-hint-format]="#[fg=yellow,bold]%s" \
@@ -127,12 +133,27 @@ fingers_defaults=( \
   [fingers-highlight-format-nocompact]="#[fg=yellow,nobold,dim]%s" \
 
   [fingers-keyboard-layout]="qwerty" \
+
+  [fingers-system-copy-command]="$(default_copy_command)" \
+  [fingers-system-open-command]="$(default_open_command)" \
+
+  # TODO deprecated options
+  [fingers-copy-command]="DEPRECATED" \
+  [fingers-copy-command-uppercase]="DEPRECATED" \
 )
 
 set_tmux_env 'fingers-patterns'
 set_tmux_env 'fingers-compact-hints'
-set_tmux_env 'fingers-copy-command'
-set_tmux_env 'fingers-copy-command-uppercase'
+set_tmux_env 'fingers-copy-command' # DEPRECATED
+set_tmux_env 'fingers-copy-command-uppercase' # DEPRECATED
+
+set_tmux_env 'fingers-main-action'
+set_tmux_env 'fingers-ctrl-action'
+set_tmux_env 'fingers-shift-action'
+set_tmux_env 'fingers-alt-action'
+
+set_tmux_env 'fingers-system-copy-command'
+set_tmux_env 'fingers-system-open-command'
 
 set_tmux_env 'fingers-hint-position'
 set_tmux_env 'fingers-hint-format' process_format
