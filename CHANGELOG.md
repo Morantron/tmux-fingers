@@ -1,3 +1,7 @@
+## 0.10.1 - 02 Jan 2019
+
+* Fix dangling pane when cancelling fingers-mode.
+
 ## 0.10.0 - 29 Dec 2018
 
 * New default pattern for uuids ( thanks @kidd ! ).
