@@ -20,6 +20,9 @@ original_rename_setting=$6
 
 BACKSPACE=$'\177'
 
+input=''
+result=''
+
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   EXEC_PREFIX="nohup"
 else
@@ -59,8 +62,14 @@ function revert_to_original_pane() {
 }
 
 function handle_exit() {
-  revert_to_original_pane
   rm -rf "$pane_input_temp" "$pane_output_temp" "$match_lookup_table"
+  revert_to_original_pane
+
+  if [[ ! -z "$result" ]]; then
+    run_fingers_copy_command "$result" "$input"
+  fi
+
+  tmux kill-window -t "$fingers_window_id"
 }
 
 function is_valid_input() {
@@ -199,7 +208,5 @@ while read -rsn1 char; do
   fi
 
   copy_result "$result" "$input"
-  revert_to_original_pane
-  run_fingers_copy_command "$result" "$input"
-  tmux kill-window -t "$fingers_window_id"
+  exit 0
 done < /dev/tty
