@@ -9,7 +9,7 @@ source $CURRENT_DIR/utils.sh
 source $CURRENT_DIR/help.sh
 
 HAS_TMUX_YANK=$([ "$(tmux list-keys | grep -c tmux-yank)" == "0" ]; echo $?)
-tmux_yank_copy_command=$(tmux_list_vi_copy_keys | grep -E "(vi-copy|copy-mode-vi) *y" | sed -E 's/.*copy-pipe(-and-cancel)? *"(.*)".*/\2/g')
+tmux_yank_copy_command=$(tmux_list_vi_copy_keys | grep -E "(vi-copy|copy-mode-vi) *y" | sed -E 's/.*copy-pipe(-and-cancel)? *(.*)/\2/g')
 
 current_pane_id=$1
 fingers_pane_id=$2
@@ -132,7 +132,7 @@ function copy_result() {
   tmux set-buffer "$result"
 
   if [[ $HAS_TMUX_YANK = 1 ]]; then
-    tmux run-shell -b "printf \"$result\" | $EXEC_PREFIX $tmux_yank_copy_command"
+    tmux run-shell -b "printf \"$result\" | $EXEC_PREFIX $(echo "$tmux_yank_copy_command")"
   fi
 }
 
