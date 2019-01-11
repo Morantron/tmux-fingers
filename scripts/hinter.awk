@@ -1,106 +1,6 @@
 BEGIN {
   n_matches = 0;
-
-  HINTS[0] = "p"
-  HINTS[1] = "o"
-  HINTS[2] = "i"
-  HINTS[3] = "u"
-  HINTS[4] = "l"
-  HINTS[5] = "k"
-  HINTS[6] = "j"
-  HINTS[7] = "t"
-  HINTS[8] = "r"
-  HINTS[9] = "e"
-  HINTS[10] = "wj"
-  HINTS[11] = "wt"
-  HINTS[12] = "wr"
-  HINTS[13] = "we"
-  HINTS[14] = "ww"
-  HINTS[15] = "wq"
-  HINTS[16] = "wf"
-  HINTS[17] = "wd"
-  HINTS[18] = "ws"
-  HINTS[19] = "wa"
-  HINTS[20] = "qp"
-  HINTS[21] = "qo"
-  HINTS[22] = "qi"
-  HINTS[23] = "qu"
-  HINTS[24] = "ql"
-  HINTS[25] = "qk"
-  HINTS[26] = "qj"
-  HINTS[27] = "qt"
-  HINTS[28] = "qr"
-  HINTS[29] = "qe"
-  HINTS[30] = "qw"
-  HINTS[31] = "qq"
-  HINTS[32] = "qf"
-  HINTS[33] = "qd"
-  HINTS[34] = "qs"
-  HINTS[35] = "qa"
-  HINTS[36] = "fp"
-  HINTS[37] = "fo"
-  HINTS[38] = "fi"
-  HINTS[39] = "fu"
-  HINTS[40] = "fl"
-  HINTS[41] = "fk"
-  HINTS[42] = "fj"
-  HINTS[43] = "ft"
-  HINTS[44] = "fr"
-  HINTS[45] = "fe"
-  HINTS[46] = "fw"
-  HINTS[47] = "fq"
-  HINTS[48] = "ff"
-  HINTS[49] = "fd"
-  HINTS[50] = "fs"
-  HINTS[51] = "fa"
-  HINTS[52] = "dp"
-  HINTS[53] = "do"
-  HINTS[54] = "di"
-  HINTS[55] = "du"
-  HINTS[56] = "dl"
-  HINTS[57] = "dk"
-  HINTS[58] = "dj"
-  HINTS[59] = "dt"
-  HINTS[60] = "dr"
-  HINTS[61] = "de"
-  HINTS[62] = "dw"
-  HINTS[63] = "dq"
-  HINTS[64] = "df"
-  HINTS[65] = "dd"
-  HINTS[66] = "ds"
-  HINTS[67] = "da"
-  HINTS[68] = "sp"
-  HINTS[69] = "so"
-  HINTS[70] = "si"
-  HINTS[71] = "su"
-  HINTS[72] = "sl"
-  HINTS[73] = "sk"
-  HINTS[74] = "sj"
-  HINTS[75] = "st"
-  HINTS[76] = "sr"
-  HINTS[77] = "se"
-  HINTS[78] = "sw"
-  HINTS[79] = "sq"
-  HINTS[80] = "sf"
-  HINTS[81] = "sd"
-  HINTS[82] = "ss"
-  HINTS[83] = "sa"
-  HINTS[84] = "ap"
-  HINTS[85] = "ao"
-  HINTS[86] = "ai"
-  HINTS[87] = "au"
-  HINTS[88] = "al"
-  HINTS[89] = "ak"
-  HINTS[90] = "aj"
-  HINTS[91] = "at"
-  HINTS[92] = "ar"
-  HINTS[93] = "ae"
-  HINTS[94] = "aw"
-  HINTS[95] = "aq"
-  HINTS[96] = "af"
-  HINTS[97] = "ad"
-  HINTS[98] = "as"
-  HINTS[99] = "aa"
+  n_lines = 0;
 
   finger_patterns = ENVIRON["FINGERS_PATTERNS"];
   fingers_compact_hints = ENVIRON["FINGERS_COMPACT_HINTS"];
@@ -131,49 +31,88 @@ BEGIN {
 }
 
 {
-  output_line = $0;
+  lines[n_lines] = $0
 
-  # insert hints into `output_line` and accumulate hints in `hint_lookup`
-  line = output_line;
-  pos = col_pos_correction = 0;
+  pos = 0;
+  n_tokens = 0
+
+  line = $0
+
   while (match(line, finger_patterns)) {
-    pos += RSTART;
-    col_pos = pos + col_pos_correction
-    pre_match = substr(output_line, 0, col_pos - 1);
-    post_match = substr(output_line, col_pos + RLENGTH, length(line) - 1);
-    line_match = substr(line, RSTART, RLENGTH);
+    n_matches++
+    col_pos = RSTART;
 
-    hint = hint_by_match[line_match]
-    if (!hint) {
-      hint = HINTS[n_matches++]
-      hint_by_match[line_match] = hint
-    }
-    hint_lookup = hint_lookup hint ":" line_match "\n"
+    pre_match = substr(line, 0, col_pos - 1);
+    post_match = substr(line, col_pos + RLENGTH, length(line) - 1);
+    match_token = substr(line, RSTART, RLENGTH);
 
-    if (fingers_compact_hints) {
-      hint_len = length(sprintf(hint_format_nocolor, hint))
+    tokens_by_line[n_lines][n_tokens]["value"] = pre_match
+    tokens_by_line[n_lines][n_tokens]["type"] = "text"
 
-      if (fingers_hint_position == "left")
-        line_match = substr(line_match, hint_len + 1, length(line_match) - hint_len);
-      else
-        line_match = substr(line_match, 1, length(line_match) - hint_len);
-    }
+    n_tokens++
 
-    if (fingers_hint_position == "left")
-      hint_match = sprintf(compound_format, hint, line_match);
-    else
-      hint_match = sprintf(compound_format, line_match, hint);
+    tokens_by_line[n_lines][n_tokens]["value"] = match_token
+    tokens_by_line[n_lines][n_tokens]["type"] = "match"
 
-    output_line = pre_match hint_match post_match;
-
-    col_pos_correction += length(sprintf(highlight_format, line_match)) + length(sprintf(hint_format, hint)) - 1;
+    n_tokens++
 
     line = post_match;
   }
 
-  printf "\n%s", output_line
+  if (n_tokens == 0) {
+    tokens_by_line[n_lines][n_tokens]["value"] = line
+    tokens_by_line[n_lines][n_tokens]["type"] = "text"
+  }
+
+  n_lines++
 }
 
 END {
+  # TODO read alphabet root dir from ENVIRON
+  hints_path = "/home/morantron/hacking/tmux-fingers/alphabets/qwerty/" n_matches
+  getline raw_hints < hints_path
+  split(raw_hints, hints, " ")
+
+  hint_index = 1
+
+  for (line_index = 0; line_index < n_lines; line_index++) {
+    tokens_in_this_line = length(tokens_by_line[line_index])
+
+    for (token_index = 0; token_index < tokens_in_this_line; token_index++) {
+      token = tokens_by_line[line_index][token_index]["value"]
+      token_type = tokens_by_line[line_index][token_index]["type"]
+
+      if (token_type == "match") {
+        hint = hint_by_match[token]
+
+        if (!hint) {
+          hint = hints[hint_index]
+          hint_by_match[token] = hint
+          hint_index = hint_index + 1
+          hint_lookup = hint_lookup hint ":" token "\n"
+        }
+
+        if (fingers_compact_hints) {
+          hint_len = length(sprintf(hint_format_nocolor, hint))
+          if (fingers_hint_position == "left")
+            token = substr(token, hint_len + 1, length(token) - hint_len);
+          else
+            token = substr(token, 1, length(token) - hint_len);
+        }
+
+        if (fingers_hint_position == "left")
+          token = sprintf(compound_format, hint, token);
+        else
+          token = sprintf(compound_format, token, hint);
+      }
+
+      printf token
+    }
+
+    if (line_index < n_lines - 1) {
+      printf "\n"
+    }
+  }
+
   print hint_lookup | "cat 1>&3"
 }
