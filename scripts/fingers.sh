@@ -153,6 +153,8 @@ function run_fingers_copy_command() {
   fi
 }
 
+# %BENCHMARK_END%
+
 while read -rsn1 char; do
   # Escape sequence, flush input
   if [[ "$char" == $'\x1b' ]]; then
