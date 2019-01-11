@@ -12,6 +12,8 @@ function snippet_for {
   echo "echo \"\$(cat /tmp/benchmark-execution-id) $1 \$((\$(date +%s%N)/1000000))\" >> ~/shared/benchmark.log"
 }
 
+SAMPLES=${SAMPLES:=50}
+
 function setup_benchmark_repo() {
   echo "Setting up benchmark repo ..."
   rm -rf "$benchmark_repo_path"
@@ -33,10 +35,14 @@ if [[ "$target" == "within-vm" ]]; then
   setup_benchmark_repo
   set_execution_id
 
+  cat /dev/null > ~/shared/benchmark.log
+
+  echo "Will run benchmark $SAMPLES times"
+
   pushd "$benchmark_repo_path" &> /dev/null
     for benchmark in $(ls $benchmark_repo_path/test/benchmarks/*.sh); do
 
-      for i in {1..50}; do
+      for i in $(seq 1 "$SAMPLES"); do
         echo "* Running $benchmark [ $i ]"
         sleep 1
         $benchmark
@@ -46,5 +52,6 @@ if [[ "$target" == "within-vm" ]]; then
 elif [[ -z "$target" ]]; then
   echo "Running benchmarks"
   vagrant up "$target" &>> /dev/null
-  vagrant ssh "$target" -c "cd shared && ./test/benchmark.sh within-vm" 2> /dev/null
+  vagrant ssh "$target" -c "cd shared && SAMPLES=$SAMPLES ./test/benchmark.sh within-vm" 2> /dev/null
+  node dev/benchmark-report.js
 fi
