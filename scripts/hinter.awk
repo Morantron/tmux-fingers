@@ -59,6 +59,13 @@ BEGIN {
     line = post_match;
   }
 
+  if (length(post_match) > 0) {
+    tokens_by_line[n_lines][n_tokens]["value"] = post_match
+    tokens_by_line[n_lines][n_tokens]["type"] = "text"
+
+    n_tokens++
+  }
+
   if (n_tokens == 0) {
     tokens_by_line[n_lines][n_tokens]["value"] = line
     tokens_by_line[n_lines][n_tokens]["type"] = "text"
