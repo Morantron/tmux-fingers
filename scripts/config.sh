@@ -94,6 +94,8 @@ fingers_defaults=( \
   [fingers-hint-position-nocompact]="right" \
   [fingers-hint-format-nocompact]="#[fg=yellow,bold][%s]" \
   [fingers-highlight-format-nocompact]="#[fg=yellow,nobold,dim]%s" \
+
+  [fingers-keyboard-layout]="qwerty" \
 )
 
 set_tmux_env 'fingers-patterns'
@@ -109,6 +111,7 @@ set_tmux_env 'fingers-hint-position-nocompact'
 set_tmux_env 'fingers-hint-format-nocompact' process_format
 set_tmux_env 'fingers-highlight-format-nocompact' process_format
 
+set_tmux_env 'fingers-keyboard-layout'
 
 for option in fingers-{hint,highlight}-format{,-nocompact}; do
   env_name="$(envify "$option")_NOCOLOR"

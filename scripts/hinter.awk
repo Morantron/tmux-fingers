@@ -74,8 +74,7 @@ BEGIN {
 }
 
 END {
-  # TODO read alphabet root dir from ENVIRON
-  hints_path = "/home/morantron/hacking/tmux-fingers/alphabets/qwerty/" n_matches
+  hints_path = ENVIRON["FINGERS_ALPHABET_DIR"] n_matches
   getline raw_hints < hints_path
   split(raw_hints, hints, " ")
 
