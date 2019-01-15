@@ -11,7 +11,7 @@ init_pane
 
 tmuxomatic__exec "cat ./test/fixtures/grep-output"
 invoke_fingers
-tmuxomatic send-keys "i"
+tmuxomatic send-keys "d"
 
 tmuxomatic__sleep 1
 tmuxomatic__exec "cat /tmp/tmux-yank-result"
