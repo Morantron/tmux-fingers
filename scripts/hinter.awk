@@ -111,7 +111,7 @@ END {
           token = sprintf(compound_format, token, hint);
       }
 
-      printf token
+      printf "%s", token
     }
 
     if (line_index < n_lines - 1) {
