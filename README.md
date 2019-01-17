@@ -235,6 +235,33 @@ Custom format for the highlighted match. See [@fingers-hint-format](#fingers-hin
 
 Same as above, used when `@fingers-compact-hints` is set to `0`.
 
+## @fingers-keyboard-layout
+
+`default: "qwerty"`
+
+Hints are generated taking optimal finger movement into account. You can choose between the following:
+
+  * `qwerty`: the default, use all letters
+  * `qwerty-left-hand`: only use letters easily reachable with left hand
+  * `qwerty-right-hand`: only use letters easily reachable with right hand
+  * `qwerty-homerow`: only use letters in the homerow
+  * `qwertz`
+  * `qwertz-left-hand`
+  * `qwertz-right-hand`
+  * `qwertz-homerow`
+  * `azerty`
+  * `azerty-left-hand`
+  * `azerty-right-hand`
+  * `azerty-homerow`
+  * `colemak`
+  * `colemak-left-hand`
+  * `colemak-right-hand`
+  * `colemak-homerow`
+  * `dvorak`
+  * `dvorak-left-hand`
+  * `dvorak-right-hand`
+  * `dvorak-homerow`
+
 # Troubleshooting
 
 If you encounter any problems you can run the following command to automatically detect common problems:

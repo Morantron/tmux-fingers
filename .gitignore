@@ -1,3 +1,4 @@
 *.log
-copy-test.txt
+node_modules/
 .vagrant/
+.gawk*

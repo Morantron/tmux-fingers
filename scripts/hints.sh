@@ -31,8 +31,10 @@ function show_hints() {
   local fingers_pane_id=$1
   local compact_hints=$2
 
+  FINGERS_ALPHABET_DIR="$CURRENT_DIR/../alphabets/$FINGERS_KEYBOARD_LAYOUT/"
+
   clear_screen "$fingers_pane_id"
-  get_stdin | FINGERS_COMPACT_HINTS="$compact_hints" gawk -f $CURRENT_DIR/hinter.awk 3> $match_lookup_table
+  get_stdin | FINGERS_COMPACT_HINTS="$compact_hints" FINGERS_ALPHABET_DIR="$FINGERS_ALPHABET_DIR" gawk -f $CURRENT_DIR/hinter.awk 3> $match_lookup_table
 }
 
 function show_hints_and_swap() {

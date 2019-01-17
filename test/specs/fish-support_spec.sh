@@ -11,8 +11,10 @@ tmuxomatic__exec "tmux -f /home/vagrant/shared/test/conf/basic.conf new -s test"
 init_pane_fish
 tmuxomatic__exec "cat ./test/fixtures/grep-output"
 invoke_fingers
-tmuxomatic send-keys "i"
+tmuxomatic send-keys "d"
 echo_yanked
+
+sleep 1.0
 
 tmuxomatic__expect "yanked text is scripts/hints.sh"
 tmuxomatic__end end_hook

@@ -13,11 +13,11 @@ tmuxomatic__exec "cat ./test/fixtures/custom-patterns"
 tmuxomatic send-keys "echo yanked text is "
 
 invoke_fingers
-tmuxomatic send-keys "i"
+tmuxomatic send-keys "d"
 tmux_paste
 
 invoke_fingers
-tmuxomatic send-keys "o"
+tmuxomatic send-keys "s"
 tmux_paste
 
 tmuxomatic send-keys Enter

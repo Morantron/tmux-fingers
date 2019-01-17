@@ -1,0 +1,15 @@
+{
+  "name": "tmux-fingers-dev-stuff",
+  "version": "0.0.1",
+  "description": "tools to develop tmux-fingers shite",
+  "main": "index.js",
+  "repository": "https://github.com/morantron/tmux-fingers",
+  "author": "Morantron",
+  "license": "MIT",
+  "dependencies": {
+    "lodash.chunk": "^4.2.0",
+    "lodash.range": "^3.2.0",
+    "lodash.uniq": "^4.5.0",
+    "n-ary-huffman": "^4.0.0"
+  }
+}
