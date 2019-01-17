@@ -1,5 +1,6 @@
 const huffman = require('n-ary-huffman')
 const range = require('lodash.range')
+const uniq = require('lodash.uniq')
 const path = require('path')
 const fs = require('fs')
 const MAX_MATCHES = 200
@@ -8,8 +9,6 @@ const { promisify } = require('util')
 const exec = promisify(require('child_process').exec)
 
 const alphabetsDefinition = require('./alphabets.json')
-
-const alphabet = (process.argv[2] || '').split('')
 
 const ALPHABETS_DIR = path.resolve(__dirname, '../alphabets/')
 
@@ -34,6 +33,11 @@ const byLength = (a, b) => Math.sign(a.length - b.length)
 async function main() {
   Object.keys(alphabetsDefinition).forEach(async alphabetName => {
     const alphabet = alphabetsDefinition[alphabetName].split('')
+
+    if (alphabet.length !== uniq(alphabet).length) {
+      console.error(`ERROR: ${alphabetName} contains duplicate characters`);
+      process.exit(1)
+    }
 
     const alphabetDir = path.resolve(ALPHABETS_DIR, alphabetName)
 
