@@ -21,6 +21,15 @@ origin_window_name=$7
 
 BACKSPACE=$'\177'
 
+input=''
+result=''
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  EXEC_PREFIX="nohup"
+else
+  EXEC_PREFIX=""
+fi
+
 # TODO not sure this is truly working
 function force_dim_support() {
   tmux show -s terminal-overrides | command grep -q -F "dim=\\\\E[2m" && return
@@ -43,7 +52,6 @@ function zoom_pane() {
 
 function revert_to_original_pane() {
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
-  tmux kill-window -t "$fingers_window_id"
   tmux set-window-option automatic-rename "$original_rename_setting"
   tmux rename-window "$origin_window_name"
 
@@ -53,11 +61,18 @@ function revert_to_original_pane() {
   fi
 
   [[ $pane_was_zoomed == "1" ]] && zoom_pane "$current_pane_id"
+
 }
 
 function handle_exit() {
-  revert_to_original_pane
   rm -rf "$pane_input_temp" "$pane_output_temp" "$match_lookup_table"
+  revert_to_original_pane
+
+  if [[ ! -z "$result" ]]; then
+    run_fingers_copy_command "$result" "$input"
+  fi
+
+  tmux kill-window -t "$fingers_window_id"
 }
 
 function is_valid_input() {
@@ -121,22 +136,25 @@ function copy_result() {
   [[ -z $result ]] && retun
   tmux set-buffer "$result"
 
-  if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    exec_prefix="nohup"
-  else
-    exec_prefix=""
+  if [[ $HAS_TMUX_YANK = 1 ]]; then
+    tmux run-shell -b "printf \"$result\" | $EXEC_PREFIX $tmux_yank_copy_command"
   fi
+}
+
+function run_fingers_copy_command() {
+  local result="$1"
+  local hint="$2"
 
   is_uppercase=$(echo "$input" | grep -E '^[a-z]+$' &> /dev/null; echo $?)
 
   if [[ $is_uppercase == "1" ]] && [ ! -z "$FINGERS_COPY_COMMAND_UPPERCASE" ]; then
-    tmux run-shell -b "printf \"$result\" | IS_UPPERCASE=$is_uppercase HINT=$hint $exec_prefix $FINGERS_COPY_COMMAND_UPPERCASE > /dev/null"
+    command_to_run="$FINGERS_COPY_COMMAND_UPPERCASE"
   elif [ ! -z "$FINGERS_COPY_COMMAND" ]; then
-    tmux run-shell -b "printf \"$result\" | IS_UPPERCASE=$is_uppercase HINT=$hint $exec_prefix $FINGERS_COPY_COMMAND > /dev/null"
+    command_to_run="$FINGERS_COPY_COMMAND"
   fi
 
-  if [[ $HAS_TMUX_YANK = 1 ]] && [ ! -z "$tmux_yank_copy_command" ]; then
-    tmux run-shell -b "printf \"$result\" | $exec_prefix $tmux_yank_copy_command > /dev/null"
+  if [[ ! -z "$command_to_run" ]]; then
+    tmux run-shell -b "export IS_UPPERCASE=\"$is_uppercase\" HINT=\"$hint\" && printf \"$result\" | $EXEC_PREFIX $command_to_run >/dev/null 2>&1"
   fi
 }
 

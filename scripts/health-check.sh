@@ -111,17 +111,11 @@ function perform_health_check() {
   local healthy=1
 
   # BASH_VERSION is a global
-  local TMUX_VERSION=$(tmux -V | grep -Eio "[0-9]+(\.[0-9a-z])*$")
+  local TMUX_VERSION=$(tmux -V | grep -Eio "([0-9]+(\.[0-9]))(?:-rc)?")
   local GAWK_VERSION=""
 
   if [[ $(program_exists "gawk") = "1" ]]; then
     GAWK_VERSION=$(gawk -W version | grep -Eo "[0-9]+\.[0-9]\.[0-9]" | head -n 1)
-  fi
-
-  FINGERS_SKIP_HEALTH_CHECK=$(tmux show-option -gqv @fingers-skip-health-check)
-
-  if [[ $FINGERS_SKIP_HEALTH_CHECK -eq 1 ]]; then
-    return
   fi
 
   if [[ $(program_exists "gawk") = 0 ]]; then
@@ -191,8 +185,6 @@ function perform_health_check() {
     log_message ""
     log_message "  $HELP_LINK"
     log_message ""
-    log_message "To skip this check add \"set -g @fingers-skip-health-check '1'\" to your tmux conf"
-    log_message ""
 
     dump_log
 
@@ -200,10 +192,7 @@ function perform_health_check() {
       : # waiting for-tmux
     done
 
-    local health_window_id=$(tmux new-window -P -n "[tmux-fingers health-check]" "tmux wait-for -S health_output && cat $health_tmp | less")
-    tmux wait-for health_output
-    tmux split-window -t "$health_window_id" -v -l 15 -c "$TMUX_FINGERS_ROOT"
-    tmux select-window -t "$health_window_id"
+    cat $health_tmp
   fi
 
   sleep 0.5

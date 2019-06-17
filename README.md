@@ -12,13 +12,15 @@ Press ( <kbd>prefix</kbd> + <kbd>F</kbd> ) to enter **[fingers]** mode, it will 
 pane along with letter hints. By pressing those letters, the highlighted match
 will be yanked. Less keystrokes == profit!
 
-Relevant stuff:
+Here is a list of the stuff highlighted by default.
 
 * File paths
 * git SHAs
 * numbers ( 4+ digits )
-* urls
-* ip addresses
+* hex numbers
+* IP addresses
+* kubernetes resources
+* UUIDs
 
 It also works on copy mode, but requires *tmux 2.2* or newer to properly take
 the scroll position into account.
@@ -128,8 +130,10 @@ invoking the plugin.
 
 `default: NONE`
 
-By default **tmux-fingers** will just yank matches using tmux clipboard ( or
-[tmux-yank](https://github.com/tmux-plugins/tmux-yank) if present ).
+By default **tmux-fingers** will just yank matches using tmux clipboard. For
+system clipboard integration you'll also need to install
+[tmux-yank](https://github.com/tmux-plugins/tmux-yank).
+
 
 If you still want to set your own custom command you can do so like this:
 
@@ -139,8 +143,8 @@ set -g @fingers-copy-command 'xclip -selection clipboard'
 
 This command will also receive the following:
 
-  *  `IS_UPPERCASE`: environment variable set to `1` or `0` depending on how the hint was introduced.
-  *  `HINT`: environment variable the selected letter hint itself ( ex: `q`, `as`, etc... ).
+  * `IS_UPPERCASE`: environment variable set to `1` or `0` depending on how the hint was introduced.
+  * `HINT`: environment variable the selected letter hint itself ( ex: `q`, `as`, etc... ).
   * `stdin`: copied text will be piped to `@fingers-copy-command`.
 
 ## @fingers-copy-command-uppercase
@@ -154,6 +158,12 @@ For example, this open links in browser when holding <kbd>SHIFT</kbd> while sele
 
 ```
 set -g @fingers-copy-command-uppercase 'xargs xdg-open'
+```
+
+Or, for automatically pasting:
+
+```
+set -g @fingers-copy-command-uppercase 'tmux paste-buffer'
 ```
 
 ## @fingers-compact-hints
@@ -224,6 +234,14 @@ Custom format for the highlighted match. See [@fingers-hint-format](#fingers-hin
 `default: "#[fg=yellow,bold,dim]%s"`
 
 Same as above, used when `@fingers-compact-hints` is set to `0`.
+
+# Troubleshooting
+
+If you encounter any problems you can run the following command to automatically detect common problems:
+
+` $ /path/to/tmux-fingers/scripts/health-check.sh`
+
+More info in [health-check.md](./docs/health-check.md)
 
 # Acknowledgements and inspiration
 
