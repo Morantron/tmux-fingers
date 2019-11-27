@@ -1,6 +1,6 @@
 # tmux-fingers
 
-[![CircleCI](https://circleci.com/gh/Morantron/tmux-fingers.svg?style=svg)](https://circleci.com/gh/Morantron/tmux-fingers)
+[![Build Status](https://travis-ci.com/Morantron/tmux-fingers.svg?branch=develop)](https://travis-ci.com/Morantron/tmux-fingers)
 
 **tmux-fingers**: copy pasting with vimium/vimperator like hints.
 

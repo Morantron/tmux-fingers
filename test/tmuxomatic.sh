@@ -5,6 +5,8 @@ TMUXOMATIC_SOCKET=tmuxomatic
 TMUXOMATIC_TIMEOUT="10"
 TMUXOMATIC_EXIT_CODE=''
 
+source $TMUXOMATIC_CURRENT_DIR/../scripts/utils.sh
+
 function tmuxomatic() {
   TMUX='' tmux -L "$TMUXOMATIC_SOCKET" "$@"
 }
@@ -18,8 +20,20 @@ function tmuxomatic__begin() {
   tmuxomatic list-sessions &> /dev/null
 
   if [[ $? -eq 1 ]]; then
-    tmuxomatic -f "$TMUXOMATIC_CURRENT_DIR/conf/tmuxomatic.conf" new-session -d -s tmuxomatic
-    wait
+    tmuxomatic -f /dev/null new-session -d -s tmuxomatic
+
+    tmuxomatic set -g prefix F12
+    tmuxomatic set -g status off
+
+    tmux_version=$(get_tmux_version)
+
+    if [[ $(version_major "$tmux_version") -ge "2" ]] && [[ $(version_minor "$tmux_version") -lt "9" ]]; then
+      tmuxomatic set-window-option force-width 80
+      tmuxomatic set-window-option force-height 24
+    else
+      tmuxomatic resize-window -x 80 -y 24
+    fi
+
     tmuxomatic__exec "export TMUX=''"
     tmuxomatic__exec "clear"
   fi
@@ -76,7 +90,7 @@ function tmuxomatic__expect() {
 }
 
 # TODO ideally specs shouldn't have any sleeps, but life is hard! Since
-# circle-ci machine is kind of slow, sleeps need to be longer there.
+# ci machines are usually kind of slow, sleeps need to be longer there.
 #
 # Ideally tmuxomatic__exec should now when a command has finished by using
 # "tmux wait", or alert-silence hook, or some tmux sorcery like that.

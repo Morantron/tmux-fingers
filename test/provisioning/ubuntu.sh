@@ -1,19 +1,14 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 sudo aptitude update
-sudo aptitude install -y fish gawk
+sudo aptitude install -y fish gawk xvfb perl
 
-useradd -m -p "$(perl -e "print crypt('fishman','sa');")" -s "/usr/bin/fish" fishman
+sudo useradd -m -p "$(perl -e "print crypt('fishman','sa');")" -s "/usr/bin/fish" fishman
 
-wget https://github.com/tmux/tmux/releases/download/2.6/tmux-2.6.tar.gz
-
-# install tmux from source
+# remove system tmux and install tmux dependencies
 sudo aptitude remove -y tmux
 sudo aptitude install -y libevent-dev libncurses5-dev
-tar xvzf tmux-2.6.tar.gz
-cd tmux-2.6/ || echo "Could not find tmux-2.6/ folder" || exit 1
 
-./configure
-make
-make install
-cd - || exit 1
+$CURRENT_DIR/../install-tmux-versions.sh

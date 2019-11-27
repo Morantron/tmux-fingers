@@ -1,5 +1,15 @@
 language: generic
-install:
-  - ./test/provisioning/ubuntu.sh
+install: ./test/provisioning/ci.sh
 script: ./test/run.sh within-vm
 os: linux
+cache: /opt
+env:
+  - CI_TMUX_VERSION=2.3
+  - CI_TMUX_VERSION=2.4
+  - CI_TMUX_VERSION=2.5
+  - CI_TMUX_VERSION=2.6
+  - CI_TMUX_VERSION=2.7
+  - CI_TMUX_VERSION=2.8
+  - CI_TMUX_VERSION=2.9
+  - CI_TMUX_VERSION=2.9a
+  - CI_TMUX_VERSION=3.0

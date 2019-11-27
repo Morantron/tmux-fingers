@@ -49,8 +49,6 @@ function begin_with_conf() {
 }
 
 function begin_hook() {
-  tmuxomatic set-window-option force-width 80
-  tmuxomatic set-window-option force-height 24
   tmuxomatic__exec  "tmux kill-session -t test"
 }
 
