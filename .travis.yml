@@ -1,0 +1,5 @@
+language: generic
+install:
+  - ./test/provisioning/ubuntu.sh
+script: ./test/run.sh within-vm
+os: linux
