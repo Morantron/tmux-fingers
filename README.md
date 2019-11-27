@@ -25,10 +25,6 @@ Here is a list of the stuff highlighted by default.
 It also works on copy mode, but requires *tmux 2.2* or newer to properly take
 the scroll position into account.
 
-Additionally, you can install
-[tmux-yank](https://github.com/tmux-plugins/tmux-yank) for system clipboard
-integration.
-
 ## Key shortcuts
 
 While in **[fingers]** mode, you can use the following shortcuts:

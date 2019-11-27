@@ -31,17 +31,6 @@ function version_minor() {
   echo "$1" | cut -f2 -d. | grep -Eo "[0-9]"
 }
 
-function program_exists() {
-  local prog="$1"
-
-  which "$prog" &> /dev/null
-
-  if [[ $? == "0" ]]; then
-    echo "1"
-  else
-    echo "0"
-  fi
-}
 
 function log_message() {
   log_messages+=("$1")

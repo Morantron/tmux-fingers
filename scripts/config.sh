@@ -50,6 +50,37 @@ function strip_format () {
   echo "$1" | sed "s/#\[[^]]*\]//g"
 }
 
+function default_copy_command () {
+  # installing reattach-to-user-namespace is recommended on OS X
+  if [[ $(program_exists "pbcopy") = "1" ]]; then
+    if [[ $(program_exists "reattach-to-user-namespace") = "1" ]]; then
+      echo "reattach-to-user-namespace pbcopy"
+    else
+      echo "pbcopy"
+    fi
+  elif [[ $(program_exists "clip.exe") = "1" ]]; then # WSL clipboard command
+    echo "cat | clip.exe"
+  elif [[ $(program_exists "wl-copy") = "1" ]]; then # wl-clipboard: Wayland clipboard utilities
+    echo "wl-copy"
+  elif [[ $(program_exists "xsel") = "1" ]]; then
+    echo "xsel -i --clipboard"
+  elif [[ $(program_exists "xclip") = "1" ]]; then
+    echo "xclip -selection clipboard"
+  elif [[ $(program_exists "putclip") = "1" ]]; then # cygwin clipboard command
+    echo "putclip"
+  fi
+}
+
+function default_open_command () {
+  if [[ $(program_exists "open") = "1" ]]; then
+    echo "xargs open"
+  elif [[ $(program_exists "xdg-open") = "1" ]]; then
+    echo "xargs xdg-open"
+  elif [[ $(program_exists "cygstart") = "1" ]]; then
+    echo "xargs cygstart"
+  fi
+}
+
 PATTERNS_LIST=(
 "((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]+)"
 "([[:digit:]]{4,})"
@@ -84,8 +115,8 @@ PATTERNS=$(array_join "|" "${PATTERNS_LIST[@]}")
 fingers_defaults=( \
   [fingers-patterns]="$PATTERNS" \
   [fingers-compact-hints]=1 \
-  [fingers-copy-command]="" \
-  [fingers-copy-command-uppercase]="" \
+  [fingers-copy-command]="$(default_copy_command)" \
+  [fingers-copy-command-uppercase]="$(default_open_command)" \
 
   [fingers-hint-position]="left" \
   [fingers-hint-format]="#[fg=yellow,bold]%s" \

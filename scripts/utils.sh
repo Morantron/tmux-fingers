@@ -146,3 +146,15 @@ function resolve_path() {
     echo "$(readlink -f "$path")"
   fi
 }
+
+function program_exists() {
+  local prog="$1"
+
+  which "$prog" &> /dev/null
+
+  if [[ $? == "0" ]]; then
+    echo "1"
+  else
+    echo "0"
+  fi
+}

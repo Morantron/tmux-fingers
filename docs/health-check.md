@@ -51,12 +51,8 @@ git submodule update --init --recursive"
 tmux source ~/.tmux.conf"
 ```
 
-## reattach-to-user-namespace is recommended
+## system clipboard integration
 
-If you are using tmux 2.5 or less and OSX, it's recommended that you install `reattach-to-user-namespace` in for system clipboard integration.
+In order for system clipboard integration to work, you need to have program in your system that manages that.
 
-```
-brew install reattach-to-user-namespace
-```
-
-Remember that you need to install [tmux-yank](https://github.com/tmux-plugins/tmux-yank) as well.
+Check [tmux-yank documentation](https://github.com/tmux-plugins/tmux-yank#requirements) to check what program do you need to install, depending on your platform.
