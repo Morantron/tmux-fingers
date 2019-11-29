@@ -58,9 +58,9 @@ function prompt_fingers_for_pane() {
 
   capture_pane "$current_pane_id" "$tmp_path"
 
-  local original_rename_setting=$(tmux show-window-option -gv automatic-rename)
+  local original_window_name=$(tmux display-message -p '#{window_name}')
   tmux set-window-option automatic-rename off
-  pane_exec "$fingers_pane_id" "cat $tmp_path | $CURRENT_DIR/fingers.sh \"$current_pane_id\" \"$fingers_pane_id\" \"$last_pane_id\" \"$fingers_window_id\" $tmp_path $original_rename_setting"
+  pane_exec "$fingers_pane_id" "cat $tmp_path | $CURRENT_DIR/fingers.sh \"$current_pane_id\" \"$fingers_pane_id\" \"$last_pane_id\" \"$fingers_window_id\" $tmp_path $original_window_name"
 
   echo $fingers_pane_id
 }

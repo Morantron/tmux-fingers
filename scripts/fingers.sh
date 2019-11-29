@@ -13,7 +13,7 @@ fingers_pane_id=$2
 last_pane_id=$3
 fingers_window_id=$4
 pane_input_temp=$5
-original_rename_setting=$6
+original_window_name=$6
 
 BACKSPACE=$'\177'
 
@@ -47,7 +47,7 @@ function zoom_pane() {
 
 function revert_to_original_pane() {
   tmux swap-pane -s "$current_pane_id" -t "$fingers_pane_id"
-  tmux set-window-option automatic-rename "$original_rename_setting"
+  tmux rename-window "$original_window_name"
 
   if [[ ! -z "$last_pane_id" ]]; then
     tmux select-pane -t "$last_pane_id"
