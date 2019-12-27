@@ -7,6 +7,10 @@ os:
   - linux
   - osx
 cache: /opt
+jobs:
+  exclude:
+    - os: osx
+      env: CI_TMUX_VERSION=2.1
 env:
   - CI_TMUX_VERSION=2.1
   - CI_TMUX_VERSION=2.2
