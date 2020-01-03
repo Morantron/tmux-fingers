@@ -126,10 +126,14 @@ fingers_defaults=( \
 
   [fingers-hint-position]="left" \
   [fingers-hint-format]="#[fg=yellow,bold]%s" \
+  [fingers-selected-hint-format]="#[fg=red,bold]%s" \
+  [fingers-selected-highlight-format]="#[fg=red,nobold,dim]%s" \
   [fingers-highlight-format]="#[fg=yellow,nobold,dim]%s" \
 
   [fingers-hint-position-nocompact]="right" \
   [fingers-hint-format-nocompact]="#[fg=yellow,bold][%s]" \
+  [fingers-selected-hint-format-nocompact]="#[fg=red,bold][%s]" \
+  [fingers-selected-highlight-format-nocompact]="#[fg=red,nobold,dim][%s]" \
   [fingers-highlight-format-nocompact]="#[fg=yellow,nobold,dim]%s" \
 
   [fingers-keyboard-layout]="qwerty" \
@@ -163,9 +167,14 @@ set_tmux_env 'fingers-hint-position-nocompact'
 set_tmux_env 'fingers-hint-format-nocompact' process_format
 set_tmux_env 'fingers-highlight-format-nocompact' process_format
 
+set_tmux_env 'fingers-selected-hint-format' process_format
+set_tmux_env 'fingers-selected-highlight-format' process_format
+set_tmux_env 'fingers-selected-hint-format-nocompact' process_format
+set_tmux_env 'fingers-selected-highlight-format-nocompact' process_format
+
 set_tmux_env 'fingers-keyboard-layout'
 
-for option in fingers-{hint,highlight}-format{,-nocompact}; do
+for option in fingers-{selected-hint,selected-highlight,hint,highlight}-format{,-nocompact}; do
   env_name="$(envify "$option")_NOCOLOR"
   option_value="$(read_from_config "$option")"
   default_value="${fingers_defaults[$option]}"

@@ -12,3 +12,12 @@ function current_ms() {
 function log() {
   echo "$1" >> "$CURRENT_DIR/../fingers.log"
 }
+
+function log_array() {
+  declare -a arg_arr=(${!1})
+
+  for i in "${arg_arr[@]}"
+  do
+    log "> $i"
+  done
+}

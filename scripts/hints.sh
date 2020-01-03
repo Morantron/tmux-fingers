@@ -29,12 +29,22 @@ function get_stdin() {
 
 function show_hints() {
   local fingers_pane_id=$1
-  local compact_hints=$2
+  shift
+  local compact_hints=$1
+  shift
+  local multi_mode=$1
+  shift
+  declare -a selected_hints=(${@})
 
   FINGERS_ALPHABET_DIR="$CURRENT_DIR/../alphabets/$FINGERS_KEYBOARD_LAYOUT/"
 
+  log "logging array begin"
+  log_array selected_hints[@]
+  log "logging array end"
+  log "join array: $(array_join ":" "${selected_hints[@]}")"
+
   clear_screen "$fingers_pane_id"
-  get_stdin | FINGERS_COMPACT_HINTS="$compact_hints" FINGERS_ALPHABET_DIR="$FINGERS_ALPHABET_DIR" gawk -f $CURRENT_DIR/hinter.awk 3> $match_lookup_table
+  get_stdin | FINGERS_SELECTED_HINTS="$(array_join ":" "${selected_hints[@]}")" FINGERS_COMPACT_HINTS="$compact_hints" FINGERS_ALPHABET_DIR="$FINGERS_ALPHABET_DIR" gawk -f $CURRENT_DIR/hinter.awk 3> $match_lookup_table
 }
 
 function show_hints_and_swap() {

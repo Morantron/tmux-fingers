@@ -33,7 +33,7 @@ fingers_bind "?" "toggle-help"
 fingers_bind "Space" "toggle-compact-mode"
 
 fingers_bind "Enter" "noop"
-fingers_bind "Tab" "noop"
+fingers_bind "Tab" "toggle-multi-mode"
 
 fingers_bind "Any" "noop"
 

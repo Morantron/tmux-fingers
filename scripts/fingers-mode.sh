@@ -9,6 +9,7 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
 source $CURRENT_DIR/help.sh
+source $CURRENT_DIR/debug.sh
 
 current_pane_id=$1
 fingers_pane_id=$2
@@ -43,8 +44,8 @@ function hide_cursor() {
   echo -n "$(tput civis)"
 }
 
-function copy_result() {
-  local result="${state[result]}"
+function copy_final_result() {
+  local result="${state[final_result]}"
 
   tmux set-buffer "$result"
 }
@@ -115,7 +116,7 @@ function run_shell_action() {
   local command_to_run="$1"
 
   if [[ ! -z $command_to_run ]]; then
-    tmux run-shell -b "printf \"$(escape_quotes "${state[result]}")\" | MODIFIER=${state[modifier]} HINT=${state[input]} $EXEC_PREFIX $command_to_run"
+    tmux run-shell -b "printf \"$(escape_quotes "${state[final_result]}")\" | MODIFIER=${state[modifier]} HINT=${state[input]} $EXEC_PREFIX $command_to_run"
   fi
 }
 
@@ -175,8 +176,11 @@ trap "handle_exit" EXIT
 state[pane_was_zoomed]=$(is_pane_zoomed "$current_pane_id")
 state[show_help]=0
 state[compact_mode]="$FINGERS_COMPACT_HINTS"
+state[multi_mode]=0
 state[input]=''
 state[modifier]=''
+selected_matches=()
+selected_hints=()
 
 hide_cursor
 show_hints_and_swap "$current_pane_id" "$fingers_pane_id" "$compact_state"
@@ -207,6 +211,9 @@ do
     toggle-compact-mode)
       toggle_state "compact_mode"
       ;;
+    toggle-multi-mode)
+      toggle_state "multi_mode"
+      ;;
     hint:*)
       accept_hint "$statement"
     ;;
@@ -223,20 +230,35 @@ do
   fi
 
   if [[ $(did_state_change "show_help" "1 => 0") == 1 ]]; then
-    show_hints "$fingers_pane_id" "${state[compact_mode]}"
+    show_hints "$fingers_pane_id" "${state[compact_mode]}" "${state[multi_mode]}" "${selected_hints[@]}"
   fi
 
   if [[ $(did_state_change "compact_mode") == 1 ]]; then
-    show_hints "$fingers_pane_id" "${state[compact_mode]}"
+    show_hints "$fingers_pane_id" "${state[compact_mode]}" "${state[multi_mode]}" "${selected_hints[@]}"
+  fi
+
+  # Exiting multi mode makes an early exit
+  if [[ $(did_state_change "multi_mode" "1 => 0") == 1 ]]; then
+    state[final_result]=$(array_join " " "${selected_matches[@]}")
+    copy_final_result
+    break
   fi
 
   input="${state[input]}"
 
-  state[result]=$(lookup_match "$input")
+  state[current_match]=$(lookup_match "$input")
 
-  if [[ -n "${state[result]}" ]]; then
-    copy_result
-    break
+  if [[ -n "${state[current_match]}" ]]; then
+    if [[ "${state[multi_mode]}" == "1" ]]; then
+      selected_matches+=(${state[current_match]})
+      selected_hints+=(${state[input]})
+      state[input]=''
+      show_hints "$fingers_pane_id" "${state[compact_mode]}" "${state[multi_mode]}" "${selected_hints[@]}"
+    else
+      state[final_result]="${state[current_match]}"
+      copy_final_result
+      break
+    fi
   fi
 done < <(tail -f /tmp/fingers-command-queue)
 

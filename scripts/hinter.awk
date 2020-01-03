@@ -15,19 +15,37 @@ BEGIN {
     hint_format_nocolor = ENVIRON["FINGERS_HINT_FORMAT_NOCOLOR"]
     highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT"]
     highlight_format_nocolor = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_NOCOLOR"]
+    selected_highlight_format = ENVIRON["FINGERS_SELECTED_HIGHLIGHT_FORMAT"]
+    selected_highlight_format_nocolor = ENVIRON["FINGERS_SELECTED_HIGHLIGHT_FORMAT_NOCOLOR"]
+    selected_hint_format = ENVIRON["FINGERS_SELECTED_HINT_FORMAT"]
+    selected_hint_format_nocolor = ENVIRON["FINGERS_SELECTED_HINT_FORMAT_NOCOLOR"]
   } else {
     hint_format = ENVIRON["FINGERS_HINT_FORMAT_NOCOMPACT"]
     highlight_format = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_NOCOMPACT"]
     hint_format_nocolor = ENVIRON["FINGERS_HINT_FORMAT_NOCOMPACT_NOCOLOR"]
     highlight_format_nocolor = ENVIRON["FINGERS_HIGHLIGHT_FORMAT_NOCOMPACT_NOCOLOR"]
+    selected_highlight_format = ENVIRON["FINGERS_SELECTED_HIGHLIGHT_FORMAT_NOCOMPACT"]
+    selected_highlight_format_nocolor = ENVIRON["FINGERS_SELECTED_HIGHLIGHT_FORMAT_NOCOMPACT_NOCOLOR"]
+    selected_hint_format = ENVIRON["FINGERS_SELECTED_HINT_FORMAT_NOCOMPACT"]
+    selected_hint_format_nocolor = ENVIRON["FINGERS_SELECTED_HINT_FORMAT_NOCOMPACT_NOCOLOR"]
   }
 
-  if (fingers_hint_position == "left")
-    compound_format = hint_format highlight_format
-  else
-    compound_format = highlight_format hint_format
+  if (fingers_hint_position == "left") {
+    general_compound_format = hint_format highlight_format
+    selected_compound_format = selected_hint_format selected_highlight_format
+  } else {
+    general_compound_format = highlight_format hint_format
+    selected_compound_format = selected_highlight_format selected_hint_format
+  }
 
   hint_lookup = ""
+
+  split(ENVIRON["FINGERS_SELECTED_HINTS"], selected_hints_arr, ":")
+
+  for (i = 1; i <= length(selected_hints_arr); ++i) {
+    selected_hints_lookup[selected_hints_arr[i]] = 1
+  }
+
 }
 
 {
@@ -97,8 +115,16 @@ END {
           hint_lookup = hint_lookup hint ":" token "\n"
         }
 
+        if (selected_hints_lookup[hint]) {
+          this_hint_format_nocolor = selected_hint_format_nocolor
+          this_compound_format = selected_compound_format
+        } else {
+          this_hint_format_nocolor = hint_format_nocolor
+          this_compound_format = general_compound_format
+        }
+
         if (fingers_compact_hints) {
-          hint_len = length(sprintf(hint_format_nocolor, hint))
+          hint_len = length(sprintf(this_hint_format_nocolor, hint))
           if (fingers_hint_position == "left")
             token = substr(token, hint_len + 1, length(token) - hint_len);
           else
@@ -106,9 +132,9 @@ END {
         }
 
         if (fingers_hint_position == "left")
-          token = sprintf(compound_format, hint, token);
+          token = sprintf(this_compound_format, hint, token);
         else
-          token = sprintf(compound_format, token, hint);
+          token = sprintf(this_compound_format, token, hint);
       }
 
       printf "%s", token
