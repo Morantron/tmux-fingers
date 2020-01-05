@@ -126,14 +126,14 @@ fingers_defaults=( \
 
   [fingers-hint-position]="left" \
   [fingers-hint-format]="#[fg=yellow,bold]%s" \
-  [fingers-selected-hint-format]="#[fg=red,bold]%s" \
-  [fingers-selected-highlight-format]="#[fg=red,nobold,dim]%s" \
+  [fingers-selected-hint-format]="#[fg=green,bold]%s" \
+  [fingers-selected-highlight-format]="#[fg=green,nobold,dim]%s" \
   [fingers-highlight-format]="#[fg=yellow,nobold,dim]%s" \
 
   [fingers-hint-position-nocompact]="right" \
   [fingers-hint-format-nocompact]="#[fg=yellow,bold][%s]" \
-  [fingers-selected-hint-format-nocompact]="#[fg=red,bold][%s]" \
-  [fingers-selected-highlight-format-nocompact]="#[fg=red,nobold,dim][%s]" \
+  [fingers-selected-hint-format-nocompact]="#[fg=green,bold][%s]" \
+  [fingers-selected-highlight-format-nocompact]="#[fg=green,nobold,dim][%s]" \
   [fingers-highlight-format-nocompact]="#[fg=yellow,nobold,dim]%s" \
 
   [fingers-keyboard-layout]="qwerty" \
