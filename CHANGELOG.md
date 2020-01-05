@@ -1,3 +1,14 @@
+## 1.0.0 - 05 Jan 2020
+
+* Added @fingers-keyboard-layout option which allows to customize which letters are used when highlighting matches. Designed to reduce finger movement IRL :tm:. ( fixes #16 )
+* Added @fingers-ctrl-action, @fingers-shift-action and @fingers-alt-action to allow different actions when holding ctlr/alt/shift. Ctrl + a-z will open links in browser, SHIFT + a-z will automatically paste selected matches.
+* Added integration with OS clipboard and file openers. This removes dependency with tmux-yank.
+* Added multi mode, which allows to copy multiple matches at the same time. When pressing TAB. ( fixes #66 )
+* Fixed WSL support ( fixes #64 )
+* Fixed accidental window renaming ( fixes #65 )
+* Fixed custom patterns parsing.
+* Migrated tests to TravisCI, which allows to test in OSX and multiple tmux versions easily ( and for free $ ).
+
 ## 0.10.1 - 02 Jan 2019
 
 * Fix dangling pane when cancelling fingers-mode.
