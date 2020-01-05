@@ -9,7 +9,6 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/hints.sh
 source $CURRENT_DIR/utils.sh
 source $CURRENT_DIR/help.sh
-source $CURRENT_DIR/debug.sh
 
 current_pane_id=$1
 fingers_pane_id=$2
