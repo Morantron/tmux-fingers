@@ -19,6 +19,10 @@ pane_input_temp=$5
 original_window_name=$6
 input_method=$7
 
+function rename_fingers_window() {
+  tmux rename-window -t "$fingers_window_id" "$1"
+}
+
 function is_pane_zoomed() {
   local pane_id=$1
 
@@ -235,6 +239,10 @@ do
 
   if [[ $(did_state_change "compact_mode") == 1 ]]; then
     show_hints "$fingers_pane_id" "${state[compact_mode]}" "${state[multi_mode]}" "${selected_hints[@]}"
+  fi
+
+  if [[ $(did_state_change "multi_mode" "0 => 1") == 1 ]]; then
+    rename_fingers_window "[fingers:multi]"
   fi
 
   # Exiting multi mode makes an early exit
