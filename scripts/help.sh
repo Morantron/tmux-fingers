@@ -23,10 +23,10 @@ tmux-fingers ( $FINGERS_VERSION ) help:
                  automatically pastes selected matches.
 - <alt> + a-z:   copies selected match to the clipboard and triggers
                  @fingers-alt-action. There is no default, configurable by the user.
-- <space>:       toggle compact hints on/off
 - <Tab>:         toggle multi mode. First press enters multi mode, which allows
                  to select multiple matches. Second press will exit with the selected matches
                  copied to the clipboard.
+- <space>:       toggle compact hints on/off
 - ?:             show/hide this help
 - <Ctrl-C>, <esc> or q: exit [fingers] mode
 ENDOFHELP

@@ -10,7 +10,7 @@
 
 Press ( <kbd>prefix</kbd> + <kbd>F</kbd> ) to enter **[fingers]** mode, it will highlight relevant stuff in the current
 pane along with letter hints. By pressing those letters, the highlighted match
-will be yanked. Less keystrokes == profit!
+will be copied to the clipboard. Less keystrokes == profit!
 
 Here is a list of the stuff highlighted by default.
 
@@ -29,7 +29,11 @@ the scroll position into account.
 
 While in **[fingers]** mode, you can use the following shortcuts:
 
-* <kbd>a</kbd>-<kbd>z</kbd>: yank a highlighted hint.
+* <kbd>a</kbd>-<kbd>z</kbd>: copies selected match to the clipboard
+* <kbd>CTRL</kbd> + <kbd>a</kbd>-<kbd>z</kbd>: copies selected match to the clipboard and triggers [@fingers-ctrl-action](#fingers-ctrl-action). By default it triggers `:open:` action, which is useful for opening links in the browser for example.
+* <kbd>SHIFT</kbd> + <kbd>a</kbd>-<kbd>z</kbd>: copies selected match to the clipboard and triggers [@fingers-ctrl-action](#fingers-shift-action). By default it triggers `:paste:` action, which automatically pastes selected matches.
+* <kbd>ALT</kbd> + <kbd>a</kbd>-<kbd>z</kbd>: copies selected match to the clipboard and triggers [@fingers-alt-action](#fingers-alt-action). There is no default, configurable by the user.
+* <kbd>TAB</kbd>: toggle multi mode. First press enters multi mode, which allows to select multiple matches. Second press will exit with the selected matches copied to the clipboard.
 * <kbd>SPACE</kbd>: toggle compact hints ( see [@fingers-compact-hints](#fingers-compact-hints) ).
 * <kbd>CTRL</kbd> + <kbd>c</kbd>: exit **[fingers]** mode
 * <kbd>ESC</kbd>: exit help or **[fingers]** mode
@@ -195,7 +199,7 @@ By default **tmux-fingers** will show hints in a compact format. For example:
 /path/to/foo/bar/lol <strong>[aw]</strong>
 </pre>
 
-( _pressing *aw* would yank `/path/to/foo/bar/lol`_ )
+( _pressing *aw* would copy `/path/to/foo/bar/lol`_ )
 
 While in **[fingers]** mode you can press <kbd>SPACE</kbd> to toggle compact mode on/off.
 
@@ -237,13 +241,37 @@ Same as above, used when `@fingers-compact-hints` is set to `0`.
 
 ## @fingers-highlight-format
 
-`default: "#[fg=yellow,bold,dim]%s"`
+`default: "#[fg=yellow,nobold,dim]%s"`
 
 Custom format for the highlighted match. See [@fingers-hint-format](#fingers-hint-format) for more details.
 
 ## @fingers-highlight-format-nocompact
 
-`default: "#[fg=yellow,bold,dim]%s"`
+`default: "#[fg=yellow,nobold,dim]%s"`
+
+Same as above, used when `@fingers-compact-hints` is set to `0`.
+
+## @fingers-selected-hint-format
+
+`default: "#[fg=green,green]%s"`
+
+Format for hints in selected matches in multimode.
+
+## @fingers-selected-hint-format-nocompact
+
+`default: "#[fg=green,bold][%s]"`
+
+Same as above, used when `@fingers-compact-hints` is set to `0`.
+
+## @fingers-selected-highlight-format
+
+`default: "#[fg=green,nobold,dim]%s"`
+
+Format for selected matches in multimode.
+
+## @fingers-selected-hint-format-nocompact
+
+`default: "#[fg=green,nobold,dim][%s]"`
 
 Same as above, used when `@fingers-compact-hints` is set to `0`.
 
