@@ -8,6 +8,7 @@
 * Fixed accidental window renaming ( fixes #65 )
 * Fixed custom patterns parsing.
 * Migrated tests to TravisCI, which allows to test in OSX and multiple tmux versions easily ( and for free $ ).
+* Deprecated @fingers-copy-command and @fingers-copy-command uppercase in favour of @fingers-(main|ctrl|shift|alt)-action option set.
 
 ## 0.10.1 - 02 Jan 2019
 

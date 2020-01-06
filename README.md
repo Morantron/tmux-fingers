@@ -96,6 +96,10 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 * [@fingers-hint-format-nocompact](#fingers-hint-format-nocompact)
 * [@fingers-highlight-format](#fingers-highlight-format)
 * [@fingers-highlight-format-nocompact](#fingers-highlight-format-nocompact)
+* [@fingers-selected-hint-format](#fingers-selected-hint-format)
+* [@fingers-selected-hint-format-nocompact](#fingers-selected-hint-format-nocompact)
+* [@fingers-selected-highlight-format](#fingers-selected-highlight-format)
+* [@fingers-selected-highlight-format-nocompact](#fingers-selected-highlight-format-nocompact)
 * deprecated: [@fingers-copy-command](#fingers-copy-command)
 * deprecated: [@fingers-copy-command-uppercase](#fingers-copy-command-uppercase)
 
