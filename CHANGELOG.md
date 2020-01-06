@@ -1,3 +1,7 @@
+## 1.0.1 - 05 Jan 2020
+
+* Fix default open command discovery ( fixes #70 )
+
 ## 1.0.0 - 05 Jan 2020
 
 * Added @fingers-keyboard-layout option which allows to customize which letters are used when highlighting matches. Designed to reduce finger movement IRL :tm:. ( fixes #16 )
