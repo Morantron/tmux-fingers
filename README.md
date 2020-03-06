@@ -15,7 +15,7 @@ will be copied to the clipboard. Less keystrokes == profit!
 Here is a list of the stuff highlighted by default.
 
 * File paths
-* git SHAs
+* SHAs
 * numbers ( 4+ digits )
 * hex numbers
 * IP addresses
