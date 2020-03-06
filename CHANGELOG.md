@@ -1,3 +1,7 @@
+## 1.1.0 - 06 Mar 2020
+
+* Extended default SHA pattern to match up to 128 digits ( fixes #73 )
+
 ## 1.0.1 - 05 Jan 2020
 
 * Fix default open command discovery ( fixes #70 )
