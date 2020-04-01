@@ -56,7 +56,15 @@ BEGIN {
 
   line = $0
 
-  while (match(line, finger_patterns)) {
+  while (match(line, finger_patterns, matches)) {
+    match_token = matches[0];
+    for (i in matches) {
+      if (i != 0 && !index(i, SUBSEP)) {
+        match_token = matches[i];
+        break;
+      }
+    }
+    match(line, match_token);
     n_matches++
     col_pos = RSTART;
 
