@@ -2,3 +2,10 @@
 node_modules/
 .vagrant/
 .gawk*
+.bundle
+vendor/bundle
+.cache
+.byebug_history
+shared
+bin/*
+/lib

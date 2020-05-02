@@ -1,0 +1,18 @@
+name: fingers
+version: 0.1.0
+
+authors:
+  - Jorge Morante <jorge@morante.eu>
+
+targets:
+  tmux-fingers:
+    main: src/fingers.cr
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 1.3.0
+
+crystal: 1.9.2
+
+license: MIT

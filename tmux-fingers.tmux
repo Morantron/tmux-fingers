@@ -1,24 +1,22 @@
 #!/usr/bin/env bash
 
-THIS_CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+echo "sourcing tmux-fingers.tmux" >> /tmp/wat.log
 
-tmux run -b "bash --norc --noprofile $THIS_CURRENT_DIR/scripts/config.sh"
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source "$THIS_CURRENT_DIR/scripts/utils.sh"
-
-DEFAULT_FINGERS_KEY="F"
-FINGERS_KEY=$(tmux show-option -gqv @fingers-key)
-FINGERS_KEY=${FINGERS_KEY:-$DEFAULT_FINGERS_KEY}
-
-TMUX_VERSION=$(get_tmux_version)
-
-input_method=""
-if [[ $(version_compare_ge "$(get_tmux_version)" "2.8") == "1" ]]
-then
-  input_method="fingers-mode"
-  tmux run -b "bash $THIS_CURRENT_DIR/scripts/setup-fingers-mode-bindings.sh"
-else
-  input_method="legacy"
+if [ ! -f "$CURRENT_DIR/bin/tmux-fingers" ]; then
+  tmux run-shell -b "bash $CURRENT_DIR/install-wizard.sh"
+  exit 0
 fi
 
-tmux bind-key $FINGERS_KEY run-shell "$THIS_CURRENT_DIR/scripts/tmux-fingers.sh '$input_method'"
+CURRENT_FINGERS_VERSION="$($CURRENT_DIR/bin/tmux-fingers version)"
+CURRENT_GIT_VERSION=$(git describe --tags | sed "s/-.*//g")
+
+if [ "$CURRENT_FINGERS_VERSION" != "$CURRENT_GIT_VERSION" ]; then
+  tmux run-shell -b "FINGERS_UPDATE=1 bash $CURRENT_DIR/install-wizard.sh"
+  exit 0
+fi
+
+echo "running bin/tmux-fingers load-config" >> /tmp/wat.log
+"$CURRENT_DIR/bin/tmux-fingers" "load-config"
+exit $?
