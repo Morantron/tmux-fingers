@@ -82,14 +82,13 @@ function default_open_command () {
 }
 
 PATTERNS_LIST=(
-"((^|^\.|[[:space:]]|[[:space:]]\.|[[:space:]]\.\.|^\.\.)[[:alnum:]~_-]*/[][[:alnum:]_.#$%&+=/@-]+)"
-"([[:digit:]]{4,})"
-"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
-"([0-9a-f]{7,128})"
-"((https?://|git@|git://|ssh://|ftp://|file:///)[[:alnum:]?=%/_.:,;~@!#$&()*+-]*)"
-"([[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3}\.[[:digit:]]{1,3})"
-"(0x[0-9a-fA-F]+)"
-"(deployment.app|binding|componentstatuse|configmap|endpoint|event|limitrange|namespace|node|persistentvolumeclaim|persistentvolume|pod|podtemplate|replicationcontroller|resourcequota|secret|serviceaccount|service|mutatingwebhookconfiguration.admissionregistration.k8s.io|validatingwebhookconfiguration.admissionregistration.k8s.io|customresourcedefinition.apiextension.k8s.io|apiservice.apiregistration.k8s.io|controllerrevision.apps|daemonset.apps|deployment.apps|replicaset.apps|statefulset.apps|tokenreview.authentication.k8s.io|localsubjectaccessreview.authorization.k8s.io|selfsubjectaccessreviews.authorization.k8s.io|selfsubjectrulesreview.authorization.k8s.io|subjectaccessreview.authorization.k8s.io|horizontalpodautoscaler.autoscaling|cronjob.batch|job.batch|certificatesigningrequest.certificates.k8s.io|events.events.k8s.io|daemonset.extensions|deployment.extensions|ingress.extensions|networkpolicies.extensions|podsecuritypolicies.extensions|replicaset.extensions|networkpolicie.networking.k8s.io|poddisruptionbudget.policy|clusterrolebinding.rbac.authorization.k8s.io|clusterrole.rbac.authorization.k8s.io|rolebinding.rbac.authorization.k8s.io|role.rbac.authorization.k8s.io|storageclasse.storage.k8s.io)[[:alnum:]_#$%&+=/@-]+"
+ "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
+ "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+ "([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
+ "[0-9a-f]{7,128}"
+ "[0-9]{4,}"
+ "((https?://|git@|git://|ssh://|ftp://|file:///)[^ ]+)"
+ "(([.\w\-~\$@]+)?(/[.\w\-@]+)+/?)"
 )
 
 if [[ $(tmux show-options -g | grep -q @fingers-pattern && echo $?) ]]; then
@@ -99,18 +98,6 @@ if [[ $(tmux show-options -g | grep -q @fingers-pattern && echo $?) ]]; then
 
   PATTERNS_LIST=("${PATTERNS_LIST[@]}" "${USER_DEFINED_PATTERNS[@]}")
 fi
-
-i=0
-for pattern in "${PATTERNS_LIST[@]}" ; do
-  is_pattern_good=$(check_pattern "$pattern")
-
-  if [[ $is_pattern_good == 0 ]]; then
-    display_message "fingers-error: bad user defined pattern $pattern" 5000
-    PATTERNS_LIST[$i]="nope{4000}"
-  fi
-
-  i=$((i + 1))
-done
 
 PATTERNS=$(array_join "|" "${PATTERNS_LIST[@]}")
 

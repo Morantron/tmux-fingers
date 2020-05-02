@@ -16,5 +16,5 @@ invoke_fingers
 tmuxomatic send-keys "p"
 echo_yanked
 
-tmuxomatic__expect "yanked text is 10.0.3.1"
+tmuxomatic__expect "yanked text is 10.0.3.255"
 tmuxomatic__end end_hook

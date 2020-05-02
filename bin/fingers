@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+GC.disable
+
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+
+require 'fingers'
+
+Fingers::CLI.new(ARGV, File.expand_path(__FILE__)).run

@@ -1,8 +1,13 @@
-language: generic
+language: ruby
+rvm:
+  - 2.6
+  - 2.7
+  - 3.0
 install: ./test/provisioning/ci.sh
 script:
   - bash -c 'echo $BASH_VERSION'
-  - ./test/run.sh within-vm
+  - bundle exec rspec
+  - cat ./fingers.log
 os:
   - linux
   - osx
@@ -10,17 +15,17 @@ cache: /opt
 jobs:
   exclude:
     - os: osx
-      env: CI_TMUX_VERSION=2.1
+      env: CI_TMUX_VERSION=3.0
 env:
-  - CI_TMUX_VERSION=2.1
-  - CI_TMUX_VERSION=2.2
-  - CI_TMUX_VERSION=2.3
-  - CI_TMUX_VERSION=2.4
-  - CI_TMUX_VERSION=2.5
-  - CI_TMUX_VERSION=2.6
-  - CI_TMUX_VERSION=2.7
-  - CI_TMUX_VERSION=2.8
-  - CI_TMUX_VERSION=2.9
-  - CI_TMUX_VERSION=2.9a
+  #- CI_TMUX_VERSION=2.1
+  #- CI_TMUX_VERSION=2.2
+  #- CI_TMUX_VERSION=2.3
+  #- CI_TMUX_VERSION=2.4
+  #- CI_TMUX_VERSION=2.5
+  #- CI_TMUX_VERSION=2.6
+  #- CI_TMUX_VERSION=2.7
+  #- CI_TMUX_VERSION=2.8
+  #- CI_TMUX_VERSION=2.9
+  #- CI_TMUX_VERSION=2.9a
   - CI_TMUX_VERSION=3.0
-  - CI_TMUX_VERSION=3.0a
+  #- CI_TMUX_VERSION=3.0a

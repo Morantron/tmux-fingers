@@ -2,8 +2,8 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-sudo aptitude update
-sudo aptitude install -y fish gawk perl
+sudo apt update
+sudo apt install -y fish gawk perl
 
 sudo useradd -m -p "$(perl -e "print crypt('fishman','sa');")" -s "/usr/bin/fish" fishman
 

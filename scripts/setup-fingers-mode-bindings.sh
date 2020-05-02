@@ -4,7 +4,7 @@ function fingers_bind() {
   local key="$1"
   local command="$2"
 
-  tmux bind-key -Tfingers "$key" run-shell -b "$CURRENT_DIR/send-input.sh '$command'"
+  tmux bind-key -Tfingers "$key" run-shell -b "$CURRENT_DIR/../fingers/cli.rb send_input '$command'"
 }
 
 for char in {a..z}

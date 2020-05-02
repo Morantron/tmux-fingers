@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# %BENCHMARK_START%
-
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $CURRENT_DIR/utils.sh
 
@@ -72,6 +70,6 @@ function prompt_fingers_for_pane() {
   echo $fingers_pane_id
 }
 
-last_pane_id=$(tmux display -pt':.{last}' '#{pane_id}' 2>/dev/null)
+last_pane_id=$2
 current_pane_id=$(tmux list-panes -F "#{pane_id}:#{?pane_active,active,nope}" | grep active | cut -d: -f1)
 fingers_pane_id=$(prompt_fingers_for_pane "$current_pane_id" "$last_pane_id")

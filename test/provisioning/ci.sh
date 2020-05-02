@@ -9,3 +9,12 @@ else
   sudo usermod -a -G travis fishman
 fi
 
+$CURRENT_DIR/../use-tmux.sh "$CI_TMUX_VERSION"
+
+echo $PATH
+echo $(which tmux)
+
+bundle install
+
+# remove weird warnings in rb shell commands about world writable folder
+sudo chmod go-w -R /opt

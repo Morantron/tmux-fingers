@@ -10,4 +10,6 @@ brew install bash gawk reattach-to-user-namespace
 sudo mkdir -p /opt/vagrant
 sudo ln -s "$PWD" /opt/vagrant/shared
 
+bundle
+
 $CURRENT_DIR/../install-tmux-versions.sh
