@@ -63,7 +63,7 @@ function default_copy_command () {
   elif [[ $(program_exists "wl-copy") = "1" ]]; then # wl-clipboard: Wayland clipboard utilities
     echo "wl-copy"
   elif [[ $(program_exists "xsel") = "1" ]]; then
-    echo "xsel -i --clipboard"
+    echo "xsel -i --clipboard -l $HOME/.local/share/.xsel.log"
   elif [[ $(program_exists "xclip") = "1" ]]; then
     echo "xclip -selection clipboard"
   elif [[ $(program_exists "putclip") = "1" ]]; then # cygwin clipboard command
