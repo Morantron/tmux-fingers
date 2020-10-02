@@ -8,7 +8,7 @@
 
 # Usage
 
-Press ( <kbd>prefix</kbd> + <kbd>F</kbd> ) to enter **[fingers]** mode, it will highlight relevant stuff in the current
+Press ( <kbd>prefix</kbd> + <kbd>FINGERS</kbd> ) to enter **[fingers]** mode, it will highlight relevant stuff in the current
 pane along with letter hints. By pressing those letters, the highlighted match
 will be copied to the clipboard. Less keystrokes == profit!
 
