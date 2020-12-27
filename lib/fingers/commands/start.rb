@@ -9,7 +9,7 @@ class PanePrinter
   end
 end
 
-class Fingers::Command::Start < Fingers::Command::Base
+class Fingers::Commands::Start < Fingers::Commands::Base
   State = Struct.new(
     :show_help,
     :compact_mode,

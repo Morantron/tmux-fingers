@@ -12,13 +12,13 @@ module Fingers
 
       command_class = case ARGV[0]
                       when 'start'
-                        Fingers::Command::Start
+                        Fingers::Commands::Start
                       when 'check_version'
-                        Fingers::Command::CheckVersion
+                        Fingers::Commands::CheckVersion
                       when 'send_input'
-                        Fingers::Command::SendInput
+                        Fingers::Commands::SendInput
                       when 'load_config'
-                        Fingers::Command::LoadConfig
+                        Fingers::Commands::LoadConfig
                       else
                         raise "Unknown command #{ARGV[0]}"
                       end

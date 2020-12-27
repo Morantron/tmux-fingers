@@ -1,4 +1,4 @@
-class Fingers::Command::LoadConfig < Fingers::Command::Base
+class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   DISALLOWED_CHARS = /cimqn/.freeze
 
   DEFAULT_PATTERNS = {

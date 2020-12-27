@@ -1,18 +1,14 @@
-module Fingers
-  module Command
-    class Base
-      def initialize(args, cli)
-        @args = args
-        @cli = cli
-      end
+class Fingers::Commands::Base
+  def initialize(args, cli)
+    @args = args
+    @cli = cli
+  end
 
-      protected
+  protected
 
-      attr_reader :args, :cli
+  attr_reader :args, :cli
 
-      def tmux
-        @tmux ||= Tmux.instance
-      end
-    end
+  def tmux
+    @tmux ||= ::Tmux.instance
   end
 end

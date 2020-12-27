@@ -1,4 +1,4 @@
-class Fingers::Command::CheckVersion < Fingers::Command::Base
+class Fingers::Commands::CheckVersion < Fingers::Commands::Base
   def run
     require 'net/https'
 

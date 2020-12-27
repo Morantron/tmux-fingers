@@ -1,4 +1,4 @@
-class Fingers::Command::SendInput < Fingers::Command::Base
+class Fingers::Commands::SendInput < Fingers::Commands::Base
   def run
     socket = InputSocket.new
 
