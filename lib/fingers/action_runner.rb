@@ -11,7 +11,7 @@ class Fingers::ActionRunner
 
     return unless final_shell_command
 
-    `tmux run-shell -b "#{final_shell_command} &> /dev/null"`
+    `tmux run-shell -b "#{final_shell_command} &> #{Fingers::Dirs::LOG_PATH}"`
   end
 
   private
@@ -82,6 +82,8 @@ class Fingers::ActionRunner
                                'wl-copy'
                              elsif program_exists?('xclip')
                                'xclip -selection clipboard'
+                             elsif program_exists?('xsel')
+                               'xsel -i --clipboard'
                              elsif program_exists?('putclip')
                                'putclip'
                              end

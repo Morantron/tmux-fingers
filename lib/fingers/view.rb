@@ -20,7 +20,6 @@ class Fingers::View
   end
 
   def run_action
-    # TODO: handle exit_message, no need to run action
     Fingers::ActionRunner.new(
       hint: state.input,
       modifier: state.modifier,
