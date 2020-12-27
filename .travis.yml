@@ -3,7 +3,7 @@ rvm:
   - 2.6
   - 2.7
   - 3.0
-install: ./test/provisioning/ci.sh
+install: ./spec/provisioning/ci.sh
 script:
   - bash -c 'echo $BASH_VERSION'
   - bundle exec rspec

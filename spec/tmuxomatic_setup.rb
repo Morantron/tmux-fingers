@@ -105,7 +105,7 @@ shared_context 'tmuxomatic setup', a: :b do
   def fingers_stubs_path
     File.expand_path(File.join(
                        fingers_root,
-                       './test/stubs'
+                       './spec/stubs'
                      ))
   end
 
@@ -113,7 +113,7 @@ shared_context 'tmuxomatic setup', a: :b do
     conf_path = File.expand_path(
       File.join(
         File.dirname(__FILE__),
-        '../test/conf/',
+        '../spec/conf/',
         "#{config_name}.conf"
       )
     )

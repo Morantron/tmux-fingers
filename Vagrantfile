@@ -11,6 +11,6 @@ Vagrant.configure(2) do |config|
   config.vm.define 'ubuntu' do |machine|
     machine.vm.box = 'ubuntu/focal64'
     machine.vm.synced_folder '.', '/home/vagrant/shared'
-    machine.vm.provision 'shell', path: './test/provisioning/ubuntu.sh'
+    machine.vm.provision 'shell', path: './spec/provisioning/ubuntu.sh'
   end
 end

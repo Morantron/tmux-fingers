@@ -7,7 +7,7 @@ describe 'acceptance', :retry => 3 do
 
   context 'basic yank' do
     before do
-      exec('cat test/fixtures/grep-output')
+      exec('cat spec/fixtures/grep-output')
 
       invoke_fingers
 
@@ -23,7 +23,7 @@ describe 'acceptance', :retry => 3 do
     let(:config_name) { 'custom-patterns' }
 
     before do
-      exec('cat test/fixtures/custom-patterns')
+      exec('cat spec/fixtures/custom-patterns')
 
       send_keys('echo yanked text is ')
 
@@ -45,7 +45,7 @@ describe 'acceptance', :retry => 3 do
 
   context 'more than one match per line' do
     before do
-      exec('cat test/fixtures/ip-output')
+      exec('cat spec/fixtures/ip-output')
 
       invoke_fingers
       send_keys('i')
@@ -83,7 +83,7 @@ describe 'acceptance', :retry => 3 do
 
     before do
       `rm -rf /tmp/fingers-stub-output`
-      exec('cat test/fixtures/grep-output')
+      exec('cat spec/fixtures/grep-output')
 
       invoke_fingers
       send_keys('M-y')
@@ -103,7 +103,7 @@ describe 'acceptance', :retry => 3 do
 
   context 'shift action' do
     before do
-      exec('cat test/fixtures/grep-output')
+      exec('cat spec/fixtures/grep-output')
 
       send_keys('yanked text is ')
       invoke_fingers
@@ -121,7 +121,7 @@ describe 'acceptance', :retry => 3 do
 
     before do
       `rm -rf /tmp/fingers-stub-output`
-      exec('cat test/fixtures/grep-output')
+      exec('cat spec/fixtures/grep-output')
 
       invoke_fingers
       send_keys(hint_to_press)
@@ -148,7 +148,7 @@ describe 'acceptance', :retry => 3 do
 
     before do
       # zleep 3
-      exec('cat test/fixtures/quotes')
+      exec('cat spec/fixtures/quotes')
       send_keys('echo yanked text is ')
       invoke_fingers
       send_keys('b')
