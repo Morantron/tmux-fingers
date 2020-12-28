@@ -90,7 +90,7 @@ class Tmux
 
     if pane.pane_in_mode == '1'
       start_line = -pane.scroll_position.to_i
-      end_line = pane.pane_height..to_i - pane.scroll_position.to_i - 1
+      end_line = pane.pane_height.to_i - pane.scroll_position.to_i - 1
 
       `#{tmux} capture-pane -J -p -t '#{pane_id}' -S #{start_line} -E #{end_line}`
     else
