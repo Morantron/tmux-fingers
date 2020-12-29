@@ -18,6 +18,7 @@ shared_context 'tmuxomatic setup', a: :b do
 
   let(:tmuxomatic_pane_id) { tmuxomatic.panes.first['pane_id'] }
   let(:tmuxomatic_window_id) { tmuxomatic.panes.first['window_id'] }
+  let(:wait_for_initial_clear) { true }
 
   # Like sleep, but slower on CI lol
   def zzz(amount)
@@ -134,7 +135,7 @@ shared_context 'tmuxomatic setup', a: :b do
     exec("export PROMPT_COMMAND='#{tmuxomatic_unlock_path}'", wait: false)
     zzz 1.0
 
-    exec('clear')
+    exec('clear', wait: wait_for_initial_clear)
   end
 
   after do

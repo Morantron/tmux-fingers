@@ -166,6 +166,7 @@ describe 'acceptance', :retry => 3 do
 
   context 'config options validation' do
     let(:config_name) { 'invalid' }
+    let(:wait_for_initial_clear) { false }
 
     before do
       zzz 5
