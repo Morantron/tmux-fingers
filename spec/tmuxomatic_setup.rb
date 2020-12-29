@@ -143,8 +143,26 @@ shared_context 'tmuxomatic setup', a: :b do
   end
 end
 
+def wrap_in_box(output, width)
+  "┌" + "─" * width + "┐\n" +
+    output.split("\n").map do |line|
+      "│" + line.ljust(width, " ") + "│"
+    end.join("\n") + "\n" +
+  "└" + "─" * width + "┘"
+end
+
 RSpec::Matchers.define :contain_content do |expected|
+  pane_output = nil
+  pane = nil
+
   match do
-    tmuxomatic.capture_pane(tmuxomatic_pane_id).include?(expected)
+    pane = tmuxomatic.pane_by_id(tmuxomatic_pane_id)
+    pane_output = tmuxomatic.capture_pane(tmuxomatic_pane_id)
+    pane_output.include?(expected)
+  end
+
+  failure_message do |_actual|
+    "Could not find '#{expected}' in:\n" +
+    wrap_in_box(pane_output, pane.pane_width.to_i)
   end
 end
