@@ -1,46 +1,18 @@
 class ::Fingers::MatchFormatter
-  class << self
-    def for(compact:)
-      new(
-        hint_format: hint_format(selected: false, compact: compact),
-        highlight_format: highlight_format(selected: false, compact: compact),
-        selected_hint_format: hint_format(selected: true, compact: compact),
-        selected_highlight_format: highlight_format(selected: true, compact: compact),
-        hint_position: Fingers.config.hint_position,
-        compact: Fingers.config.compact_hints,
-      )
-    end
-
-    private
-
-    def hint_format(selected:, compact:)
-      Fingers.config.send(format_method('hint', selected, compact))
-    end
-
-    def highlight_format(selected:, compact:)
-      Fingers.config.send(format_method('highlight', selected, compact))
-    end
-
-    def maybe(string, should_be_included)
-      should_be_included ? string : nil
-    end
-
-    def format_method(part, selected, compact)
-      [
-        maybe("selected", selected),
-        "#{part}_format",
-        maybe("nocompact", !compact)
-      ].compact.join("_")
-    end
-  end
-
-  def initialize(hint_format:, highlight_format:, selected_hint_format:, selected_highlight_format:, hint_position:, compact:)
+  def initialize(
+    hint_format: Fingers.config.hint_format,
+    highlight_format: Fingers.config.highlight_format,
+    selected_hint_format: Fingers.config.selected_hint_format,
+    selected_highlight_format: Fingers.config.selected_highlight_format,
+    hint_position: Fingers.config.hint_position,
+    reset_sequence: `tput sgr0`.chomp
+  )
     @hint_format = hint_format
     @highlight_format = highlight_format
     @selected_hint_format = selected_hint_format
     @selected_highlight_format = selected_highlight_format
     @hint_position = hint_position
-    @compact = compact
+    @reset_sequence = reset_sequence
   end
 
   def format(hint:, highlight:, selected:, offset: nil)
@@ -51,7 +23,7 @@ class ::Fingers::MatchFormatter
 
   private
 
-  attr_reader :hint_format, :highlight_format, :selected_hint_format, :selected_highlight_format, :hint_position, :compact
+  attr_reader :hint_format, :highlight_format, :selected_hint_format, :selected_highlight_format, :hint_position, :reset_sequence
 
   def before_offset(offset, highlight)
     return "" if offset.nil?
@@ -72,47 +44,19 @@ class ::Fingers::MatchFormatter
   end
 
   def format_offset(selected, hint, highlight)
-    format_string(selected) % input(hint, highlight)
-  end
+    chopped_highlight = chop_highlight(hint, highlight)
 
-  def format_string(selected)
-    if selected
-      selected_format_string
+    hint_pair = (selected ? selected_hint_format : hint_format) + hint
+    highlight_pair = (selected ? selected_highlight_format : highlight_format) + chopped_highlight
+
+    if hint_position == "right"
+      highlight_pair + hint_pair + reset_sequence
     else
-      default_format_string
+      hint_pair + highlight_pair + reset_sequence
     end
   end
 
-  def default_format_string
-    @default_format_string ||= arrange_format([
-      hint_format, highlight_format
-    ])
-  end
-
-  def selected_format_string
-    @selected_format_string ||= arrange_format([
-      selected_hint_format, selected_highlight_format
-    ])
-  end
-
-  def arrange_format(fmt)
-    fmt.reverse! if hint_position == 'right'
-    fmt.join
-  end
-
-  def input(hint, highlight)
-    processed_highlight = process_highlight(hint, highlight)
-
-    if hint_position == 'right'
-      [processed_highlight, hint]
-    else
-      [hint, processed_highlight]
-    end
-  end
-
-  def process_highlight(hint, highlight)
-    return highlight unless compact
-
+  def chop_highlight(hint, highlight)
     if hint_position == 'right'
       highlight[0..-(hint.length + 1)]
     else

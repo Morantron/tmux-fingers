@@ -28,13 +28,9 @@ class Huffman
     attr_reader :children, :weight
   end
 
-  def initialize(alphabet:, n:)
-    @alphabet = alphabet
-    @n = n
-    @heap = build_heap
-  end
+  def generate_hints(alphabet:, n:)
+    setup!(alphabet: alphabet, n: n)
 
-  def generate_hints
     return alphabet if n <= alphabet.length
 
     first_node = true
@@ -65,6 +61,12 @@ class Huffman
   private
 
   attr_reader :alphabet, :n, :heap
+
+  def setup!(alphabet:, n:)
+    @alphabet = alphabet
+    @n = n
+    @heap = build_heap
+  end
 
   def initial_number_of_branches
     result = nil

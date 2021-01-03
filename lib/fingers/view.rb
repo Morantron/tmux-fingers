@@ -45,11 +45,6 @@ class Fingers::View
     output.print 'Help message'
   end
 
-  def toggle_compact_mode_message
-    state.compact_mode = !state.compact_mode
-    render
-  end
-
   def noop_message; end
 
   def toggle_multi_mode_message

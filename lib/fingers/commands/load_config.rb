@@ -60,8 +60,6 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
         parsed_format = Tmux.instance.parse_format(value)
 
         Fingers.config.send("#{option}=".to_sym, parsed_format)
-      elsif option == 'compact_hints'
-        Fingers.config.compact_hints = to_bool(value)
       else
         Fingers.config.send("#{option}=".to_sym, value)
       end
@@ -106,7 +104,6 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     fingers_mode_bind('Escape', 'exit')
 
     fingers_mode_bind('?', 'toggle-help')
-    fingers_mode_bind('Space', 'toggle_compact_mode')
 
     fingers_mode_bind('Enter', 'noop')
     fingers_mode_bind('Tab', 'toggle_multi_mode')

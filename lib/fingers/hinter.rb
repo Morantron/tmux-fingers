@@ -1,6 +1,4 @@
 class ::Fingers::Hinter
-  DEFAULT_FORMATTER_BUILDER = ->(compact) { ::Fingers::MatchFormatter.for(compact: compact) }
-
   def initialize(
     input:,
     width:,
@@ -8,21 +6,21 @@ class ::Fingers::Hinter
     patterns: Fingers.config.patterns,
     alphabet: Fingers.config.alphabet,
     output:,
-    formatter_builder: DEFAULT_FORMATTER_BUILDER
+    huffman: Huffman.new,
+    formatter: ::Fingers::MatchFormatter.new
   )
     @input = input
     @width = width
     @hints_by_text = {}
     @state = state
     @output = output
-    @formatter_builder = formatter_builder
+    @formatter = formatter
+    @huffman = huffman
     @patterns = patterns
     @alphabet = alphabet
   end
 
   def run
-    set_formatter!
-
     lines[0..-2].each { |line| process_line(line, "\n") }
     process_line(lines[-1], '')
 
@@ -44,14 +42,10 @@ class ::Fingers::Hinter
               :width,
               :state,
               :formatter,
+              :huffman,
               :output,
-              :formatter_builder,
               :patterns,
               :alphabet
-
-  def set_formatter!
-    @formatter = formatter_builder.call(state.compact_mode)
-  end
 
   def build_lookup_table!
     @lookup_table = hints_by_text.invert
@@ -69,7 +63,7 @@ class ::Fingers::Hinter
   def hints
     return @hints if @hints
 
-    @hints = Huffman.new(alphabet: alphabet, n: n_matches).generate_hints
+    @hints = huffman.generate_hints(alphabet: alphabet, n: n_matches)
   end
 
   def replace(match)
@@ -111,17 +105,20 @@ class ::Fingers::Hinter
   def n_matches
     return @n_matches if @n_matches
 
-    count = 0
+    match_set = ::Set.new
 
-    Fingers.benchmark_stamp('counting_matches:start')
+    Fingers.benchmark_stamp('counting-matches:start')
 
-    lines.each { |line| count += line.scan(pattern).length }
+    lines.each do |line|
+      line.scan(pattern).each do |match|
+        match_set.add(match)
+      end
+    end
 
-    Fingers.benchmark_stamp('counting_matches:end')
+    Fingers.benchmark_stamp('counting-matches:end')
 
-    # TODO: are we taking into account duplicates here?
-    @n_matches = count
+    @n_matches = match_set.length
 
-    count
+    @n_matches
   end
 end

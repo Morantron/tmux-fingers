@@ -12,7 +12,6 @@ end
 class Fingers::Commands::Start < Fingers::Commands::Base
   State = Struct.new(
     :show_help,
-    :compact_mode,
     :multi_mode,
     :input,
     :modifier,
@@ -85,7 +84,6 @@ class Fingers::Commands::Start < Fingers::Commands::Base
 
     @state = State.new
 
-    @state.compact_mode = Fingers.config.compact_hints
     @state.multi_mode = false
     @state.show_help = false
     @state.input = ''

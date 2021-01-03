@@ -1,5 +1,5 @@
 class TmuxFormatPrinter
-  PATTERN_FORMAT = /#\[([^\]]*)\]/.freeze
+  FORMAT_SEPARATOR = /[ ,]+/.freeze
 
   COLOR_MAP = {
     black: 0,
@@ -36,19 +36,16 @@ class TmuxFormatPrinter
     @shell = shell
   end
 
-  def print(input)
+  def print(input, reset_styles_after: false)
     @applied_styles = {}
 
-    output = input.gsub(PATTERN_FORMAT) do
-      match = $~
-      formats = match[1]
+    output = ''
 
-      formats.split(',').map do |format|
-        parse_format(format)
-      end.join
+    input.split(FORMAT_SEPARATOR).each do |format|
+      output += parse_format(format)
     end
 
-    output += reset_sequence unless @applied_styles.empty?
+    output += reset_sequence if reset_styles_after && !@applied_styles.empty?
 
     output
   end

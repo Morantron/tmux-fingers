@@ -7,6 +7,7 @@ require 'timeout'
 require 'socket'
 require 'pathname'
 require 'tmpdir'
+require 'set'
 
 # Top level fingers namespace
 module Fingers

@@ -1,12 +1,11 @@
 require 'spec_helper'
 
 describe Fingers::MatchFormatter do
-  let(:highlight_format) { '%s' }
-  let(:hint_format) { '[%s]' }
+  let(:hint_format) { '#[fg=yellow,bold]' }
+  let(:highlight_format) { '#[fg=yellow]' }
   let(:hint_position) { 'left' }
-  let(:selected_hint_format) { '{%s}' }
-  let(:selected_highlight_format) { '{%s}' }
-  let(:compact) { false }
+  let(:selected_hint_format) { '#[fg=green,bold]' }
+  let(:selected_highlight_format) { '#[fg=green]' }
   let(:selected) { false }
   let(:offset) { nil }
 
@@ -20,7 +19,7 @@ describe Fingers::MatchFormatter do
       selected_highlight_format: selected_highlight_format,
       selected_hint_format: selected_hint_format,
       hint_position: hint_position,
-      compact: compact
+      reset_sequence: '#[reset]'
     )
   end
 
@@ -33,7 +32,7 @@ describe Fingers::MatchFormatter do
       let(:hint_position) { 'left' }
 
       it 'places the hint on the left side' do
-        expect(result).to eq('[a]yolo')
+        expect(result).to eq('#[fg=yellow,bold]a#[fg=yellow]olo#[reset]')
       end
     end
 
@@ -41,51 +40,26 @@ describe Fingers::MatchFormatter do
       let(:hint_position) { 'right' }
 
       it 'places the hint on the right side' do
-        expect(result).to eq('yolo[a]')
+        expect(result).to eq('#[fg=yellow]yol#[fg=yellow,bold]a#[reset]')
       end
     end
-  end
-
-  context 'when compact mode is set' do
-    let(:compact) { true }
-    let(:hint_format) { '%s' }
-
-    context 'and position is set to left' do
-      let(:hint_position) { 'left' }
-
-      it 'correctly places the hint inside the highlight' do
-        expect(result).to eq('aolo')
-      end
-    end
-
-    context 'and position is set to right' do
-      let(:hint_position) { 'right' }
-
-      it 'correctly places the hint inside the highlight' do
-        expect(result).to eq('yola')
-      end
-    end
-
-    # TODO: what if hint is longer than highlight? hehehe
   end
 
   context 'when a hint is selected' do
     let(:selected) { true }
 
     it 'selects the correct format' do
-      expect(result).to eq('{a}{yolo}')
+      expect(result).to eq('#[fg=green,bold]a#[fg=green]olo#[reset]')
     end
   end
 
   context 'when offset is provided' do
-    let(:compact) { false }
     let(:offset) { [1, 5] }
     let(:highlight) { 'yoloyoloyolo' }
     let(:hint) { 'a' }
-    let(:highlight_format) { '|%s|' }
 
     it 'only highlights at specified offset' do
-      expect(result).to eq('y[a]|oloyo|loyolo')
+      expect(result).to eq('y#[fg=yellow,bold]a#[fg=yellow]loyo#[reset]loyolo')
     end
   end
 end
