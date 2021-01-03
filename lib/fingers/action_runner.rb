@@ -11,7 +11,8 @@ class Fingers::ActionRunner
 
     return unless final_shell_command
 
-    `tmux run-shell -b "#{final_shell_command} &> #{Fingers::Dirs::LOG_PATH}"`
+    redirect_to_log_file = ">>#{Fingers::Dirs::LOG_PATH} 2>&1"
+    `tmux run-shell -b "#{final_shell_command} #{redirect_to_log_file}"`
   end
 
   private

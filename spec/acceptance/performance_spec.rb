@@ -20,11 +20,6 @@ def measure_benchmarks
     elsif phase == 'end'
       _, start_ms = step_stack.pop
 
-      puts "step: #{step}"
-      puts "ms: #{ms}"
-      puts "start_ms: #{start_ms}"
-      puts '----'
-
       ellapsed_ms = ms - start_ms
 
       ellapsed_times_by_step[step] = [] unless ellapsed_times_by_step[step]

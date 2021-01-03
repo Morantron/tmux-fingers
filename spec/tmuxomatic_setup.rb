@@ -30,7 +30,7 @@ shared_context 'tmuxomatic setup', a: :b do
       tmuxomatic.send_keys(tmuxomatic_pane_id, keys)
       if trace_benchmark
         Fingers.benchmark_stamp('boot:start')
-        Fingers.benchmark_stamp('ready_for_input:start')
+        Fingers.benchmark_stamp('ready-for-input:start')
       end
     end
     # TODO: detect when key is received, is it even possible?

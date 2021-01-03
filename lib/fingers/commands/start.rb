@@ -113,6 +113,7 @@ class Fingers::Commands::Start < Fingers::Commands::Base
     tmux.disable_prefix
     tmux.set_key_table 'fingers'
 
+    Fingers.benchmark_stamp('ready-for-input:end')
     Fingers.trace_for_tests_do_not_remove_or_the_whole_fabric_of_reality_will_tear_apart_with_unforeseen_consequences('fingers-ready')
 
     input_socket.on_input do |input|

@@ -80,11 +80,10 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   end
 
   def setup_bindings
-    # ruby
     input_mode = 'fingers-mode'
     ruby_bin = "#{RbConfig.ruby} --disable-gems"
 
-    `tmux bind-key #{Fingers.config.key} run-shell -b "#{ruby_bin} #{cli} start '#{input_mode}' '\#{pane_id}' >#{Fingers::Dirs::LOG_PATH} 2>&1"`
+    `tmux bind-key #{Fingers.config.key} run-shell -b "#{ruby_bin} #{cli} start '#{input_mode}' '\#{pane_id}' >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
 
     setup_fingers_mode_bindings if input_mode == 'fingers-mode'
   end

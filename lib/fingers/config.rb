@@ -56,9 +56,9 @@ module Fingers
   end
 
   def self.load_from_cache
-    Fingers.benchmark_stamp('load_config_from_cache:start')
+    Fingers.benchmark_stamp('load-config-from-cache:start')
     result = Marshal.load(File.open(CONFIG_PATH))
-    Fingers.benchmark_stamp('load_config_from_cache:end')
+    Fingers.benchmark_stamp('load-config-from-cache:end')
     result
   end
 end
