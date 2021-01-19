@@ -1,0 +1,38 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    byebug (11.1.3)
+    diff-lcs (1.3)
+    io-console (0.5.6)
+    irb (1.2.4)
+      reline (>= 0.0.1)
+    reline (0.1.4)
+      io-console (~> 0.5)
+    rspec (3.9.0)
+      rspec-core (~> 3.9.0)
+      rspec-expectations (~> 3.9.0)
+      rspec-mocks (~> 3.9.0)
+    rspec-core (3.9.2)
+      rspec-support (~> 3.9.3)
+    rspec-expectations (3.9.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.9.0)
+    rspec-mocks (3.9.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.9.0)
+    rspec-retry (0.6.2)
+      rspec-core (> 3.3)
+    rspec-support (3.9.3)
+
+PLATFORMS
+  ruby
+  x86_64-linux
+
+DEPENDENCIES
+  byebug
+  irb
+  rspec
+  rspec-retry
+
+BUNDLED WITH
+   2.2.2

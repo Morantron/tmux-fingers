@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-GIT_DIR=$CURRENT_DIR/../.git
-GIT_HOOKS_DIR=$GIT_DIR/hooks
-
-rm -rf "$GIT_HOOKS_DIR"
-ln -s "$CURRENT_DIR" "$GIT_HOOKS_DIR"
