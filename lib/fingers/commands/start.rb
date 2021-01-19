@@ -5,7 +5,7 @@ class PanePrinter
   end
 
   def print(msg)
-    @file.print(msg)
+    @file.write(msg)
   end
 end
 
@@ -23,7 +23,7 @@ class Fingers::Commands::Start < Fingers::Commands::Base
   )
 
   def run
-    _, _input_mode, original_pane_id = args
+    _, original_pane_id = args
 
     @original_pane_id = original_pane_id
 
@@ -50,7 +50,16 @@ class Fingers::Commands::Start < Fingers::Commands::Base
   end
 
   def fingers_window
-    @fingers_window ||= tmux.create_window('[fingers]', 'cat', 80, 24)
+    @fingers_window ||= tmux.create_window('[fingers]', new_window_cmd, 80, 24)
+  end
+
+  def new_window_cmd
+    if tmux.supports_any_key?
+      "cat"
+    else
+      ruby_bin = "#{RbConfig.ruby} --disable-gems"
+      "#{ruby_bin} #{cli} capture_tty_input &> /dev/null"
+    end
   end
 
   def original_pane
@@ -100,7 +109,7 @@ class Fingers::Commands::Start < Fingers::Commands::Base
     view.render
 
     tmux.swap_panes(fingers_pane_id, original_pane_id)
-    tmux.zoom_pane(fingers_pane_id) if pane_was_zoomed?
+    maybe_zoom_pane(fingers_pane_id)
   end
 
   def fingers_pane_id
@@ -110,8 +119,10 @@ class Fingers::Commands::Start < Fingers::Commands::Base
   def handle_input
     input_socket = InputSocket.new
 
-    tmux.disable_prefix
-    tmux.set_key_table 'fingers'
+    if tmux.supports_any_key?
+      tmux.disable_prefix
+      tmux.set_key_table 'fingers'
+    end
 
     Fingers.benchmark_stamp('ready-for-input:end')
     Fingers.trace_for_tests_do_not_remove_or_the_whole_fabric_of_reality_will_tear_apart_with_unforeseen_consequences('fingers-ready')
@@ -142,6 +153,11 @@ class Fingers::Commands::Start < Fingers::Commands::Base
     %w[prefix]
   end
 
+  def maybe_zoom_pane(pane_id)
+    return if tmux.supports_zoom_when_swapping_panes?
+    tmux.zoom_pane(pane_id) if pane_was_zoomed?
+  end
+
   def pane_was_zoomed?
     original_pane.window_zoomed_flag == '1'
   end
@@ -152,7 +168,7 @@ class Fingers::Commands::Start < Fingers::Commands::Base
     tmux.swap_panes(fingers_pane_id, original_pane_id)
     tmux.kill_pane(fingers_pane_id)
 
-    tmux.zoom_pane(original_pane_id) if pane_was_zoomed?
+    maybe_zoom_pane(original_pane_id)
 
     restore_options
     view.run_action if state.result

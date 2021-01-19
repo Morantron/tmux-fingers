@@ -78,7 +78,7 @@ describe 'acceptance', :retry => 3 do
     it { should contain_content('current pane is zoomed') }
   end
 
-  context 'alt action' do
+  context 'alt action', :if => Tmux.instance.supports_any_key? do
     let(:config_name) { 'alt-action' }
 
     before do
@@ -114,7 +114,7 @@ describe 'acceptance', :retry => 3 do
     it { should contain_content('yanked text is scripts/hints.sh') }
   end
 
-  context 'ctrl action' do
+  context 'ctrl action', :if => Tmux.instance.supports_any_key? do
     let(:config_name) { 'ctrl-action' }
     let(:prefix) { 'C-b' }
     let(:hint_to_press) { 'C-y' }

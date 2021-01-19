@@ -3,13 +3,10 @@
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 sudo apt update
-sudo apt install -y fish gawk perl
+sudo apt remove -y tmux xsel
+sudo apt install -y fish gawk perl libevent-dev libncurses5-dev
 
 sudo useradd -m -p "$(perl -e "print crypt('fishman','sa');")" -s "/usr/bin/fish" fishman
-
-# remove system tmux and install tmux dependencies
-sudo aptitude remove -y tmux xsel
-sudo aptitude install -y libevent-dev libncurses5-dev
 
 # stub xclip globally, to avoid having to use xvfb
 if [[ ! -e /usr/bin/xclip ]]; then

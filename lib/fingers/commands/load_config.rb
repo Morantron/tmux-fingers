@@ -38,9 +38,21 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     validate_options!
     parse_tmux_conf
     setup_bindings
+    check_tmux_capabilities
+    save_config
   end
 
   private
+
+  def check_tmux_capabilities
+    man_tmux = `man tmux 2> /dev/null`.chomp
+
+    can_swap_and_zoom = !man_tmux.scan(/swap-pane.*Z.*dst-pane.*\n/).empty?
+  end
+
+  def save_config
+    Fingers.save_config
+  end
 
   def parse_tmux_conf
     options = shell_safe_options
@@ -72,7 +84,6 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
     Fingers.config.alphabet = ALPHABET_MAP[Fingers.config.keyboard_layout.to_sym].split('')
 
-    Fingers.save_config
   end
 
   def clean_up_patterns(patterns)
@@ -80,12 +91,11 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   end
 
   def setup_bindings
-    input_mode = 'fingers-mode'
     ruby_bin = "#{RbConfig.ruby} --disable-gems"
 
-    `tmux bind-key #{Fingers.config.key} run-shell -b "#{ruby_bin} #{cli} start '#{input_mode}' '\#{pane_id}' >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
+    `tmux bind-key #{Fingers.config.key} run-shell -b "#{ruby_bin} #{cli} start '\#{pane_id}' >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
 
-    setup_fingers_mode_bindings if input_mode == 'fingers-mode'
+    setup_fingers_mode_bindings if tmux.supports_any_key?
   end
 
   def setup_fingers_mode_bindings

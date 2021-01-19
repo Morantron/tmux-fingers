@@ -19,6 +19,8 @@ module Fingers
                         Fingers::Commands::SendInput
                       when 'load_config'
                         Fingers::Commands::LoadConfig
+                      when 'capture_tty_input'
+                        Fingers::Commands::CaptureTtyInput
                       else
                         raise "Unknown command #{ARGV[0]}"
                       end

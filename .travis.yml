@@ -1,8 +1,8 @@
 language: ruby
 rvm:
   - 2.6
-  - 2.7
-  - 3.0
+  #- 2.7
+  #- 3.0
 install: ./spec/provisioning/ci.sh
 script:
   - bash -c 'echo $BASH_VERSION'
@@ -10,7 +10,7 @@ script:
   - cat ./fingers.log
 os:
   - linux
-  - osx
+  #- osx
 cache: /opt
 jobs:
   exclude:

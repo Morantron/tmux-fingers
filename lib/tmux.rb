@@ -109,8 +109,11 @@ class Tmux
   end
 
   def swap_panes(src_id, dst_id)
-    # TODO: -Z not supported on all tmux versions
-    system(tmux, 'swap-pane', '-d', '-s', src_id, '-t', dst_id)
+    flags = ['-d', '-s', src_id, '-t', dst_id]
+
+    flags.unshift('-Z') if supports_zoom_when_swapping_panes?
+
+    system(tmux, 'swap-pane', *flags)
   end
 
   def kill_pane(id)
@@ -175,6 +178,14 @@ class Tmux
     format_printer.print(format).chomp
   end
 
+  def supports_any_key?
+    version >= "2.8"
+  end
+
+  def supports_zoom_when_swapping_panes?
+    version >= "3.1"
+  end
+
   attr_accessor :socket, :config_file
 
   private
@@ -200,5 +211,9 @@ class Tmux
       fields = line.split(';')
       yield fields
     end
+  end
+
+  def version
+    @version ||= Version.new(`#{tmux} -V`.chomp)
   end
 end
