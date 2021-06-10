@@ -8,7 +8,7 @@ TMUX_PRINTER="$CONF_CURRENT_DIR/../vendor/tmux-printer/tmux-printer"
 declare -A fingers_defaults
 
 function check_pattern() {
-  echo "beep beep" | grep -e "$1" 2> /dev/null
+  echo "beep beep" | grep -E -e "$1" 2> /dev/null
 
   if [[ $? == "2" ]]; then
     echo 0
@@ -18,7 +18,7 @@ function check_pattern() {
 }
 
 function check_matches_empty_string() {
-  if ! grep -e "$1" <<< "" >/dev/null; then
+  if grep -E -e "$1" <<< "" >/dev/null; then
     echo 0
   else
     echo 1
@@ -122,7 +122,6 @@ for pattern in "${PATTERNS_LIST[@]}" ; do
     display_message "fingers-error: user defined pattern $pattern matched the empty string" 5000
     PATTERNS_LIST[$i]="nope{4000}"
   fi
-
 
   i=$((i + 1))
 done
