@@ -128,7 +128,8 @@ set -g @fingers-pattern-1 'yolo'
 set -g @fingers-pattern-50 'whatever'
 ```
 
-Patterns are case insensitive, and grep's extended syntax ( ERE ) should be used.
+Patterns are case insensitive, and grep's extended syntax ( ERE ) should be used. Patterns
+matching the empty string are disallowed.
 `man grep` for more info.
 
 If the introduced regexp contains an error, an error will be shown when
