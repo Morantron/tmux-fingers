@@ -12,11 +12,9 @@ module Fingers
     :shift_action,
     :hint_position,
     :hint_format,
-    :highlight_format,
     :selected_hint_format,
     :selected_highlight_format,
-    :hint_separator,
-    :hint_wrapper,
+    :highlight_format,
   ) do
     def initialize(
       key = 'F',

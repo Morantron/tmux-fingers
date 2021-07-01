@@ -1,6 +1,5 @@
 class Fingers::View
-
-  CLEAR_ESCAPE_SEQUENCE = "\e[H\e[2J".freeze
+  CLEAR_ESCAPE_SEQUENCE = "\e[H\e[J".freeze
 
   def initialize(hinter:, state:, output:, original_pane:)
     @hinter = hinter
@@ -15,7 +14,7 @@ class Fingers::View
   end
 
   def render
-    output.print "---clear---\n"
+    output.print CLEAR_ESCAPE_SEQUENCE
     hide_cursor
     hinter.run
   end
@@ -38,7 +37,7 @@ class Fingers::View
   attr_reader :hinter, :state, :output, :original_pane
 
   def hide_cursor
-    output.print ""
+    output.print `tput civis`
   end
 
   def toggle_help_message

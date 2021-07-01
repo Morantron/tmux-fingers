@@ -24,7 +24,7 @@ class ::Fingers::Hinter
     lines[0..-2].each { |line| process_line(line, "\n") }
     process_line(lines[-1], '')
 
-    #STDOUT.flush
+    STDOUT.flush
 
     build_lookup_table!
   end

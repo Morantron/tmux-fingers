@@ -3,7 +3,7 @@
 if [[ -n "$CI_TMUX_VERSION" ]]; then
   VERSIONS=("$CI_TMUX_VERSION")
 else
-  VERSIONS=("2.1" "2.2" "2.3" "2.4" "2.5" "2.6" "2.7" "2.8" "2.9" "2.9a" "3.0" "3.0a" "3.1c")
+  VERSIONS=("2.1" "2.2" "2.3" "2.4" "2.5" "2.6" "2.7" "2.8" "2.9" "2.9a" "3.0" "3.0a")
 fi
 
 sudo mkdir -p /opt

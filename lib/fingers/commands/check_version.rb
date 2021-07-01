@@ -8,9 +8,9 @@ class Fingers::Commands::CheckVersion < Fingers::Commands::Base
     response = Net::HTTP.get_response(uri)
     json_response = JSON.parse(response.body)
 
-    latest_release = json_response.map { |tag| Version.new(tag['name']) }.max
+    latest_release = json_response.map { |tag| Gem::Version.new(tag['name']) }.max
 
-    current_release = Version.new(Fingers::VERSION)
+    current_release = Gem::Version.new(Fingers::VERSION)
 
     puts "There is a new tmux-fingers release: #{latest_release}" if latest_release > current_release
   rescue StandardError => e
