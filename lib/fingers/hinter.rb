@@ -69,8 +69,6 @@ class ::Fingers::Hinter
   def replace(match)
     text = match[0]
 
-    return text if hints.empty?
-
     captured_text = match && match.named_captures['capture'] || text
 
     if match.named_captures['capture']
@@ -81,6 +79,7 @@ class ::Fingers::Hinter
     else
       capture_offset = nil
     end
+
 
     if hints_by_text.has_key?(captured_text)
       hint = hints_by_text[captured_text]
@@ -110,8 +109,8 @@ class ::Fingers::Hinter
     Fingers.benchmark_stamp('counting-matches:start')
 
     lines.each do |line|
-      line.scan(pattern).each do |match|
-        match_set.add(match)
+      line.scan(pattern) do |match|
+        match_set.add($&)
       end
     end
 
