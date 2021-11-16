@@ -1,3 +1,8 @@
+## 1.1.1 - 16 Nov 2020
+
+* Don't allow patterns matching empty string ( fixes #86 )
+* In health-check, suggest to reload tmux.conf when gawk is not found ( fixes #89 )
+
 ## 1.1.0 - 06 Mar 2020
 
 * Extended default SHA pattern to match up to 128 digits ( fixes #73 )
