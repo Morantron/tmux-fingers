@@ -10,16 +10,18 @@ To run the check you need to run the following command.
 
 ## gawk not found
 
-Install `gawk` package.
+Install `gawk` package and reload your tmux.conf.
 
 ### OSX
 
-`$ brew install gawk`
+```
+$ brew install gawk && tmux source ~/.tmux.conf
+```
 
 ### Linux
 
-* Ubuntu: `$ sudo aptitude install gawk`
-* Arch linux: `$ sudo pacman -S install gawk`
+* Ubuntu: `$ sudo aptitude install gawk && tmux source ~/.tmux.conf`
+* Arch linux: `$ sudo pacman -S install gawk && tmux source ~/.tmux.conf`
 
 ## bash version is too old
 
