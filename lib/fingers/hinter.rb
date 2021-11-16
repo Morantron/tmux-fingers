@@ -98,7 +98,7 @@ class ::Fingers::Hinter
   end
 
   def lines
-    @lines ||= input.split("\n")
+    @lines ||= input.force_encoding('UTF-8').split("\n")
   end
 
   def n_matches
