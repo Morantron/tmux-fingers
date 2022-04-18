@@ -13,13 +13,6 @@ require 'set'
 module Fingers
 end
 
-# Monkey patching string to add shellscape method, maybe remove.
-class String
-  def shellescape
-    gsub('"', '\\"')
-  end
-end
-
 require 'tmux'
 require 'tmux_format_printer'
 require 'huffman'

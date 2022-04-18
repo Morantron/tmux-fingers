@@ -11,8 +11,10 @@ class Fingers::ActionRunner
 
     return unless final_shell_command
 
-    redirect_to_log_file = ">>#{Fingers::Dirs::LOG_PATH} 2>&1"
-    `tmux run-shell -b "#{final_shell_command} #{redirect_to_log_file}"`
+    IO.popen(action_env, final_shell_command, "r+") do |io|
+      io.puts match
+      io.close_write
+    end
   end
 
   private
@@ -48,14 +50,14 @@ class Fingers::ActionRunner
     # return unless ENV['DISPLAY']
     return unless system_copy_command
 
-    %(printf "#{match.shellescape}" | #{system_copy_command})
+    system_copy_command
   end
 
   def open
     # return unless ENV['DISPLAY']
     return unless system_open_command
 
-    %(printf "#{match.shellescape}" | #{system_open_command})
+    system_open_command
   end
 
   def paste
@@ -63,7 +65,11 @@ class Fingers::ActionRunner
   end
 
   def shell_action
-    %(printf "#{match.shellescape}" | MODIFIER=#{modifier} HINT=#{hint} #{action})
+    action
+  end
+
+  def action_env
+    { 'MODIFIER' => modifier, 'HINT' => hint }
   end
 
   def action
