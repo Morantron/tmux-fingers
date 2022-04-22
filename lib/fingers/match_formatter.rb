@@ -58,9 +58,9 @@ class ::Fingers::MatchFormatter
 
   def chop_highlight(hint, highlight)
     if hint_position == 'right'
-      highlight[0..-(hint.length + 1)]
+      highlight[0..-(hint.length + 1)] || ""
     else
-      highlight[hint.length..-1]
+      highlight[hint.length..-1] || ""
     end
   end
 end
