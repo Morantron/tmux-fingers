@@ -33,6 +33,10 @@ class ::Fingers::Hinter
     lookup_table[hint]
   end
 
+  def matches
+    @matches ||= @hints_by_text.keys.uniq.flatten
+  end
+
   private
 
   attr_reader :hints,

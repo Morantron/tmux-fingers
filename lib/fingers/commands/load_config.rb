@@ -112,6 +112,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
       fingers_mode_bind("M-#{char}", "hint:#{char}:alt")
     end
 
+    fingers_mode_bind('Space', 'fzf')
     fingers_mode_bind('C-c', 'exit')
     fingers_mode_bind('q', 'exit')
     fingers_mode_bind('Escape', 'exit')

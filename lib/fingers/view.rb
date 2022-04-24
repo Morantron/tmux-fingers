@@ -72,6 +72,16 @@ class Fingers::View
     handle_match(match) if match
   end
 
+  def fzf_message
+    file = File.open('/tmp/fingers_fzf', 'w')
+    hinter.matches.each do |match|
+      file.puts match
+    end
+    file.close
+
+    `tmux display-popup -KER "cat /tmp/fingers_fzf | fzf"`
+  end
+
   def handle_match(match)
     if state.multi_mode
       state.multi_matches << match
