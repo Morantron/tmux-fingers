@@ -61,4 +61,8 @@ module Fingers
     Fingers.benchmark_stamp('load-config-from-cache:end')
     result
   end
+
+  def self.configure
+    yield config
+  end
 end

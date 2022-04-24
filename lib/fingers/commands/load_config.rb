@@ -1,6 +1,8 @@
 class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   DISALLOWED_CHARS = /cimqn/.freeze
 
+  FINGERS_FILE_PATH = "#{ENV['HOME']}/.fingersrc"
+
   DEFAULT_PATTERNS = {
     "ip": '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}',
     "uuid": '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
@@ -71,6 +73,18 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
                                                 ])
 
     Fingers.config.alphabet = ALPHABET_MAP[Fingers.config.keyboard_layout.to_sym].split('')
+
+    fingers_file_require_path = File.expand_path(FINGERS_FILE_PATH, __dir__)
+
+    Fingers.logger.debug("Config: #{FINGERS_FILE_PATH}")
+    Fingers.logger.debug("fingers_file_require_path: #{fingers_file_require_path}")
+
+
+    if File.exist?(FINGERS_FILE_PATH)
+      `cp #{FINGERS_FILE_PATH} /tmp/fingersrc.rb`
+      require "/tmp/fingersrc.rb"
+      `rm /tmp/fingersrc.rb`
+    end
 
     Fingers.save_config
   end
