@@ -23,9 +23,11 @@ class Fingers::Commands::Start < Fingers::Commands::Base
   )
 
   def run
-    _, _input_mode, original_pane_id = args
+    _, _input_mode, from_pane_id, target = args
 
-    @original_pane_id = original_pane_id
+    Fingers.logger.debug("from_pane_id: #{from_pane_id}")
+    @from_pane_id = from_pane_id
+    @target = target
 
     create_window!
     track_options_to_restore!
@@ -37,15 +39,15 @@ class Fingers::Commands::Start < Fingers::Commands::Base
 
   private
 
-  attr_reader :original_pane_id
+  attr_reader :from_pane_id, :target
 
   def create_window!
     fingers_window
 
     tmux.resize_window(
       fingers_window.window_id,
-      original_pane.pane_width.to_i,
-      original_pane.pane_height.to_i
+      target_pane.pane_width.to_i,
+      target_pane.pane_height.to_i
     )
   end
 
@@ -53,8 +55,8 @@ class Fingers::Commands::Start < Fingers::Commands::Base
     @fingers_window ||= tmux.create_window('[fingers]', 'cat', 80, 24)
   end
 
-  def original_pane
-    @original_pane ||= tmux.pane_by_id(@original_pane_id)
+  def target_pane
+    @target_pane ||= compute_target_pane
   end
 
   def pane_printer
@@ -63,8 +65,8 @@ class Fingers::Commands::Start < Fingers::Commands::Base
 
   def hinter
     @hinter ||= Fingers::Hinter.new(
-      input: tmux.capture_pane(original_pane.pane_id).chomp,
-      width: original_pane.pane_width.to_i,
+      input: tmux.capture_pane(target_pane.pane_id).chomp,
+      width: target_pane.pane_width.to_i,
       state: state,
       output: pane_printer
     )
@@ -75,7 +77,7 @@ class Fingers::Commands::Start < Fingers::Commands::Base
       hinter: hinter,
       state: state,
       output: pane_printer,
-      original_pane: original_pane
+      original_pane: target_pane
     )
   end
 
@@ -99,7 +101,7 @@ class Fingers::Commands::Start < Fingers::Commands::Base
   def show_hints
     view.render
 
-    tmux.swap_panes(fingers_pane_id, original_pane_id)
+    tmux.swap_panes(fingers_pane_id, target_pane.pane_id)
     tmux.zoom_pane(fingers_pane_id) if pane_was_zoomed?
   end
 
@@ -115,6 +117,8 @@ class Fingers::Commands::Start < Fingers::Commands::Base
 
     Fingers.benchmark_stamp('ready-for-input:end')
     Fingers.trace_for_tests_do_not_remove_or_the_whole_fabric_of_reality_will_tear_apart_with_unforeseen_consequences('fingers-ready')
+
+    return if Fingers.config.trace_perf == '1'
 
     input_socket.on_input do |input|
       view.process_input(input)
@@ -143,20 +147,32 @@ class Fingers::Commands::Start < Fingers::Commands::Base
   end
 
   def pane_was_zoomed?
-    original_pane.window_zoomed_flag == '1'
+    target_pane.window_zoomed_flag == '1'
   end
 
   def teardown
     tmux.set_key_table 'root'
 
-    tmux.swap_panes(fingers_pane_id, original_pane_id)
+    tmux.swap_panes(fingers_pane_id, target_pane.pane_id)
     tmux.kill_pane(fingers_pane_id)
 
-    tmux.zoom_pane(original_pane_id) if pane_was_zoomed?
+    tmux.zoom_pane(target_pane.pane_id) if pane_was_zoomed?
 
     restore_options
     view.run_action if state.result
 
     Fingers.trace_for_tests_do_not_remove_or_the_whole_fabric_of_reality_will_tear_apart_with_unforeseen_consequences('fingers-finish')
+  end
+
+  def compute_target_pane
+    from_pane = tmux.pane_by_id(from_pane_id)
+    return from_pane if target == "self"
+
+    sibling_panes = tmux.panes_by_window_id(from_pane.window_id)
+
+    # TODO display message or pick pane
+    return from_pane if sibling_panes.length > 2
+
+    sibling_panes.find { |pane| pane.pane_id != from_pane.pane_id }
   end
 end

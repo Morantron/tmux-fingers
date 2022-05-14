@@ -19,6 +19,8 @@ module Fingers
                         Fingers::Commands::SendInput
                       when 'load_config'
                         Fingers::Commands::LoadConfig
+                      when 'trace_start'
+                        Fingers::Commands::TraceStart
                       else
                         raise "Unknown command #{ARGV[0]}"
                       end

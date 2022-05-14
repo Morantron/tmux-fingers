@@ -76,6 +76,10 @@ class Tmux
     windows.find { |window| window['window_id'] == id }
   end
 
+  def panes_by_window_id(window_id)
+    panes.select { |pane| pane['window_id'] == window_id }
+  end
+
   def pane_exec(pane_id, cmd)
     send_keys(pane_id, " #{cmd}")
     send_keys(pane_id, 'Enter')
@@ -184,7 +188,7 @@ class Tmux
   def tmux
     flags = []
 
-    flags.push('-L', socket) if socket
+    flags.push('-L', socket_flag_value) if socket_flag_value
 
     return "tmux #{flags.join(' ')}" unless flags.empty?
 
@@ -200,5 +204,10 @@ class Tmux
       fields = line.split(';')
       yield fields
     end
+  end
+
+  def socket_flag_value
+    return ENV['FINGERS_TMUX_SOCKET'] if ENV['FINGERS_TMUX_SOCKET']
+    socket
   end
 end

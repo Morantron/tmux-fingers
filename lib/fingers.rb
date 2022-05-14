@@ -30,6 +30,7 @@ require 'fingers/commands/check_version'
 require 'fingers/commands/load_config'
 require 'fingers/commands/send_input'
 require 'fingers/commands/start'
+require 'fingers/commands/trace_start'
 
 require 'fingers/action_runner'
 require 'fingers/hinter'

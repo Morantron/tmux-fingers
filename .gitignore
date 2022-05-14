@@ -5,3 +5,4 @@ node_modules/
 .bundle
 vendor/bundle
 .cache
+.byebug_history

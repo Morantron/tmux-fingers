@@ -15,6 +15,8 @@ shared_context 'tmuxomatic setup', a: :b do
   let(:config_name) { 'basic' }
   let(:prefix) { 'C-a' }
   let(:fingers_key) { 'F' }
+  let(:tmuxomatic_window_width) { 80 }
+  let(:tmuxomatic_window_height) { 24 }
 
   let(:tmuxomatic_pane_id) { tmuxomatic.panes.first['pane_id'] }
   let(:tmuxomatic_window_id) { tmuxomatic.panes.first['window_id'] }
@@ -28,13 +30,9 @@ shared_context 'tmuxomatic setup', a: :b do
   def send_keys(keys, trace_benchmark: false)
     fork do
       tmuxomatic.send_keys(tmuxomatic_pane_id, keys)
-      if trace_benchmark
-        Fingers.benchmark_stamp('boot:start')
-        Fingers.benchmark_stamp('ready-for-input:start')
-      end
     end
     # TODO: detect when key is received, is it even possible?
-    zzz 0.2
+    zzz 1.0
   end
 
   def exec(cmd, wait: true)
@@ -51,8 +49,11 @@ shared_context 'tmuxomatic setup', a: :b do
     return unless wait
 
     Timeout.timeout(10) do
-      sleep 0.1 while count_in_log_file(trace) <= trace_count_before
+      noop while count_in_log_file(trace) <= trace_count_before
     end
+  end
+
+  def noop
   end
 
   def wait_for_fingers_teardown
@@ -120,10 +121,10 @@ shared_context 'tmuxomatic setup', a: :b do
     )
 
     tmuxomatic
-    tmuxomatic.new_session('tmuxomatic', "PATH=\"#{fingers_root}:#{fingers_stubs_path}:$PATH\" TMUX='' tmux -L tmuxomatic_inner -f #{conf_path}", 80, 24)
+    tmuxomatic.new_session('tmuxomatic', "PATH=\"#{fingers_root}:#{fingers_stubs_path}:$PATH\" TMUX='' tmux -L tmuxomatic_inner -f #{conf_path}", tmuxomatic_window_width, tmuxomatic_window_height)
     tmuxomatic.set_global_option('prefix', 'None')
     tmuxomatic.set_global_option('status', 'off')
-    tmuxomatic.resize_window(tmuxomatic_window_id, 80, 24)
+    tmuxomatic.resize_window(tmuxomatic_window_id, tmuxomatic_window_width, tmuxomatic_window_height)
 
     `touch #{Fingers::Dirs::LOG_PATH}`
 

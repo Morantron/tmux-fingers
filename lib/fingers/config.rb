@@ -15,6 +15,7 @@ module Fingers
     :selected_hint_format,
     :selected_highlight_format,
     :highlight_format,
+    :trace_perf
   ) do
     def initialize(
       key = 'F',
@@ -29,7 +30,8 @@ module Fingers
       hint_format = Tmux.instance.parse_format('fg=yellow,bold'),
       selected_hint_format = Tmux.instance.parse_format('fg=green,bold'),
       selected_highlight_format = Tmux.instance.parse_format('fg=green,nobold,dim'),
-      highlight_format = Tmux.instance.parse_format('fg=yellow,nobold,dim')
+      highlight_format = Tmux.instance.parse_format('fg=yellow,nobold,dim'),
+      trace_perf = '0'
     )
       super
     end
