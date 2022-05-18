@@ -7,7 +7,7 @@ module Fingers
     @logger = Logger.new(
       Fingers::Dirs::LOG_PATH
     )
-    @logger.level = Logger.const_get(ENV.fetch('FINGERS_LOG_LEVEL', 'DEBUG'))
+    @logger.level = Logger.const_get(ENV.fetch('FINGERS_LOG_LEVEL', 'INFO'))
     @logger
   end
 

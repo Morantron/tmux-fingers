@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# rubocop:disable Metrics/ClassLength
 class Tmux
   include Singleton
 
@@ -211,3 +214,6 @@ class Tmux
     socket
   end
 end
+
+#Tmux = TmuxControl
+# rubocop:enable Metrics/ClassLength

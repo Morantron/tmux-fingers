@@ -1,11 +1,17 @@
 class PanePrinter
   def initialize(pane_tty)
     @pane_tty = pane_tty
+    @buf = ''
     @file = File.open(@pane_tty, 'w')
   end
 
   def print(msg)
     @file.print(msg)
+    #@buf += msg
+  end
+
+  def flush
+    #@file.print(@buf)
   end
 end
 

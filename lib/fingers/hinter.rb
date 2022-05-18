@@ -25,6 +25,7 @@ class ::Fingers::Hinter
     process_line(lines[-1], '')
 
     STDOUT.flush
+    output.flush
 
     build_lookup_table!
   end

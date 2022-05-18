@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  shell:
+    cap_add:
+      - SYS_PTRACE
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
