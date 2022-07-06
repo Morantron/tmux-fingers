@@ -1,38 +1,38 @@
 class Fingers::Commands::LoadConfig < Fingers::Commands::Base
-  DISALLOWED_CHARS = /cimqn/.freeze
+  DISALLOWED_CHARS = /cimqn/
 
-  FINGERS_FILE_PATH = "#{ENV['HOME']}/.fingersrc"
+  FINGERS_FILE_PATH = "#{ENV["HOME"]}/.fingersrc"
 
   DEFAULT_PATTERNS = {
-    "ip": '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}',
-    "uuid": '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
-    "sha": '[0-9a-f]{7,128}',
-    "digit": '[0-9]{4,}',
-    "url": "((https?://|git@|git://|ssh://|ftp://|file:///)[^ ()'\"]+)",
-    "path": '(([.\\w\\-~\\$@]+)?(/[.\\w\\-@]+)+/?)'
+    ip: '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}',
+    uuid: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+    sha: "[0-9a-f]{7,128}",
+    digit: "[0-9]{4,}",
+    url: "((https?://|git@|git://|ssh://|ftp://|file:///)[^ ()'\"]+)",
+    path: '(([.\\w\\-~\\$@]+)?(/[.\\w\\-@]+)+/?)'
   }.freeze
 
   ALPHABET_MAP = {
-    "qwerty": 'asdfqwerzxcvjklmiuopghtybn',
-    "qwerty-homerow": 'asdfjklgh',
-    "qwerty-left-hand": 'asdfqwerzcxv',
-    "qwerty-right-hand": 'jkluiopmyhn',
-    "azerty": 'qsdfazerwxcvjklmuiopghtybn',
-    "azerty-homerow": 'qsdfjkmgh',
-    "azerty-left-hand": 'qsdfazerwxcv',
-    "azerty-right-hand": 'jklmuiophyn',
-    "qwertz": 'asdfqweryxcvjkluiopmghtzbn',
-    "qwertz-homerow": 'asdfghjkl',
-    "qwertz-left-hand": 'asdfqweryxcv',
-    "qwertz-right-hand": 'jkluiopmhzn',
-    "dvorak": 'aoeuqjkxpyhtnsgcrlmwvzfidb',
-    "dvorak-homerow": 'aoeuhtnsid',
-    "dvorak-left-hand": 'aoeupqjkyix',
-    "dvorak-right-hand": 'htnsgcrlmwvz',
-    "colemak": 'arstqwfpzxcvneioluymdhgjbk',
-    "colemak-homerow": 'arstneiodh',
-    "colemak-left-hand": 'arstqwfpzxcv',
-    "colemak-right-hand": 'neioluymjhk'
+    qwerty: "asdfqwerzxcvjklmiuopghtybn",
+    "qwerty-homerow": "asdfjklgh",
+    "qwerty-left-hand": "asdfqwerzcxv",
+    "qwerty-right-hand": "jkluiopmyhn",
+    azerty: "qsdfazerwxcvjklmuiopghtybn",
+    "azerty-homerow": "qsdfjkmgh",
+    "azerty-left-hand": "qsdfazerwxcv",
+    "azerty-right-hand": "jklmuiophyn",
+    qwertz: "asdfqweryxcvjkluiopmghtzbn",
+    "qwertz-homerow": "asdfghjkl",
+    "qwertz-left-hand": "asdfqweryxcv",
+    "qwertz-right-hand": "jkluiopmhzn",
+    dvorak: "aoeuqjkxpyhtnsgcrlmwvzfidb",
+    "dvorak-homerow": "aoeuhtnsid",
+    "dvorak-left-hand": "aoeupqjkyix",
+    "dvorak-right-hand": "htnsgcrlmwvz",
+    colemak: "arstqwfpzxcvneioluymdhgjbk",
+    "colemak-homerow": "arstneiodh",
+    "colemak-left-hand": "arstqwfpzxcv",
+    "colemak-right-hand": "neioluymjhk"
   }.freeze
 
   def run
@@ -56,9 +56,9 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
       option = option
 
-      if option.match(/pattern/)
+      if /pattern/.match?(option)
         user_defined_patterns.push(value)
-      elsif option.match(/format/)
+      elsif /format/.match?(option)
         parsed_format = Tmux.instance.parse_format(value)
 
         Fingers.config.send("#{option}=".to_sym, parsed_format)
@@ -68,21 +68,20 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     end
 
     Fingers.config.patterns = clean_up_patterns([
-                                                  *enabled_default_patterns,
-                                                  *user_defined_patterns
-                                                ])
+      *enabled_default_patterns,
+      *user_defined_patterns
+    ])
 
-    Fingers.config.alphabet = ALPHABET_MAP[Fingers.config.keyboard_layout.to_sym].split('')
+    Fingers.config.alphabet = ALPHABET_MAP[Fingers.config.keyboard_layout.to_sym].split("")
 
     fingers_file_require_path = File.expand_path(FINGERS_FILE_PATH, __dir__)
 
     Fingers.logger.debug("Config: #{FINGERS_FILE_PATH}")
     Fingers.logger.debug("fingers_file_require_path: #{fingers_file_require_path}")
 
-
     if File.exist?(FINGERS_FILE_PATH)
       `cp #{FINGERS_FILE_PATH} /tmp/fingersrc.rb`
-      require "/tmp/fingersrc.rb"
+      require "/tmp/fingersrc"
       `rm /tmp/fingersrc.rb`
     end
 
@@ -94,17 +93,17 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   end
 
   def setup_bindings
-    input_mode = 'fingers-mode'
+    input_mode = "fingers-mode"
     ruby_bin = "#{RbConfig.ruby} --disable-gems"
 
     `tmux bind-key #{Fingers.config.key} run-shell -b "#{ruby_bin} #{cli} start '#{input_mode}' '\#{pane_id}' self >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
     `tmux bind-key O run-shell -b "#{ruby_bin} #{cli} start '#{input_mode}' '\#{pane_id}' other >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
 
-    setup_fingers_mode_bindings if input_mode == 'fingers-mode'
+    setup_fingers_mode_bindings if input_mode == "fingers-mode"
   end
 
   def setup_fingers_mode_bindings
-    ('a'..'z').to_a.each do |char|
+    ("a".."z").to_a.each do |char|
       next if char.match(DISALLOWED_CHARS)
 
       fingers_mode_bind(char, "hint:#{char}:main")
@@ -113,17 +112,17 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
       fingers_mode_bind("M-#{char}", "hint:#{char}:alt")
     end
 
-    fingers_mode_bind('Space', 'fzf')
-    fingers_mode_bind('C-c', 'exit')
-    fingers_mode_bind('q', 'exit')
-    fingers_mode_bind('Escape', 'exit')
+    fingers_mode_bind("Space", "fzf")
+    fingers_mode_bind("C-c", "exit")
+    fingers_mode_bind("q", "exit")
+    fingers_mode_bind("Escape", "exit")
 
-    fingers_mode_bind('?', 'toggle-help')
+    fingers_mode_bind("?", "toggle-help")
 
-    fingers_mode_bind('Enter', 'noop')
-    fingers_mode_bind('Tab', 'toggle_multi_mode')
+    fingers_mode_bind("Enter", "noop")
+    fingers_mode_bind("Tab", "toggle_multi_mode")
 
-    fingers_mode_bind('Any', 'noop')
+    fingers_mode_bind("Any", "noop")
   end
 
   def enabled_default_patterns
@@ -131,7 +130,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   end
 
   def to_bool(input)
-    input == '1'
+    input == "1"
   end
 
   def shell_safe_options
@@ -153,12 +152,12 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   end
 
   def ensure_cache_folder
-    require 'fileutils'
+    require "fileutils"
     FileUtils.mkdir_p(Fingers::Dirs::CACHE) unless File.exist?(Fingers::Dirs::CACHE)
   end
 
   def fingers_options_names
-    @fingers_options_names ||= `tmux show-options -g | grep ^@fingers`.split("\n").map { |line| line.split(' ')[0] }
+    @fingers_options_names ||= `tmux show-options -g | grep ^@fingers`.split("\n").map { |line| line.split(" ")[0] }
   end
 
   def unset_tmux_option!(option)
@@ -177,13 +176,13 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
     return if errors.empty?
 
-    puts '[tmux-fingers] Errors found in tmux.conf:'
+    puts "[tmux-fingers] Errors found in tmux.conf:"
     errors.each { |error| puts "  - #{error}" }
     exit(1)
   end
 
   def option_to_method(option)
-    option.gsub(/^@fingers-/, '').tr('-', '_')
+    option.gsub(/^@fingers-/, "").tr("-", "_")
   end
 
   def fingers_mode_bind(key, command)

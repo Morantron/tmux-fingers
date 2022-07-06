@@ -17,8 +17,8 @@ class ::Fingers::MatchFormatter
 
   def format(hint:, highlight:, selected:, offset: nil)
     before_offset(offset, highlight) +
-    format_offset(selected, hint, within_offset(offset, highlight)) +
-    after_offset(offset, highlight)
+      format_offset(selected, hint, within_offset(offset, highlight)) +
+      after_offset(offset, highlight)
   end
 
   private
@@ -57,7 +57,7 @@ class ::Fingers::MatchFormatter
   end
 
   def chop_highlight(hint, highlight)
-    if hint_position == 'right'
+    if hint_position == "right"
       highlight[0..-(hint.length + 1)] || ""
     else
       highlight[hint.length..-1] || ""

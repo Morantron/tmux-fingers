@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class Tmux
   include Singleton
 
@@ -58,34 +57,34 @@ class Tmux
   def new_session(name, cmd, width, height)
     flags = []
 
-    flags.push('-f', config_file) if config_file
+    flags.push("-f", config_file) if config_file
 
-    `env -u TMUX #{tmux} #{flags.join(' ')} new-session -d -s #{name} -x #{width} -y #{height} '#{cmd}'`
+    `env -u TMUX #{tmux} #{flags.join(" ")} new-session -d -s #{name} -x #{width} -y #{height} '#{cmd}'`
   end
 
   def start_server
     flags = []
 
-    flags.push('-f', config_file) if config_file
+    flags.push("-f", config_file) if config_file
 
-    `#{tmux} #{flags.join(' ')} start-server &`
+    `#{tmux} #{flags.join(" ")} start-server &`
   end
 
   def pane_by_id(id)
-    panes.find { |pane| pane['pane_id'] == id }
+    panes.find { |pane| pane["pane_id"] == id }
   end
 
   def window_by_id(id)
-    windows.find { |window| window['window_id'] == id }
+    windows.find { |window| window["window_id"] == id }
   end
 
   def panes_by_window_id(window_id)
-    panes.select { |pane| pane['window_id'] == window_id }
+    panes.select { |pane| pane["window_id"] == window_id }
   end
 
   def pane_exec(pane_id, cmd)
     send_keys(pane_id, " #{cmd}")
-    send_keys(pane_id, 'Enter')
+    send_keys(pane_id, "Enter")
   end
 
   def send_keys(pane_id, keys)
@@ -95,7 +94,7 @@ class Tmux
   def capture_pane(pane_id)
     pane = pane_by_id(pane_id)
 
-    if pane.pane_in_mode == '1'
+    if pane.pane_in_mode == "1"
       start_line = -pane.scroll_position.to_i
       end_line = pane.pane_height.to_i - pane.scroll_position.to_i - 1
 
@@ -117,7 +116,7 @@ class Tmux
 
   def swap_panes(src_id, dst_id)
     # TODO: -Z not supported on all tmux versions
-    system(tmux, 'swap-pane', '-d', '-s', src_id, '-t', dst_id)
+    system(tmux, "swap-pane", "-d", "-s", src_id, "-t", dst_id)
   end
 
   def kill_pane(id)
@@ -130,12 +129,12 @@ class Tmux
 
   # TODO: this command is version dependant D:
   def resize_window(window_id, width, height)
-    system(tmux, 'resize-window', '-t', window_id, '-x', width.to_s, '-y', height.to_s)
+    system(tmux, "resize-window", "-t", window_id, "-x", width.to_s, "-y", height.to_s)
   end
 
   # TODO: this command is version dependant D:
   def resize_pane(pane_id, width, height)
-    system(tmux, 'resize-pane', '-t', pane_id, '-x', width.to_s, '-y', height.to_s)
+    system(tmux, "resize-pane", "-t", pane_id, "-x", width.to_s, "-y", height.to_s)
   end
 
   def last_pane_id
@@ -143,21 +142,21 @@ class Tmux
   end
 
   def set_window_option(name, value)
-    system(tmux, 'set-window-option', name, value)
+    system(tmux, "set-window-option", name, value)
   end
 
   def set_key_table(table)
-    system(tmux, 'set-window-option', 'key-table', table)
-    system(tmux, 'switch-client', '-T', table)
+    system(tmux, "set-window-option", "key-table", table)
+    system(tmux, "switch-client", "-T", table)
   end
 
   def disable_prefix
-    set_global_option('prefix', 'None')
-    set_global_option('prefix2', 'None')
+    set_global_option("prefix", "None")
+    set_global_option("prefix2", "None")
   end
 
   def set_global_option(name, value)
-    system(tmux, 'set-option', '-g', name, value)
+    system(tmux, "set-option", "-g", name, value)
   end
 
   def get_global_option(name)
@@ -167,15 +166,15 @@ class Tmux
   def set_buffer(value)
     return unless value
 
-    system(tmux, 'set-buffer', value)
+    system(tmux, "set-buffer", value)
   end
 
   def select_pane(id)
-    system(tmux, 'select-pane', '-t', id)
+    system(tmux, "select-pane", "-t", id)
   end
 
   def zoom_pane(id)
-    system(tmux, 'resize-pane', '-Z', '-t', id)
+    system(tmux, "resize-pane", "-Z", "-t", id)
   end
 
   def parse_format(format)
@@ -191,29 +190,29 @@ class Tmux
   def tmux
     flags = []
 
-    flags.push('-L', socket_flag_value) if socket_flag_value
+    flags.push("-L", socket_flag_value) if socket_flag_value
 
-    return "tmux #{flags.join(' ')}" unless flags.empty?
+    return "tmux #{flags.join(" ")}" unless flags.empty?
 
-    'tmux'
+    "tmux"
   end
 
   def build_tmux_output_format(fields)
-    fields.map { |field| format("\#{%<field>s}", field: field) }.join(';')
+    fields.map { |field| format("\#{%<field>s}", field: field) }.join(";")
   end
 
   def parse_tmux_formatted_output(output)
     output.split("\n").map do |line|
-      fields = line.split(';')
+      fields = line.split(";")
       yield fields
     end
   end
 
   def socket_flag_value
-    return ENV['FINGERS_TMUX_SOCKET'] if ENV['FINGERS_TMUX_SOCKET']
+    return ENV["FINGERS_TMUX_SOCKET"] if ENV["FINGERS_TMUX_SOCKET"]
     socket
   end
 end
 
-#Tmux = TmuxControl
+# Tmux = TmuxControl
 # rubocop:enable Metrics/ClassLength

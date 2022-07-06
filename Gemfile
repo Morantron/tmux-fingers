@@ -1,8 +1,9 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 group :development do
-  gem 'irb'
-  gem 'byebug'
-  gem 'rspec'
-  gem 'rspec-retry'
+  gem "byebug"
+  gem "irb"
+  gem "rspec"
+  gem "rspec-retry"
+  gem "standardrb"
 end

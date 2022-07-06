@@ -1,17 +1,17 @@
 class PanePrinter
   def initialize(pane_tty)
     @pane_tty = pane_tty
-    @buf = ''
-    @file = File.open(@pane_tty, 'w')
+    @buf = ""
+    @file = File.open(@pane_tty, "w")
   end
 
   def print(msg)
     @file.print(msg)
-    #@buf += msg
+    # @buf += msg
   end
 
   def flush
-    #@file.print(@buf)
+    # @file.print(@buf)
   end
 end
 
@@ -58,7 +58,7 @@ class Fingers::Commands::Start < Fingers::Commands::Base
   end
 
   def fingers_window
-    @fingers_window ||= tmux.create_window('[fingers]', 'cat', 80, 24)
+    @fingers_window ||= tmux.create_window("[fingers]", "cat", 80, 24)
   end
 
   def target_pane
@@ -94,8 +94,8 @@ class Fingers::Commands::Start < Fingers::Commands::Base
 
     @state.multi_mode = false
     @state.show_help = false
-    @state.input = ''
-    @state.modifier = ''
+    @state.input = ""
+    @state.modifier = ""
     @state.selected_hints = []
     @state.selected_matches = []
     @state.multi_matches = []
@@ -119,12 +119,12 @@ class Fingers::Commands::Start < Fingers::Commands::Base
     input_socket = InputSocket.new
 
     tmux.disable_prefix
-    tmux.set_key_table 'fingers'
+    tmux.set_key_table "fingers"
 
-    Fingers.benchmark_stamp('ready-for-input:end')
-    Fingers.trace_for_tests_do_not_remove_or_the_whole_fabric_of_reality_will_tear_apart_with_unforeseen_consequences('fingers-ready')
+    Fingers.benchmark_stamp("ready-for-input:end")
+    Fingers.trace_for_tests_do_not_remove_or_the_whole_fabric_of_reality_will_tear_apart_with_unforeseen_consequences("fingers-ready")
 
-    return if Fingers.config.trace_perf == '1'
+    return if Fingers.config.trace_perf == "1"
 
     input_socket.on_input do |input|
       view.process_input(input)
@@ -153,11 +153,11 @@ class Fingers::Commands::Start < Fingers::Commands::Base
   end
 
   def pane_was_zoomed?
-    target_pane.window_zoomed_flag == '1'
+    target_pane.window_zoomed_flag == "1"
   end
 
   def teardown
-    tmux.set_key_table 'root'
+    tmux.set_key_table "root"
 
     tmux.swap_panes(fingers_pane_id, target_pane.pane_id)
     tmux.kill_pane(fingers_pane_id)
@@ -167,7 +167,7 @@ class Fingers::Commands::Start < Fingers::Commands::Base
     restore_options
     view.run_action if state.result
 
-    Fingers.trace_for_tests_do_not_remove_or_the_whole_fabric_of_reality_will_tear_apart_with_unforeseen_consequences('fingers-finish')
+    Fingers.trace_for_tests_do_not_remove_or_the_whole_fabric_of_reality_will_tear_apart_with_unforeseen_consequences("fingers-finish")
   end
 
   def compute_target_pane

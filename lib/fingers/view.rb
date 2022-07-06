@@ -9,7 +9,7 @@ class Fingers::View
   end
 
   def process_input(input)
-    command, *args = input.gsub(/-/, '_').split(':')
+    command, *args = input.tr("-", "_").split(":")
     send("#{command}_message".to_sym, *args)
   end
 
@@ -42,10 +42,11 @@ class Fingers::View
 
   def toggle_help_message
     output.print CLEAR_ESCAPE_SEQUENCE
-    output.print 'Help message'
+    output.print "Help message"
   end
 
-  def noop_message; end
+  def noop_message
+  end
 
   def toggle_multi_mode_message
     prev_state = state.multi_mode
@@ -53,7 +54,7 @@ class Fingers::View
     current_state = state.multi_mode
 
     if prev_state == true && current_state == false
-      state.result = state.multi_matches.join(' ')
+      state.result = state.multi_matches.join(" ")
       request_exit!
     end
   end
@@ -73,7 +74,7 @@ class Fingers::View
   end
 
   def fzf_message
-    file = File.open('/tmp/fingers_fzf', 'w')
+    file = File.open("/tmp/fingers_fzf", "w")
     hinter.matches.each do |match|
       file.puts match
     end
@@ -86,7 +87,7 @@ class Fingers::View
     if state.multi_mode
       state.multi_matches << match
       state.selected_hints << state.input
-      state.input = ''
+      state.input = ""
       render
     else
       state.result = match

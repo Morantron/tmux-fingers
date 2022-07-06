@@ -1,4 +1,4 @@
-require 'logger'
+require "logger"
 
 module Fingers
   def self.logger
@@ -7,7 +7,7 @@ module Fingers
     @logger = Logger.new(
       Fingers::Dirs::LOG_PATH
     )
-    @logger.level = Logger.const_get(ENV.fetch('FINGERS_LOG_LEVEL', 'INFO'))
+    @logger.level = Logger.const_get(ENV.fetch("FINGERS_LOG_LEVEL", "INFO"))
     @logger
   end
 

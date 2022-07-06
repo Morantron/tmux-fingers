@@ -1,6 +1,6 @@
 describe Fingers::Hinter do
   let(:input) do
-'
+    '
 ola ke ase
 ke ase ola
 ke olaola ke
@@ -23,7 +23,7 @@ beep beep
   let(:output) do
     class TextOutput
       def initialize
-        @contents = ''
+        @contents = ""
       end
 
       def print(msg)
@@ -42,17 +42,17 @@ beep beep
 
   let(:formatter) do
     ::Fingers::MatchFormatter.new(
-      hint_format: '%s',
-      highlight_format: '%s',
-      selected_hint_format: '%s',
-      selected_highlight_format: '%s',
-      hint_position: 'left'
+      hint_format: "%s",
+      highlight_format: "%s",
+      selected_hint_format: "%s",
+      selected_highlight_format: "%s",
+      hint_position: "left"
     )
   end
 
-  let(:patterns) { ['ola'] }
+  let(:patterns) { ["ola"] }
 
-  let(:alphabet) { 'asdf'.split('') }
+  let(:alphabet) { "asdf".split("") }
 
   let(:hinter) do
     ::Fingers::Hinter.new(
@@ -62,11 +62,11 @@ beep beep
       patterns: patterns,
       alphabet: alphabet,
       output: output,
-      formatter: formatter,
+      formatter: formatter
     )
   end
 
-  it 'works' do
+  it "works" do
     hinter.run
 
     puts output.contents

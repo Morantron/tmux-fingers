@@ -1,5 +1,5 @@
 class TmuxFormatPrinter
-  FORMAT_SEPARATOR = /[ ,]+/.freeze
+  FORMAT_SEPARATOR = /[ ,]+/
 
   COLOR_MAP = {
     black: 0,
@@ -13,17 +13,17 @@ class TmuxFormatPrinter
   }.freeze
 
   LAYER_MAP = {
-    bg: 'setab',
-    fg: 'setaf'
+    bg: "setab",
+    fg: "setaf"
   }.freeze
 
   STYLE_MAP = {
-    bright: 'bold',
-    bold: 'bold',
-    dim: 'dim',
-    underscore: 'smul',
-    reverse: 'rev',
-    italics: 'sitm'
+    bright: "bold",
+    bold: "bold",
+    dim: "dim",
+    underscore: "smul",
+    reverse: "rev",
+    italics: "sitm"
   }.freeze
 
   class ShellExec
@@ -39,7 +39,7 @@ class TmuxFormatPrinter
   def print(input, reset_styles_after: false)
     @applied_styles = {}
 
-    output = ''
+    output = ""
 
     input.split(FORMAT_SEPARATOR).each do |format|
       output += parse_format(format)
@@ -51,7 +51,7 @@ class TmuxFormatPrinter
   end
 
   def parse_format(format)
-    if format.match(/^(bg|fg)=/)
+    if /^(bg|fg)=/.match?(format)
       parse_color(format)
     else
       parse_style(format)
@@ -65,7 +65,7 @@ class TmuxFormatPrinter
     color = match[:color].to_sym
     color_code = match[:color_code]
 
-    if match[:color] == 'default'
+    if match[:color] == "default"
       @applied_styles.delete(layer)
       return reset_to_applied_styles!
     end
@@ -81,7 +81,7 @@ class TmuxFormatPrinter
 
   def parse_style(format)
     match = format.match(/(?<remove>no)?(?<style>.*)/)
-    should_remove_style = match[:remove] == 'no'
+    should_remove_style = match[:remove] == "no"
     style = match[:style].to_sym
 
     result = shell.exec("tput #{STYLE_MAP[style]}")
@@ -101,7 +101,7 @@ class TmuxFormatPrinter
   end
 
   def reset_sequence
-    @reset_sequence ||= shell.exec('tput sgr0').chomp.freeze
+    @reset_sequence ||= shell.exec("tput sgr0").chomp.freeze
   end
 
   private

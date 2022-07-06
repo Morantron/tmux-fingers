@@ -18,20 +18,20 @@ module Fingers
     :trace_perf
   ) do
     def initialize(
-      key = 'F',
-      keyboard_layout = 'qwerty',
+      key = "F",
+      keyboard_layout = "qwerty",
       alphabet = [],
       patterns = [],
-      main_action = ':copy:',
-      ctrl_action = ':open:',
-      alt_action = '',
-      shift_action = ':paste:',
-      hint_position = 'left',
-      hint_format = Tmux.instance.parse_format('fg=yellow,bold'),
-      selected_hint_format = Tmux.instance.parse_format('fg=green,bold'),
-      selected_highlight_format = Tmux.instance.parse_format('fg=green,nobold,dim'),
-      highlight_format = Tmux.instance.parse_format('fg=yellow,nobold,dim'),
-      trace_perf = '0'
+      main_action = ":copy:",
+      ctrl_action = ":open:",
+      alt_action = "",
+      shift_action = ":paste:",
+      hint_position = "left",
+      hint_format = Tmux.instance.parse_format("fg=yellow,bold"),
+      selected_hint_format = Tmux.instance.parse_format("fg=green,bold"),
+      selected_highlight_format = Tmux.instance.parse_format("fg=green,nobold,dim"),
+      highlight_format = Tmux.instance.parse_format("fg=yellow,nobold,dim"),
+      trace_perf = "0"
     )
       super
     end
@@ -43,7 +43,7 @@ module Fingers
 
   def self.config
     $config ||= Fingers.load_from_cache
-  rescue StandardError
+  rescue
     $config ||= ConfigStruct.new
   end
 
@@ -52,15 +52,13 @@ module Fingers
   end
 
   def self.save_config
-    File.open(CONFIG_PATH, 'w') do |f|
-      f.write(Marshal.dump(Fingers.config))
-    end
+    File.write(CONFIG_PATH, Marshal.dump(Fingers.config))
   end
 
   def self.load_from_cache
-    Fingers.benchmark_stamp('load-config-from-cache:start')
+    Fingers.benchmark_stamp("load-config-from-cache:start")
     result = Marshal.load(File.open(CONFIG_PATH))
-    Fingers.benchmark_stamp('load-config-from-cache:end')
+    Fingers.benchmark_stamp("load-config-from-cache:end")
     result
   end
 

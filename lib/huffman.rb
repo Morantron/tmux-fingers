@@ -111,6 +111,6 @@ class Huffman
   end
 
   def translate_path(path)
-    path.map { |i| alphabet[i] }.join('')
+    path.map { |i| alphabet[i] }.join("")
   end
 end

@@ -3,9 +3,8 @@ class ::Fingers::Hinter
     input:,
     width:,
     state:,
-    patterns: Fingers.config.patterns,
+    output:, patterns: Fingers.config.patterns,
     alphabet: Fingers.config.alphabet,
-    output:,
     huffman: Huffman.new,
     formatter: ::Fingers::MatchFormatter.new
   )
@@ -22,7 +21,7 @@ class ::Fingers::Hinter
 
   def run
     lines[0..-2].each { |line| process_line(line, "\n") }
-    process_line(lines[-1], '')
+    process_line(lines[-1], "")
 
     STDOUT.flush
     output.flush
@@ -41,16 +40,16 @@ class ::Fingers::Hinter
   private
 
   attr_reader :hints,
-              :hints_by_text,
-              :input,
-              :lookup_table,
-              :width,
-              :state,
-              :formatter,
-              :huffman,
-              :output,
-              :patterns,
-              :alphabet
+    :hints_by_text,
+    :input,
+    :lookup_table,
+    :width,
+    :state,
+    :formatter,
+    :huffman,
+    :output,
+    :patterns,
+    :alphabet
 
   def build_lookup_table!
     @lookup_table = hints_by_text.invert
@@ -62,7 +61,7 @@ class ::Fingers::Hinter
   end
 
   def pattern
-    @pattern ||= Regexp.compile("(#{patterns.join('|')})")
+    @pattern ||= Regexp.compile("(#{patterns.join("|")})")
   end
 
   def hints
@@ -74,9 +73,9 @@ class ::Fingers::Hinter
   def replace(match)
     text = match[0]
 
-    captured_text = match && match.named_captures['capture'] || text
+    captured_text = match && match.named_captures["capture"] || text
 
-    if match.named_captures['capture']
+    if match.named_captures["capture"]
       match_start, match_end = match.offset(0)
       capture_start, capture_end = match.offset(:capture)
 
@@ -84,7 +83,6 @@ class ::Fingers::Hinter
     else
       capture_offset = nil
     end
-
 
     if hints_by_text.has_key?(captured_text)
       hint = hints_by_text[captured_text]
@@ -103,7 +101,7 @@ class ::Fingers::Hinter
   end
 
   def lines
-    @lines ||= input.force_encoding('UTF-8').split("\n")
+    @lines ||= input.force_encoding("UTF-8").split("\n")
   end
 
   def n_matches
@@ -111,7 +109,7 @@ class ::Fingers::Hinter
 
     match_set = ::Set.new
 
-    Fingers.benchmark_stamp('counting-matches:start')
+    Fingers.benchmark_stamp("counting-matches:start")
 
     lines.each do |line|
       line.scan(pattern) do |match|
@@ -119,7 +117,7 @@ class ::Fingers::Hinter
       end
     end
 
-    Fingers.benchmark_stamp('counting-matches:end')
+    Fingers.benchmark_stamp("counting-matches:end")
 
     @n_matches = match_set.length
 

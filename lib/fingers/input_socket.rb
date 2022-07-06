@@ -10,7 +10,7 @@ class InputSocket
       socket = server.accept
       message = socket.readline
 
-      next if message == 'ping'
+      next if message == "ping"
 
       yield message
     end
@@ -23,7 +23,7 @@ class InputSocket
   end
 
   def wait_for_input
-    send_message 'ping'
+    send_message "ping"
   rescue Errno::ENOENT
     retry
   end
