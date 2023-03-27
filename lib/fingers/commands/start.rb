@@ -29,6 +29,7 @@ class Fingers::Commands::Start < Fingers::Commands::Base
   )
 
   def run
+    Fingers.logger.info("args: #{args.to_json}")
     _, _input_mode, from_pane_id, target = args
 
     Fingers.logger.debug("from_pane_id: #{from_pane_id}")
@@ -39,7 +40,9 @@ class Fingers::Commands::Start < Fingers::Commands::Base
     track_options_to_restore!
 
     show_hints
-    handle_input
+
+    sleep 2
+    #handle_input
     teardown
   end
 
@@ -174,6 +177,8 @@ class Fingers::Commands::Start < Fingers::Commands::Base
     from_pane = tmux.pane_by_id(from_pane_id)
     return from_pane if target == "self"
 
+    Fingers.logger.info("from pane #{from_pane_id}")
+    Fingers.logger.info("target #{target}")
     sibling_panes = tmux.panes_by_window_id(from_pane.window_id)
 
     # TODO display message or pick pane

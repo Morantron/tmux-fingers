@@ -1,11 +1,9 @@
 module Fingers::Dirs
   tmux_pid = (ENV["TMUX"] || ",0000").split(",")[1]
-  FINGERS_REPO_ROOT = Pathname.new(__dir__).parent.parent
+  root = "#{Dir.tmpdir}/tmux-fingers".freeze
 
-  root = Pathname.new(Dir.tmpdir) / "tmux-fingers"
-
-  LOG_PATH = FINGERS_REPO_ROOT / "fingers.log"
-  CACHE = root / "tmux-#{tmux_pid}"
-  CONFIG_PATH = CACHE / "fingers.config"
-  SOCKET_PATH = CACHE / "fingers.sock"
+  LOG_PATH = "#{root}/mruby-fingers.log".freeze
+  CACHE = "#{root}/tmux-#{tmux_pid}".freeze
+  CONFIG_PATH = "#{CACHE}/fingers.mruby.config".freeze
+  SOCKET_PATH = "#{CACHE}/fingers.mruby.sock".freeze
 end

@@ -1,0 +1,47 @@
+---
+mruby:
+  version: 3.2.0
+  release_no: 30200
+  git_commit: 1c765dc37a80bf681bbab271b0ba90711d935be9
+builds:
+  host:
+    https://github.com/iij/mruby-env.git:
+      url: https://github.com/iij/mruby-env.git
+      branch: HEAD
+      commit: 056ae324451ef16a50c7887e117f0ea30921b71b
+      version: 0.0.0
+    https://github.com/mttech/mruby-getopts.git:
+      url: https://github.com/mttech/mruby-getopts.git
+      branch: HEAD
+      commit: 32878292c1162a911b39e1e0810a28ab2cb83f6a
+      version: 0.0.0
+    https://github.com/ksss/mruby-singleton.git:
+      url: https://github.com/ksss/mruby-singleton.git
+      branch: HEAD
+      commit: 73dd4bae1a47d82e49b8f85bf27f49ec4462052e
+      version: 0.0.0
+    https://github.com/iij/mruby-tempfile.git:
+      url: https://github.com/iij/mruby-tempfile.git
+      branch: HEAD
+      commit: 9b883438547020dae328e34c8a2fe736171cd0ab
+      version: 0.0.0
+    https://github.com/mattn/mruby-onig-regexp.git:
+      url: https://github.com/mattn/mruby-onig-regexp.git
+      branch: HEAD
+      commit: 074325207f9181ad242ffb8de34072607164f57f
+      version: 0.0.0
+    https://github.com/katzer/mruby-logger.git:
+      url: https://github.com/katzer/mruby-logger.git
+      branch: HEAD
+      commit: f794ef6f6ceff1794d02a6d9cfc1d281bdfcad21
+      version: 0.0.0
+    https://github.com/iij/mruby-iijson.git:
+      url: https://github.com/iij/mruby-iijson.git
+      branch: HEAD
+      commit: c5e730c30090d3cddae258f57ab9508edb3e9fce
+      version: 0.0.0
+    https://github.com/mattn/mruby-json.git:
+      url: https://github.com/mattn/mruby-json.git
+      branch: HEAD
+      commit: f99d9428025469f2400f93c53b185f65f963e507
+      version: 0.0.0

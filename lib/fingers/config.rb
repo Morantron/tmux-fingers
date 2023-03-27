@@ -43,7 +43,7 @@ module Fingers
 
   def self.config
     $config ||= Fingers.load_from_cache
-  rescue
+  rescue StandardError => e
     $config ||= ConfigStruct.new
   end
 
@@ -52,14 +52,54 @@ module Fingers
   end
 
   def self.save_config
-    File.write(CONFIG_PATH, Marshal.dump(Fingers.config))
+    f = File.open(CONFIG_PATH, 'w')
+    json = {}
+    output = "_config = ConfigStruct.new\n"
+    ConfigStruct.members.map do |member|
+      value = Fingers.escape_control_chars(Fingers.config.send(member))
+
+      if value.is_a?(String)
+        output += "_config.#{member} = \"#{value.gsub('"', '\"')}\"\n"
+      end
+
+      # Assuming all arrays are string arrays for now
+      if value.is_a?(Array)
+        output += "_config.#{member} = ["
+        output += value.map {|val| "\"#{val.gsub('"', '\"')}\"" }.join(", ")
+        output += "]\n"
+      end
+    end
+    output += '_config'
+    f.write(output)
+    f.close
   end
 
   def self.load_from_cache
-    Fingers.benchmark_stamp("load-config-from-cache:start")
-    result = Marshal.load(File.open(CONFIG_PATH))
-    Fingers.benchmark_stamp("load-config-from-cache:end")
-    result
+    #Fingers.benchmark_stamp("load-config-from-cache:start")
+    config_file = File.open(CONFIG_PATH)
+
+    config = Kernel.eval(config_file.read)
+    #json.keys.each do |member|
+      #config.send("#{member}=".to_sym, json[member])
+    #end
+    config
+    #Fingers.benchmark_stamp("load-config-from-cache:end")
+    #result
+  end
+
+  def self.escape_control_chars(value)
+    if value.is_a?(String)
+      value = value.gsub(/[\x00-\x1f]/) do |match|
+        "\\u%04x" % match.ord
+      end
+    elsif value.is_a?(Array)
+      value.map! { |v| escape_control_chars(v) }
+    elsif value.is_a?(Hash)
+      value.each do |k, v|
+        value[k] = escape_control_chars(v)
+      end
+    end
+    value
   end
 
   def self.configure

@@ -4,12 +4,12 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   FINGERS_FILE_PATH = "#{ENV["HOME"]}/.fingersrc"
 
   DEFAULT_PATTERNS = {
-    ip: '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}',
-    uuid: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-    sha: "[0-9a-f]{7,128}",
+    #ip: '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}',
+    #uuid: "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+    #sha: "[0-9a-f]{7,128}",
     digit: "[0-9]{4,}",
-    url: "((https?://|git@|git://|ssh://|ftp://|file:///)[^ ()'\"]+)",
-    path: '(([.\\w\\-~\\$@]+)?(/[.\\w\\-@]+)+/?)'
+    #url: "((https?://|git@|git://|ssh://|ftp://|file:///)[^ ()'\"]+)",
+    #path: '(([.\\w\\-~\\$@]+)?(/[.\\w\\-@]+)+/?)'
   }.freeze
 
   ALPHABET_MAP = {
@@ -74,17 +74,6 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
     Fingers.config.alphabet = ALPHABET_MAP[Fingers.config.keyboard_layout.to_sym].split("")
 
-    fingers_file_require_path = File.expand_path(FINGERS_FILE_PATH, __dir__)
-
-    Fingers.logger.debug("Config: #{FINGERS_FILE_PATH}")
-    Fingers.logger.debug("fingers_file_require_path: #{fingers_file_require_path}")
-
-    if File.exist?(FINGERS_FILE_PATH)
-      `cp #{FINGERS_FILE_PATH} /tmp/fingersrc.rb`
-      require "/tmp/fingersrc"
-      `rm /tmp/fingersrc.rb`
-    end
-
     Fingers.save_config
   end
 
@@ -94,10 +83,9 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
   def setup_bindings
     input_mode = "fingers-mode"
-    ruby_bin = "#{RbConfig.ruby} --disable-gems"
 
-    `tmux bind-key #{Fingers.config.key} run-shell -b "#{ruby_bin} #{cli} start '#{input_mode}' '\#{pane_id}' self >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
-    `tmux bind-key O run-shell -b "#{ruby_bin} #{cli} start '#{input_mode}' '\#{pane_id}' other >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
+    `tmux bind-key #{Fingers.config.key} run-shell -b "#{cli} start '#{input_mode}' '\#{pane_id}' self >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
+    `tmux bind-key O run-shell -b "#{cli} start '#{input_mode}' '\#{pane_id}' other >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
 
     setup_fingers_mode_bindings if input_mode == "fingers-mode"
   end
@@ -148,12 +136,12 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   def valid_option?(option)
     option_method = option_to_method(option)
 
+    puts "option method #{option_method}"
     Fingers.config.respond_to?(option_method) || option.match(/^@fingers-pattern-\d+$/)
   end
 
   def ensure_cache_folder
-    require "fileutils"
-    FileUtils.mkdir_p(Fingers::Dirs::CACHE) unless File.exist?(Fingers::Dirs::CACHE)
+    `mkdir -p #{Fingers::Dirs::CACHE}`
   end
 
   def fingers_options_names

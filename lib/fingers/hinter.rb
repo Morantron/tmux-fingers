@@ -56,6 +56,7 @@ class ::Fingers::Hinter
   end
 
   def process_line(line, ending)
+    Fingers.logger.info("processing line")
     result = line.gsub(pattern) { |_m| replace($~) }
     output.print(result + ending)
   end
@@ -73,16 +74,18 @@ class ::Fingers::Hinter
   def replace(match)
     text = match[0]
 
-    captured_text = match && match.named_captures["capture"] || text
+    #captured_text = match && match.named_captures["capture"] || text
+    captured_text = match && match || text
 
-    if match.named_captures["capture"]
-      match_start, match_end = match.offset(0)
-      capture_start, capture_end = match.offset(:capture)
+    #if match.named_captures["capture"]
+      #match_start, match_end = match.offset(0)
+      #capture_start, capture_end = match.offset(:capture)
 
-      capture_offset = [capture_start - match_start, capture_end - capture_start]
-    else
+      #capture_offset = [capture_start - match_start, capture_end - capture_start]
+    #else
       capture_offset = nil
-    end
+    #end
+
 
     if hints_by_text.has_key?(captured_text)
       hint = hints_by_text[captured_text]
@@ -91,6 +94,7 @@ class ::Fingers::Hinter
       hints_by_text[captured_text] = hint
     end
 
+
     # TODO: this should be output hint without ansi escape sequences
     formatter.format(
       hint: hint,
@@ -98,10 +102,11 @@ class ::Fingers::Hinter
       selected: state.selected_hints.include?(hint),
       offset: capture_offset
     )
+
   end
 
   def lines
-    @lines ||= input.force_encoding("UTF-8").split("\n")
+    @lines ||= input.split("\n")
   end
 
   def n_matches
@@ -112,6 +117,9 @@ class ::Fingers::Hinter
     Fingers.benchmark_stamp("counting-matches:start")
 
     lines.each do |line|
+      Fingers.logger.info("line: #{line}")
+      Fingers.logger.info("pattern: #{pattern}")
+      Fingers.logger.info("----")
       line.scan(pattern) do |match|
         match_set.add($&)
       end

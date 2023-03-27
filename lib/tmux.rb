@@ -209,7 +209,7 @@ class Tmux
   end
 
   def socket_flag_value
-    return ENV["FINGERS_TMUX_SOCKET"] if ENV["FINGERS_TMUX_SOCKET"]
+    #return ENV["FINGERS_TMUX_SOCKET"] if ENV["FINGERS_TMUX_SOCKET"]
     socket
   end
 end

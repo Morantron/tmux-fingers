@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 module Fingers
   class CLI
     def initialize(args, cli_path)
@@ -15,6 +13,8 @@ module Fingers
         Fingers::Commands::Start
       when "check_version"
         Fingers::Commands::CheckVersion
+      when "show_version"
+        Fingers::Commands::ShowVersion
       when "send_input"
         Fingers::Commands::SendInput
       when "load_config"
@@ -28,6 +28,7 @@ module Fingers
       begin
         command_class.new(args, cli_path).run
       rescue => e
+        puts e
         Fingers.logger.error(e)
       end
     end
