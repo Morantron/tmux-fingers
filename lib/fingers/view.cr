@@ -1,5 +1,6 @@
 require "tmux"
 require "fingers/hinter"
+require "fingers/action_runner"
 
 module Fingers
   class View
@@ -37,6 +38,15 @@ module Fingers
       when "fzf"
         # soon
       end
+    end
+
+    def run_action
+      ActionRunner.new(
+        hint: state.input,
+        modifier: state.modifier,
+        match: state.result,
+        original_pane: original_pane
+      ).run
     end
 
     private def hide_cursor

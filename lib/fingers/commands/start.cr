@@ -94,7 +94,7 @@ module Fingers::Commands
       tmux.zoom_pane(target_pane.pane_id) if pane_was_zoomed?
 
       restore_options
-      #view.run_action if state.result
+      view.run_action if state.result
     end
 
     private getter target_pane : Tmux::Pane do

@@ -209,11 +209,11 @@ class Tmux
   def set_buffer(value)
     return unless value
 
-    system(tmux, "set-buffer", value)
+    system(tmux, ["set-buffer", value])
   end
 
   def select_pane(id)
-    system(tmux, "select-pane", "-t", id)
+    system(tmux, ["select-pane", "-t", id])
   end
 
   def zoom_pane(id)
