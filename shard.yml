@@ -8,10 +8,6 @@ targets:
   tmux-fingers:
     main: src/fingers.cr
 
-dependencies:
-  priority_queue:
-    github: amadanmath/priority_queue.cr
-
 crystal: 1.7.3
 
 license: MIT
