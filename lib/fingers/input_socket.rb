@@ -33,9 +33,7 @@ class InputSocket
     remove_socket_file
   end
 
-  private
-
-  attr_reader :path
+  private getter :path
 
   def server
     @server ||= UNIXServer.new(path)

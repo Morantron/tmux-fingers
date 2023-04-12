@@ -1,0 +1,17 @@
+name: fingers
+version: 0.1.0
+
+authors:
+  - Jorge Morante <jorge@morante.eu>
+
+targets:
+  tmux-fingers:
+    main: src/fingers.cr
+
+dependencies:
+  priority_queue:
+    github: amadanmath/priority_queue.cr
+
+crystal: 1.7.3
+
+license: MIT

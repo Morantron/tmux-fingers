@@ -25,6 +25,7 @@ GEM
     rspec-support (3.9.3)
 
 PLATFORMS
+  arm64-darwin-22
   ruby
   x86_64-linux
 

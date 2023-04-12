@@ -44,6 +44,7 @@ class Huffman
       end
 
       smallest = get_smallest(n_branches)
+      puts "smallest: #{smallest.map { |node| node.weight }}"
       new_node = new_node_from(smallest)
 
       heap << new_node
@@ -52,6 +53,7 @@ class Huffman
     result = []
 
     traverse_tree(heap.elements[1]) do |node, path|
+      puts "node #{node.weight} path: #{path}"
       result.push(translate_path(path)) if node.children.empty?
     end
 

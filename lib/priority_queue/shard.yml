@@ -1,0 +1,9 @@
+name: priority_queue
+version: 0.1.0
+
+authors:
+  - Goran Topic <amadanmath+github@gmail.com>
+
+crystal: 0.24.1
+
+license: MIT
