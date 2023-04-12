@@ -26,13 +26,6 @@ module Fingers
 
       cmd.input.puts(match)
       cmd.input.flush
-
-
-      #puts "did it work? #status}"
-      #IO.popen(action_env, final_shell_command, "r+") do |io|
-        #io.puts match
-        #io.close_write
-      #end
     end
 
     private getter :match, :modifier, :hint, :original_pane

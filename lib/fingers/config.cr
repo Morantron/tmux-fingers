@@ -18,6 +18,8 @@ module Fingers
     property highlight_format : String
     property selected_highlight_format : String
 
+    FORMAT_PRINTER = TmuxFormatPrinter.new
+
     def initialize(
       @key = "F",
       @keyboard_layout = "qwerty",
@@ -28,10 +30,10 @@ module Fingers
       @alt_action = "",
       @shift_action = ":paste:",
       @hint_position = "left",
-      @hint_format = "fg=yellow,bold",
-      @selected_hint_format = "fg=green,bold",
-      @selected_highlight_format = "fg=green,nobold,dim",
-      @highlight_format = "fg=yellow,nobold,dim",
+      @hint_format = FORMAT_PRINTER.print("fg=yellow,bold"),
+      @selected_hint_format = FORMAT_PRINTER.print("fg=green,bold"),
+      @selected_highlight_format = FORMAT_PRINTER.print("fg=green,nobold,dim"),
+      @highlight_format = FORMAT_PRINTER.print("fg=yellow,nobold,dim"),
     )
     end
 
