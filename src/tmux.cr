@@ -10,6 +10,10 @@ def to_tmux_number(value)
   "\#{#{value}}"
 end
 
+def to_tmux_nullable_number(value)
+  "\#{?#{value},\#{#{value}},null}"
+end
+
 def to_tmux_bool(value)
   "\#{?#{value},true,false}"
 end
@@ -20,6 +24,8 @@ def build_tmux_format(hash)
       "\"#{field}\": #{to_tmux_string(field)}"
     elsif type == Int32
       "\"#{field}\": #{to_tmux_number(field)}"
+    elsif type == Int32 | Nil
+      "\"#{field}\": #{to_tmux_nullable_number(field)}"
     elsif type == Bool
       "\"#{field}\": #{to_tmux_bool(field)}"
     end
@@ -41,7 +47,7 @@ class Tmux
     property pane_height : Int32
     property pane_current_path : String
     property pane_in_mode : Bool
-    # property scroll_position : Int32
+    property scroll_position : Int32 | Nil
     property window_zoomed_flag : Bool
   end
 
@@ -63,7 +69,7 @@ class Tmux
     pane_height:       Int32,
     pane_current_path: String,
     pane_in_mode:      Bool,
-    # scroll_position: Int32,
+    scroll_position: Int32 | Nil,
     window_zoomed_flag: Bool,
   })
 
@@ -76,11 +82,6 @@ class Tmux
   })
 
   @panes : Array(Pane) | Nil
-
-  # def refresh!
-  # @panes = nil
-  # @windows = nil
-  # end
 
   def panes : Array(Pane)
     `#{tmux} list-panes -a -F '#{PANE_FORMAT}'`.chomp.split("\n").map do |pane|
@@ -140,14 +141,15 @@ class Tmux
 
     return "" unless pane
 
-    # if pane.pane_in_mode
-    # start_line = -pane.scroll_position.to_i
-    # end_line = pane.pane_height.to_i - pane.scroll_position.to_i - 1
+    if pane.pane_in_mode
+      scroll_position = pane.scroll_position.not_nil!
+      start_line = -scroll_position.to_i
+      end_line = pane.pane_height.to_i - scroll_position.to_i - 1
 
-    # `#{tmux} capture-pane -J -p -t "#{pane_id}" -S #{start_line} -E #{end_line}`
-    # else
-    `#{tmux} capture-pane -J -p -t '#{pane_id}'`.chomp
-    # end
+      `#{tmux} capture-pane -J -p -t "#{pane_id}" -S #{start_line} -E #{end_line}`
+    else
+      `#{tmux} capture-pane -J -p -t '#{pane_id}'`.chomp
+    end
   end
 
   def create_window(name, cmd, _pane_width, _pane_height)
