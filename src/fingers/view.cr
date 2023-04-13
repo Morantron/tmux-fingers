@@ -22,7 +22,8 @@ module Fingers
     end
 
     def render
-      output.print CLEAR_SEQ
+      clear_screen
+      hide_cursor
       hinter.run
     end
 
@@ -53,6 +54,10 @@ module Fingers
 
     private def hide_cursor
       output.print HIDE_CURSOR_SEQ
+    end
+
+    private def clear_screen
+      output.print CLEAR_SEQ
     end
 
     private def hint(char, modifier)

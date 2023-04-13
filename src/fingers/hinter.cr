@@ -89,17 +89,15 @@ module Fingers
     def replace(match)
       text = match[0]
 
-      # captured_text = match && match.named_captures["capture"] || text
-      captured_text = text
+      captured_text = match["capture"]? || text
 
-      # if match.named_captures["capture"]
-      # match_start, match_end = match.offset(0)
-      # capture_start, capture_end = match.offset(:capture)
-
-      # capture_offset = [capture_start - match_start, capture_end - capture_start]
-      # else
-      # capture_offset = nil
-      # end
+      if match["capture"]?
+        match_start, match_end = {match.begin(0), match.end(0)}
+        capture_start, capture_end = find_capture_offset(match).not_nil!
+        capture_offset = {capture_start - match_start, capture_end - capture_start}
+      else
+        capture_offset = nil
+      end
 
       if hints_by_text.has_key?(captured_text)
         hint = hints_by_text[captured_text]
@@ -117,8 +115,20 @@ module Fingers
         highlight: text,
         # selected: state.selected_hints.include?(hint),
         selected: false,
-        offset: nil
+        offset: capture_offset
       )
+    end
+
+    def find_capture_offset(match : Regex::MatchData) : Tuple(Int32, Int32) | Nil
+      index = capture_indices.find { |i| match[i]? }
+
+      return nil unless index
+
+      {match.begin(index), match.end(index)}
+    end
+
+    getter capture_indices : Array(Int32) do
+      pattern.name_table.map { |k, v| v == "capture" ? k : nil }.compact
     end
 
     def lines : Array(String)
