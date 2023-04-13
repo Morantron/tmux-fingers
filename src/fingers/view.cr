@@ -33,11 +33,12 @@ module Fingers
       case command
       when "hint"
         char, modifier = args
-        hint(char, modifier)
+        process_hint(char, modifier)
       when "exit"
         request_exit!
       when "toggle-help"
-      when "toggle-toggle-multi-mode"
+      when "toggle-multi-mode"
+        process_multimode
       when "fzf"
         # soon
       end
@@ -60,7 +61,7 @@ module Fingers
       output.print CLEAR_SEQ
     end
 
-    private def hint(char, modifier)
+    private def process_hint(char, modifier)
       state.input += char
       state.modifier = modifier
       match = hinter.lookup(state.input)
@@ -68,6 +69,17 @@ module Fingers
       match = hinter.lookup(state.input)
 
       handle_match(match) if match
+    end
+
+    private def process_multimode
+      prev_state = state.multi_mode
+      state.multi_mode = !state.multi_mode
+      current_state = state.multi_mode
+
+      if prev_state == true && current_state == false
+        state.result = state.multi_matches.join(' ')
+        request_exit!
+      end
     end
 
     private getter :output, :hinter, :original_pane, :state

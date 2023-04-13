@@ -116,7 +116,7 @@ module Fingers::Commands
       Fingers::Hinter.new(
         input: tmux.capture_pane(target_pane.pane_id),
         width: target_pane.pane_width.to_i,
-        # state: state,
+        state: state,
         output: pane_printer
       )
     end

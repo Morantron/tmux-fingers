@@ -16,7 +16,7 @@ module Fingers
     def initialize(
       input : String,
       width : Int32,
-      # state,
+      state : Fingers::State,
       output : Printer,
       patterns = Fingers.config.patterns,
       alphabet = Fingers.config.alphabet,
@@ -27,7 +27,7 @@ module Fingers
       @width = width
       @hints_by_text = {} of String => String
       @lookup_table = {} of String => String
-      # @state = state
+      @state = state
       @output = output
       @formatter = formatter
       @huffman = huffman
@@ -60,7 +60,7 @@ module Fingers
       :input,
       :lookup_table,
       :width,
-      # :state,
+      :state,
       :formatter,
       :huffman,
       :output,
@@ -109,12 +109,10 @@ module Fingers
         hints_by_text[captured_text] = hint
       end
 
-      # TODO: this should be output hint without ansi escape sequences
       formatter.format(
         hint: hint,
         highlight: text,
-        # selected: state.selected_hints.include?(hint),
-        selected: false,
+        selected: state.selected_hints.includes?(hint),
         offset: capture_offset
       )
     end
