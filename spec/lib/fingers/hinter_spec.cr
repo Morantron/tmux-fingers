@@ -25,7 +25,7 @@ class TestFormatter < ::Fingers::Formatter
 end
 
 describe Fingers::Hinter do
-    input = "
+  input = "
 ola ke ase
 ke ase ola
 ke olaola ke

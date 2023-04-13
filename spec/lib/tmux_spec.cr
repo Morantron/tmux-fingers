@@ -9,4 +9,3 @@ describe Tmux do
     puts panes
   end
 end
-

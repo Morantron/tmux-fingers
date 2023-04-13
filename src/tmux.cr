@@ -41,7 +41,7 @@ class Tmux
     property pane_height : Int32
     property pane_current_path : String
     property pane_in_mode : Bool
-    #property scroll_position : Int32
+    # property scroll_position : Int32
     property window_zoomed_flag : Bool
   end
 
@@ -57,30 +57,30 @@ class Tmux
 
   # TODO make a macro or something
   PANE_FORMAT = build_tmux_format({
-    pane_id: String,
-    window_id: String,
-    pane_width: Int32,
-    pane_height: Int32,
+    pane_id:           String,
+    window_id:         String,
+    pane_width:        Int32,
+    pane_height:       Int32,
     pane_current_path: String,
-    pane_in_mode: Bool,
-    #scroll_position: Int32,
+    pane_in_mode:      Bool,
+    # scroll_position: Int32,
     window_zoomed_flag: Bool,
   })
 
   WINDOW_FORMAT = build_tmux_format({
-    window_id:  String,
-    window_width: Int32,
+    window_id:     String,
+    window_width:  Int32,
     window_height: Int32,
-    pane_id: String,
-    pane_tty: String,
+    pane_id:       String,
+    pane_tty:      String,
   })
 
   @panes : Array(Pane) | Nil
 
-  #def refresh!
-    #@panes = nil
-    #@windows = nil
-  #end
+  # def refresh!
+  # @panes = nil
+  # @windows = nil
+  # end
 
   def panes : Array(Pane)
     `#{tmux} list-panes -a -F '#{PANE_FORMAT}'`.chomp.split("\n").map do |pane|
@@ -99,7 +99,7 @@ class Tmux
   end
 
   def new_session(name, cmd, width, height)
-    flags: Array(String) = [] of String
+    flags : Array(String) = [] of String
 
     flags.push("-f", config_file) if config_file
 
@@ -140,14 +140,14 @@ class Tmux
 
     return "" unless pane
 
-    #if pane.pane_in_mode
-      #start_line = -pane.scroll_position.to_i
-      #end_line = pane.pane_height.to_i - pane.scroll_position.to_i - 1
+    # if pane.pane_in_mode
+    # start_line = -pane.scroll_position.to_i
+    # end_line = pane.pane_height.to_i - pane.scroll_position.to_i - 1
 
-      #`#{tmux} capture-pane -J -p -t "#{pane_id}" -S #{start_line} -E #{end_line}`
-    #else
-      `#{tmux} capture-pane -J -p -t '#{pane_id}'`.chomp
-    #end
+    # `#{tmux} capture-pane -J -p -t "#{pane_id}" -S #{start_line} -E #{end_line}`
+    # else
+    `#{tmux} capture-pane -J -p -t '#{pane_id}'`.chomp
+    # end
   end
 
   def create_window(name, cmd, _pane_width, _pane_height)
@@ -232,9 +232,9 @@ class Tmux
   def tmux
     flags = [] of String
 
-    #flags.push("-L", socket_flag_value) if socket_flag_value
+    # flags.push("-L", socket_flag_value) if socket_flag_value
 
-    #return "tmux #{flags.join(" ")}" unless flags.empty?
+    # return "tmux #{flags.join(" ")}" unless flags.empty?
 
     "tmux"
   end

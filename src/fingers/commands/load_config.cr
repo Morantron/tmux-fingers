@@ -11,35 +11,35 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   FINGERS_FILE_PATH = "#{ENV["HOME"]}/.fingersrc"
 
   DEFAULT_PATTERNS = {
-    "ip": "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}",
-    "uuid": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-    "sha": "[0-9a-f]{7,128}",
+    "ip":    "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}",
+    "uuid":  "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+    "sha":   "[0-9a-f]{7,128}",
     "digit": "[0-9]{4,}",
-    #"url": "((https?://|git@|git://|ssh://|ftp://|file:///)[^ ()"\"]+)",
-    "path": "(([.\\w\\-~\\$@]+)?(/[.\\w\\-@]+)+/?)"
+    # "url": "((https?://|git@|git://|ssh://|ftp://|file:///)[^ ()"\"]+)",
+    "path": "(([.\\w\\-~\\$@]+)?(/[.\\w\\-@]+)+/?)",
   }
 
   ALPHABET_MAP = {
-    "qwerty": "asdfqwerzxcvjklmiuopghtybn",
-    "qwerty-homerow": "asdfjklgh",
-    "qwerty-left-hand": "asdfqwerzcxv",
-    "qwerty-right-hand": "jkluiopmyhn",
-    "azerty": "qsdfazerwxcvjklmuiopghtybn",
-    "azerty-homerow": "qsdfjkmgh",
-    "azerty-left-hand": "qsdfazerwxcv",
-    "azerty-right-hand": "jklmuiophyn",
-    "qwertz": "asdfqweryxcvjkluiopmghtzbn",
-    "qwertz-homerow": "asdfghjkl",
-    "qwertz-left-hand": "asdfqweryxcv",
-    "qwertz-right-hand": "jkluiopmhzn",
-    "dvorak": "aoeuqjkxpyhtnsgcrlmwvzfidb",
-    "dvorak-homerow": "aoeuhtnsid",
-    "dvorak-left-hand": "aoeupqjkyix",
-    "dvorak-right-hand": "htnsgcrlmwvz",
-    "colemak": "arstqwfpzxcvneioluymdhgjbk",
-    "colemak-homerow": "arstneiodh",
-    "colemak-left-hand": "arstqwfpzxcv",
-    "colemak-right-hand": "neioluymjhk"
+    "qwerty":             "asdfqwerzxcvjklmiuopghtybn",
+    "qwerty-homerow":     "asdfjklgh",
+    "qwerty-left-hand":   "asdfqwerzcxv",
+    "qwerty-right-hand":  "jkluiopmyhn",
+    "azerty":             "qsdfazerwxcvjklmuiopghtybn",
+    "azerty-homerow":     "qsdfjkmgh",
+    "azerty-left-hand":   "qsdfazerwxcv",
+    "azerty-right-hand":  "jklmuiophyn",
+    "qwertz":             "asdfqweryxcvjkluiopmghtzbn",
+    "qwertz-homerow":     "asdfghjkl",
+    "qwertz-left-hand":   "asdfqweryxcv",
+    "qwertz-right-hand":  "jkluiopmhzn",
+    "dvorak":             "aoeuqjkxpyhtnsgcrlmwvzfidb",
+    "dvorak-homerow":     "aoeuhtnsid",
+    "dvorak-left-hand":   "aoeupqjkyix",
+    "dvorak-right-hand":  "htnsgcrlmwvz",
+    "colemak":            "arstqwfpzxcvneioluymdhgjbk",
+    "colemak-homerow":    "arstneiodh",
+    "colemak-left-hand":  "arstqwfpzxcv",
+    "colemak-right-hand": "neioluymjhk",
   }
 
   def run
@@ -49,7 +49,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     setup_bindings
   end
 
-  #private
+  # private
 
   def parse_tmux_conf
     options = shell_safe_options
@@ -93,9 +93,9 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     end
 
     config.patterns = clean_up_patterns([
-                                                  *enabled_default_patterns,
-                                                  *user_defined_patterns
-                                                ])
+      *enabled_default_patterns,
+      *user_defined_patterns,
+    ])
 
     config.alphabet = ALPHABET_MAP[Fingers.config.keyboard_layout].split("")
 
@@ -162,7 +162,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
     # TODO crystal does not support responds_to in runtime i think
     true
-    #Fingers.config.responds_to?(option_method.to_sym) || option.match(/^@fingers-pattern-\d+$/)
+    # Fingers.config.responds_to?(option_method.to_sym) || option.match(/^@fingers-pattern-\d+$/)
   end
 
   def ensure_cache_folder

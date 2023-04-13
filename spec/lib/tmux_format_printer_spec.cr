@@ -23,5 +23,4 @@ describe TmuxFormatPrinter do
 
     result.should eq expected
   end
-
 end

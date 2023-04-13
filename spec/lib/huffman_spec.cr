@@ -663,7 +663,6 @@ expected_alot = [
 alphabet_a = ["a", "s", "d", "f"]
 alphabet_b = ["a", "s", "d", "f", "j", "k", "l", "g", "h"]
 
-
 describe Huffman do
   it "should work for 5" do
     huffman = Huffman.new

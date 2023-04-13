@@ -21,8 +21,8 @@ module Fingers
 
     def format(hint : String, highlight : String, selected : Bool, offset : Tuple(Int32, Int32) | Nil)
       before_offset(offset, highlight) +
-      format_offset(selected, hint, within_offset(offset, highlight)) +
-      after_offset(offset, highlight)
+        format_offset(selected, hint, within_offset(offset, highlight)) +
+        after_offset(offset, highlight)
     end
 
     private getter :hint_format, :highlight_format, :selected_hint_format, :selected_highlight_format, :hint_position, :reset_sequence

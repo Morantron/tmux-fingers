@@ -51,19 +51,19 @@ class Huffman
 
     puts root.weight
 
-    #traverse_inline(root)
+    # traverse_inline(root)
 
     traverse_tree(root) do |node, path|
-      #puts "node #{node.weight} path: #{path}"
+      # puts "node #{node.weight} path: #{path}"
       result.push(translate_path(path)) if node.children.empty?
     end
 
     result.sort_by { |hint| hint.size }
   end
 
-  #private
+  # private
 
-  #attr_reader :alphabet, :n, :heap
+  # attr_reader :alphabet, :n, :heap
 
   def setup!(alphabet, n)
     @alphabet = alphabet

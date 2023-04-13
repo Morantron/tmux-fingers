@@ -5,12 +5,12 @@ def setup(
   hint_format : String = "#[fg=yellow,bold]",
   highlight_format : String = "#[fg=yellow]",
   hint_position : String = "left",
-  selected_hint_format : String= "#[fg=green,bold]",
+  selected_hint_format : String = "#[fg=green,bold]",
   selected_highlight_format : String = "#[fg=green]",
   selected : Bool = false,
   offset : Tuple(Int32, Int32) | Nil = nil,
   hint : String = "a",
-  highlight : String = "yolo",
+  highlight : String = "yolo"
 )
   formatter = Fingers::MatchFormatter.new(
     highlight_format: highlight_format,

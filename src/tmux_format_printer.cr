@@ -1,4 +1,3 @@
-
 class TmuxFormatPrinter
   abstract class Shell
     abstract def exec(cmd)
@@ -7,28 +6,28 @@ class TmuxFormatPrinter
   FORMAT_SEPARATOR = /[ ,]+/
 
   COLOR_MAP = {
-    black: 0,
-    red: 1,
-    green: 2,
-    yellow: 3,
-    blue: 4,
+    black:   0,
+    red:     1,
+    green:   2,
+    yellow:  3,
+    blue:    4,
     magenta: 5,
-    cyan: 6,
-    white: 7
+    cyan:    6,
+    white:   7,
   }
 
   LAYER_MAP = {
     bg: "setab",
-    fg: "setaf"
+    fg: "setaf",
   }
 
   STYLE_MAP = {
-    bright: "bold",
-    bold: "bold",
-    dim: "dim",
+    bright:     "bold",
+    bold:       "bold",
+    dim:        "dim",
     underscore: "smul",
-    reverse: "rev",
-    italics: "sitm"
+    reverse:    "rev",
+    italics:    "sitm",
   }
 
   class ShellExec < Shell
@@ -123,7 +122,6 @@ class TmuxFormatPrinter
     @shell
   end
 
-  #private
-
-  #attr_reader :shell
+  # private
+  # attr_reader :shell
 end

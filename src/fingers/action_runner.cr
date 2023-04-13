@@ -41,7 +41,7 @@ module Fingers
                              when ":paste:"
                                paste
                              when nil
-                             # do nothing
+                               # do nothing
                              else
                                shell_action
                              end
@@ -70,7 +70,7 @@ module Fingers
     end
 
     def action_env
-      { "MODIFIER" => modifier, "HINT" => hint }
+      {"MODIFIER" => modifier, "HINT" => hint}
     end
 
     private property action : String | Nil do

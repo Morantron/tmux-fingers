@@ -1,4 +1,4 @@
-require "fingers/cli"
+require "./fingers/cli"
 
 module Fingers
   VERSION = "0.1.0"

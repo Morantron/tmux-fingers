@@ -33,7 +33,7 @@ module Fingers
       @hint_format = FORMAT_PRINTER.print("fg=yellow,bold"),
       @selected_hint_format = FORMAT_PRINTER.print("fg=green,bold"),
       @selected_highlight_format = FORMAT_PRINTER.print("fg=green,nobold,dim"),
-      @highlight_format = FORMAT_PRINTER.print("fg=yellow,nobold,dim"),
+      @highlight_format = FORMAT_PRINTER.print("fg=yellow,nobold,dim")
     )
     end
 

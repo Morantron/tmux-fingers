@@ -20,7 +20,7 @@ describe PriorityQueue do
       pr, str = pair
       pq.push(pr.to_i, str.to_s)
     end
-    until pq.empty? 
+    until pq.empty?
       results.push(pq.pop)
     end
 

@@ -16,4 +16,3 @@ describe Fingers::InputSocket do
     end
   end
 end
-
