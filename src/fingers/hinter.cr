@@ -140,8 +140,7 @@ module Fingers
 
       lines.each do |line|
         line.scan(pattern) do |match|
-          # TODO hey cuidao
-          match_set.add(match.to_a.first || "")
+          match_set.add(match[0]?.not_nil!)
         end
       end
 
