@@ -1,13 +1,12 @@
 # TODO maybe use some xgd shite here?
 
 module Fingers::Dirs
-  TMUX_PID          = (ENV["TMUX"] || ",0000").split(",")[1]
-  FINGERS_REPO_ROOT = Pathname.new(__dir__).parent.parent
+  TMUX_PID = (ENV["TMUX"] || ",0000").split(",")[1]
 
-  ROOT = Path["~/.tmux"].expand(home: true)
+  ROOT = Path["/tmp"] / "tmux-#{TMUX_PID}"
 
   LOG_PATH    = ROOT / "fingers.log"
-  CACHE       = ROOT / "cr-tmux-#{TMUX_PID}"
-  CONFIG_PATH = CACHE / "fingers.config"
+  CACHE       = ROOT / "tmux-fingers"
+  CONFIG_PATH = CACHE / "config.json"
   SOCKET_PATH = CACHE / "fingers.sock"
 end

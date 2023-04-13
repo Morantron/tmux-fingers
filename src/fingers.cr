@@ -1,3 +1,4 @@
+require "./fingers/logger"
 require "./fingers/cli"
 
 module Fingers

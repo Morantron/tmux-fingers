@@ -22,8 +22,6 @@ class Huffman
   end
 
   def generate_hints(alphabet : Array(String), n : Int32)
-    puts "generating for n: #{n} alphabet: #{alphabet}"
-
     setup!(alphabet: alphabet, n: n)
 
     return alphabet if n <= alphabet.size
@@ -39,7 +37,6 @@ class Huffman
       end
 
       smallest = get_smallest(n_branches)
-      puts "smallest: #{smallest.map { |node| node.weight }}"
       new_node = new_node_from(smallest)
 
       queue.push(new_node.weight, new_node)
@@ -49,29 +46,20 @@ class Huffman
 
     root = queue.pop
 
-    puts root.weight
-
-    # traverse_inline(root)
-
     traverse_tree(root) do |node, path|
-      # puts "node #{node.weight} path: #{path}"
       result.push(translate_path(path)) if node.children.empty?
     end
 
     result.sort_by { |hint| hint.size }
   end
 
-  # private
-
-  # attr_reader :alphabet, :n, :heap
-
-  def setup!(alphabet, n)
+  private def setup!(alphabet, n)
     @alphabet = alphabet
     @n = n
     @queue = build_heap
   end
 
-  def initial_number_of_branches
+  private def initial_number_of_branches
     result = 1
 
     (1..(n.to_i // arity.to_i + 1)).to_a.each do |t|
@@ -85,11 +73,11 @@ class Huffman
     result
   end
 
-  def arity
+  private def arity
     alphabet.size
   end
 
-  def build_heap
+  private def build_heap
     queue = PriorityQueue(HuffmanNode).new
 
     n.times { |i| queue.push(-i.to_i, HuffmanNode.new(weight: -i, children: [] of HuffmanNode)) }
@@ -97,15 +85,13 @@ class Huffman
     queue
   end
 
-  def get_smallest(n : Int32) : Array(HuffmanNode)
-    puts "n: #{n}"
-    puts "queue.size: #{queue.size}"
+  private def get_smallest(n : Int32) : Array(HuffmanNode)
     result = [] of HuffmanNode
     [n, queue.size].min.times.each { result.push(queue.pop) }
     result
   end
 
-  def new_node_from(nodes)
+  private def new_node_from(nodes)
     weight = nodes.sum do |node|
       node.weight
     end
@@ -113,19 +99,11 @@ class Huffman
     HuffmanNode.new(weight: weight, children: nodes)
   end
 
-  def traverse_tree(node, path = [] of Int32, &block : (HuffmanNode, Array(Int32)) -> Nil)
+  private def traverse_tree(node, path = [] of Int32, &block : (HuffmanNode, Array(Int32)) -> Nil)
     yield node, path
 
     node.children.each_with_index do |child, index|
       traverse_tree(child, [*path, index], &block)
-    end
-  end
-
-  def traverse_inline(node, path = [] of Int32)
-    puts "[inline] node: #{node} #{node.weight}, path: #{path}"
-
-    node.children.each_with_index do |child, index|
-      traverse_inline(child, [*path, index])
     end
   end
 

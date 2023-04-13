@@ -48,14 +48,12 @@ module Fingers
     end
 
     def copy
-      # return unless ENV['DISPLAY']
       return unless system_copy_command
 
       system_copy_command
     end
 
     def open
-      # return unless ENV['DISPLAY']
       return unless system_open_command
 
       system_open_command
@@ -117,7 +115,6 @@ module Fingers
     end
 
     def program_exists?(program)
-      puts "trying to find #{program}"
       Process.find_executable(program)
     end
 

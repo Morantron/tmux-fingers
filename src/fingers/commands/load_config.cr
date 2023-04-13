@@ -61,8 +61,6 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     config = Fingers::Config.new
 
     options.each do |option, value|
-      puts "#{option} => #{value}"
-
       # TODO generate an enum somehow and use an exhaustive case
       case option
       when "key"
@@ -98,9 +96,8 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     ])
 
     config.alphabet = ALPHABET_MAP[Fingers.config.keyboard_layout].split("")
-
-    puts config
     config.save
+
     Fingers.reset_config
   end
 
@@ -160,9 +157,8 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   def valid_option?(option)
     option_method = option_to_method(option)
 
-    # TODO crystal does not support responds_to in runtime i think
+    # TODO validate option
     true
-    # Fingers.config.responds_to?(option_method.to_sym) || option.match(/^@fingers-pattern-\d+$/)
   end
 
   def ensure_cache_folder

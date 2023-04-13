@@ -21,7 +21,6 @@ module Fingers::Commands
 
     def flush
       @file.flush
-      # @file.print(@buf)
     end
   end
 
@@ -37,9 +36,6 @@ module Fingers::Commands
       handle_input
 
       teardown
-
-      # tmux.swap_panes(target_pane.pane_id, fingers_window.pane_id)
-      # tmux.kill_window(fingers_window.window_id)
     end
 
     private def track_options_to_restore!
@@ -71,7 +67,7 @@ module Fingers::Commands
     private def handle_input
       input_socket = InputSocket.new
 
-      # tmux.disable_prefix
+      tmux.disable_prefix
       tmux.set_key_table "fingers"
 
       input_socket.on_input do |input|

@@ -130,16 +130,12 @@ module Fingers
 
       match_set = Set(String).new
 
-      # Fingers.benchmark_stamp('counting-matches:start')
-
       lines.each do |line|
         line.scan(pattern) do |match|
           # TODO hey cuidao
           match_set.add(match.to_a.first || "")
         end
       end
-
-      # Fingers.benchmark_stamp('counting-matches:end')
 
       @n_matches = match_set.size
 
