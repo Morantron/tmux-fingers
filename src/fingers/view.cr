@@ -1,10 +1,12 @@
 require "../tmux"
 require "./hinter"
+require "./state"
 require "./action_runner"
 
 module Fingers
   class View
-    CLEAR_ESCAPE_SEQUENCE = "\e[H\e[J"
+    CLEAR_SEQ = "\e[H\e[J"
+    HIDE_CURSOR_SEQ = "\e[25h"
 
     @hinter : Hinter
     @state : State
@@ -20,7 +22,7 @@ module Fingers
     end
 
     def render
-      output.print CLEAR_ESCAPE_SEQUENCE
+      output.print CLEAR_SEQ
       hinter.run
     end
 
@@ -50,7 +52,7 @@ module Fingers
     end
 
     private def hide_cursor
-      output.print `tput civis`
+      output.print HIDE_CURSOR_SEQ
     end
 
     private def hint(char, modifier)

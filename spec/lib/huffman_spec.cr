@@ -1,5 +1,5 @@
 require "spec"
-require "../../lib/huffman"
+require "../../src/huffman"
 
 expected_5 = [
   "s",

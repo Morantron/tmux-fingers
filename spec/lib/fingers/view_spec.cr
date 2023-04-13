@@ -1,2 +1,2 @@
 require "spec"
-require "../../../lib/fingers/view"
+require "../../../src/fingers/view"

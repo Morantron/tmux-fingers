@@ -1,5 +1,5 @@
 require "spec"
-require "../../lib/priority_queue"
+require "../../src/priority_queue"
 
 describe PriorityQueue do
   it "transforms tmux status line format into escape sequences" do

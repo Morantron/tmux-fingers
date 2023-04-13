@@ -1,5 +1,5 @@
 require "spec"
-require "../../../lib/fingers/hinter"
+require "../../../src/fingers/hinter"
 
 record StateDouble, selected_hints : Array(String)
 

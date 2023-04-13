@@ -1,5 +1,5 @@
 require "spec"
-require "../../lib/tmux_format_printer"
+require "../../src/tmux_format_printer"
 
 class FakeShell < TmuxFormatPrinter::Shell
   def exec(cmd)

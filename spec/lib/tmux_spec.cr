@@ -1,5 +1,5 @@
 require "spec"
-require "../../lib/tmux"
+require "../../src/tmux"
 
 describe Tmux do
   it "transforms tmux status line format into escape sequences" do

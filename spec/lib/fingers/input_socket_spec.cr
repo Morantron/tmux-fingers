@@ -1,5 +1,5 @@
 require "spec"
-require "../../../lib/fingers/input_socket"
+require "../../../src/fingers/input_socket"
 
 describe Fingers::InputSocket do
   it "works" do

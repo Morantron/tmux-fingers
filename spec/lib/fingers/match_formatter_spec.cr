@@ -1,5 +1,5 @@
 require "spec"
-require "../../../lib/fingers/match_formatter"
+require "../../../src/fingers/match_formatter"
 
 def setup(
   hint_format : String = "#[fg=yellow,bold]",
