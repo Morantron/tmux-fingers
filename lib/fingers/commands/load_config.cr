@@ -1,7 +1,7 @@
-require "fingers/dirs"
-require "fingers/config"
-require "tmux"
 require "file_utils"
+require "../dirs"
+require "../config"
+require "../../tmux"
 
 class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   @fingers_options_names : Array(String) | Nil

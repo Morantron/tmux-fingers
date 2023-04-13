@@ -1,6 +1,6 @@
-require "tmux"
-require "fingers/hinter"
-require "fingers/action_runner"
+require "../tmux"
+require "./hinter"
+require "./action_runner"
 
 module Fingers
   class View

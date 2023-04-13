@@ -1,4 +1,4 @@
-require "fingers/config"
+require "./config"
 
 module Fingers
   class ActionRunner

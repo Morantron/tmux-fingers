@@ -1,7 +1,7 @@
-require "huffman"
-require "fingers/config"
-require "fingers/match_formatter"
-require "fingers/types"
+require "../huffman"
+require "./config"
+require "./match_formatter"
+require "./types"
 
 module Fingers
   class Hinter

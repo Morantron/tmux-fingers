@@ -1,7 +1,4 @@
-require "fingers/commands/start"
-require "fingers/commands/load_config"
-require "fingers/commands/send_input"
-require "fingers/commands/version"
+require "./commands/*"
 
 module Fingers
   class Cli

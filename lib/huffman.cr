@@ -1,4 +1,4 @@
-require "priority_queue"
+require "./priority_queue"
 
 class HuffmanNode
   def initialize(weight : Int32, children : Array(HuffmanNode))

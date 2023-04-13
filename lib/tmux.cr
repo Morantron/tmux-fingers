@@ -1,5 +1,5 @@
 require "json"
-require "tmux_format_printer"
+require "./tmux_format_printer"
 
 def to_tmux_string(value)
   # TODO tmux syntax to escape quotes

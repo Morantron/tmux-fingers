@@ -1,4 +1,4 @@
-require "fingers/commands/base"
+require "./base"
 
 module Fingers::Commands
   class SendInput < Base

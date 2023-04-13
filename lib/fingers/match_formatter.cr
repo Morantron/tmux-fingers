@@ -1,5 +1,5 @@
-require "fingers/config"
-require "fingers/types"
+require "./config"
+require "./types"
 
 module Fingers
   class MatchFormatter < Fingers::Formatter

@@ -1,9 +1,9 @@
-require "fingers/commands/base"
-require "fingers/hinter"
-require "fingers/view"
-require "fingers/state"
-require "fingers/input_socket"
-require "tmux"
+require "./base"
+require "../hinter"
+require "../view"
+require "../state"
+require "../input_socket"
+require "../../tmux"
 
 module Fingers::Commands
   class PanePrinter < Fingers::Printer

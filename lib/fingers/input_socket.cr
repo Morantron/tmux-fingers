@@ -1,5 +1,5 @@
 require "socket"
-require "fingers/dirs"
+require "./dirs"
 
 module Fingers
   class InputSocket
