@@ -66,8 +66,6 @@ module Fingers
       state.modifier = modifier
       match = hinter.lookup(state.input)
 
-      match = hinter.lookup(state.input)
-
       handle_match(match) if match
     end
 
