@@ -23,7 +23,6 @@ class Huffman
 
   def generate_hints(alphabet : Array(String), n : Int32)
     cached_result = read_from_cache(alphabet, n)
-    Log.info { "from_cache: #{cached_result}" }
     return cached_result unless cached_result.nil?
 
     if n <= alphabet.size
@@ -86,7 +85,6 @@ class Huffman
   private def read_from_cache(alphabet, n) : Array(String) | Nil
     File.read(cache_key(alphabet, n)).chomp.split(":")
   rescue File::NotFoundError
-    Log.info { "hint cache miss" }
     nil
   end
 

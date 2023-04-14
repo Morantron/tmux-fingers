@@ -114,7 +114,7 @@ module Fingers::Commands
 
     private getter hinter : Hinter do
       Fingers::Hinter.new(
-        input: tmux.capture_pane(target_pane.pane_id),
+        input: tmux.capture_pane(target_pane),
         width: target_pane.pane_width.to_i,
         state: state,
         output: pane_printer

@@ -38,6 +38,33 @@ end
 
 # rubocop:disable Metrics/ClassLength
 class Tmux
+
+  class Shell
+    def initialize
+      @sh = Process.new("/bin/sh", input: :pipe, output: :pipe, error: :close)
+    end
+
+    def exec(cmd)
+      ch = Channel(String).new
+
+      spawn do
+        output = ""
+        while line = @sh.output.read_line
+          break if line == "cmd-end"
+
+          output += "#{line}\n"
+        end
+
+        ch.send(output)
+      end
+
+      @sh.input.print("#{cmd}; echo cmd-end\n")
+      @sh.input.flush
+      output = ch.receive
+      output
+    end
+  end
+
   struct Pane
     include JSON::Serializable
 
@@ -83,81 +110,40 @@ class Tmux
 
   @panes : Array(Pane) | Nil
 
+  #@sh : Shell
+
+  def initialize
+    @sh = Shell.new
+  end
+
   def panes : Array(Pane)
-    `#{tmux} list-panes -a -F '#{PANE_FORMAT}'`.chomp.split("\n").map do |pane|
+    exec("list-panes -a -F '#{PANE_FORMAT}'").chomp.split("\n").map do |pane|
       Pane.from_json(pane)
     end
   end
 
   def find_pane_by_id(id) : Pane | Nil
-    output = `#{tmux} display-message -t '#{id}' -F '#{PANE_FORMAT}' -p`.chomp
+    output = exec("display-message -t '#{id}' -F '#{PANE_FORMAT}' -p").chomp
 
     return nil if output.empty?
 
     Pane.from_json(output)
   end
 
-  def windows
-    `#{tmux} list-windows -a -F '#{WINDOW_FORMAT}'`.chomp.split("\n").map do |pane|
-      Window.from_json(pane)
-    end
-  end
-
-  def new_session(name, cmd, width, height)
-    flags : Array(String) = [] of String
-
-    flags.push("-f", config_file) if config_file
-
-    `env -u TMUX #{tmux} #{flags.join(" ")} new-session -d -s #{name} -x #{width} -y #{height} "#{cmd}"`
-  end
-
-  def start_server
-    flags = [] of String
-
-    flags.push("-f", config_file) if config_file
-
-    `#{tmux} #{flags.join(" ")} start-server &`
-  end
-
-  def pane_by_id(id)
-    panes.find { |pane| pane.pane_id == id }
-  end
-
-  def window_by_id(id)
-    windows.find { |window| window.window_id == id }
-  end
-
-  def panes_by_window_id(window_id)
-    panes.select { |pane| pane.window_id == window_id }
-  end
-
-  def pane_exec(pane_id, cmd)
-    send_keys(pane_id, " #{cmd}")
-    send_keys(pane_id, "Enter")
-  end
-
-  def send_keys(pane_id, keys)
-    `#{tmux} send-keys -t "#{pane_id}" "#{keys}"`
-  end
-
-  def capture_pane(pane_id)
-    pane = pane_by_id(pane_id)
-
-    return "" unless pane
-
+  def capture_pane(pane : Pane)
     if pane.pane_in_mode
       scroll_position = pane.scroll_position.not_nil!
       start_line = -scroll_position.to_i
       end_line = pane.pane_height.to_i - scroll_position.to_i - 1
 
-      `#{tmux} capture-pane -J -p -t "#{pane_id}" -S #{start_line} -E #{end_line}`
+      exec("capture-pane -J -p -t '#{pane.pane_id}' -S #{start_line} -E #{end_line}").chomp
     else
-      `#{tmux} capture-pane -J -p -t '#{pane_id}'`.chomp
+      exec("capture-pane -J -p -t '#{pane.pane_id}'").chomp
     end
   end
 
   def create_window(name, cmd, _pane_width, _pane_height)
-    output = `#{tmux} new-window -P -d -n '#{name}' -F '#{WINDOW_FORMAT}' '#{cmd}'`.chomp
+    output = exec("new-window -P -d -n '#{name}' -F '#{WINDOW_FORMAT}' '#{cmd}'").chomp
 
     Window.from_json(output)
   end
@@ -169,34 +155,30 @@ class Tmux
   end
 
   def kill_pane(id)
-    `#{tmux} kill-pane -t #{id}`
+    exec("kill-pane -t #{id}")
   end
 
   def kill_window(id)
-    `#{tmux} kill-window -t #{id}`
+    exec("kill-window -t #{id}")
   end
 
   # TODO: this command is version dependant D:
   def resize_window(window_id, width, height)
-    system(tmux, "resize-window", "-t", window_id, "-x", width.to_s, "-y", height.to_s)
+    exec(["resize-window", "-t", window_id, "-x", width.to_s, "-y", height.to_s].join(' '))
   end
 
   # TODO: this command is version dependant D:
   def resize_pane(pane_id, width, height)
-    system(tmux, ["resize-pane", "-t", pane_id, "-x", width.to_s, "-y", height.to_s])
-  end
-
-  def last_pane_id
-    `#{tmux} display -pt":.{last}" "#{pane_id}"`
+    exec(["resize-pane", "-t", pane_id, "-x", width.to_s, "-y", height.to_s].join(' '))
   end
 
   def set_window_option(name, value)
-    system(tmux, "set-window-option", name, value)
+    exec(["set-window-option", name, value].join(' '))
   end
 
   def set_key_table(table)
-    system(tmux, ["set-window-option", "key-table", table])
-    system(tmux, ["switch-client", "-T", table])
+    exec(["set-window-option", "key-table", table].join(' '))
+    exec(["switch-client", "-T", table].join(' '))
   end
 
   def disable_prefix
@@ -205,25 +187,25 @@ class Tmux
   end
 
   def set_global_option(name, value)
-    system(tmux, ["set-option", "-g", name, value])
+    exec(["set-option", "-g", name, value].join(' '))
   end
 
   def get_global_option(name)
-    `#{tmux} show -gqv #{name}`.chomp
+    exec(["show", "-gqv", name].join(' ')).chomp
   end
 
   def set_buffer(value)
     return unless value
 
-    system(tmux, ["set-buffer", value])
+    exec(["set-buffer", value].join(' '))
   end
 
   def select_pane(id)
-    system(tmux, ["select-pane", "-t", id])
+    exec(["select-pane", "-t", id].join(' '))
   end
 
   def zoom_pane(id)
-    system(tmux, ["resize-pane", "-Z", "-t", id])
+    exec(["resize-pane", "-Z", "-t", id].join(' '))
   end
 
   # TODO
@@ -262,6 +244,10 @@ class Tmux
   end
 
   def display_message(msg)
-    `#{tmux} display-message "#{msg}"`
+    exec("display-message \"#{msg}\"")
+  end
+
+  private def exec(cmd)
+    @sh.exec("#{tmux} #{cmd}")
   end
 end
