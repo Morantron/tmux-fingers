@@ -90,7 +90,11 @@ class Tmux
   end
 
   def find_pane_by_id(id) : Pane | Nil
-    panes.find { |pane| pane.pane_id == id }
+    output = `#{tmux} display-message -t '#{id}' -F '#{PANE_FORMAT}' -p`.chomp
+
+    return nil if output.empty?
+
+    Pane.from_json(output)
   end
 
   def windows

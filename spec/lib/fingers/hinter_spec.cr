@@ -1,5 +1,7 @@
 require "spec"
 require "../../../src/fingers/hinter"
+require "../../../src/fingers/state"
+require "../../../src/fingers/commands/load_config"
 
 record StateDouble, selected_hints : Array(String)
 
@@ -25,14 +27,11 @@ class TestFormatter < ::Fingers::Formatter
 end
 
 describe Fingers::Hinter do
-  input = "
-ola ke ase
-ke ase ola
-ke olaola ke
-ke ola ase
-
-beep beep
-"
+  input = 50.times.map do
+    10.times.map do
+      rand.to_s.split(".").last
+    end.join(" ")
+  end.join("\n")
 
   width = 40
 
@@ -40,13 +39,14 @@ beep beep
 
   formatter = TestFormatter.new
 
-  patterns = ["ola"]
+  patterns = Fingers::Commands::LoadConfig::DEFAULT_PATTERNS.values.to_a
   alphabet = "asdf".split("")
 
   hinter = Fingers::Hinter.new(
     input: input,
     width: width,
     patterns: patterns,
+    state: ::Fingers::State.new,
     alphabet: alphabet,
     output: output,
     formatter: formatter,

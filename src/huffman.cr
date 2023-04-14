@@ -22,9 +22,15 @@ class Huffman
   end
 
   def generate_hints(alphabet : Array(String), n : Int32)
-    setup!(alphabet: alphabet, n: n)
+    cached_result = read_from_cache(alphabet, n)
+    Log.info { "from_cache: #{cached_result}" }
+    return cached_result unless cached_result.nil?
 
-    return alphabet if n <= alphabet.size
+    if n <= alphabet.size
+      return alphabet 
+    end
+
+    setup!(alphabet: alphabet, n: n)
 
     first_node = true
 
@@ -50,7 +56,11 @@ class Huffman
       result.push(translate_path(path)) if node.children.empty?
     end
 
-    result.sort_by { |hint| hint.size }
+    final_result = result.sort_by { |hint| hint.size }
+
+    save_to_cache(alphabet, n, final_result)
+
+    final_result
   end
 
   private def setup!(alphabet, n)
@@ -71,6 +81,21 @@ class Huffman
     end
 
     result
+  end
+
+  private def read_from_cache(alphabet, n) : Array(String) | Nil
+    File.read(cache_key(alphabet, n)).chomp.split(":")
+  rescue File::NotFoundError
+    Log.info { "hint cache miss" }
+    nil
+  end
+
+  private def save_to_cache(alphabet, n, result)
+    File.write(cache_key(alphabet, n), result.join(":"))
+  end
+
+  private def cache_key(alphabet, n)
+    Fingers::Dirs::CACHE / "#{alphabet.join("")}-#{n}"
   end
 
   private def arity

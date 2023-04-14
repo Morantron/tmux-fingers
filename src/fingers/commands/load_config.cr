@@ -1,4 +1,5 @@
 require "file_utils"
+require "./base"
 require "../dirs"
 require "../config"
 require "../../tmux"
