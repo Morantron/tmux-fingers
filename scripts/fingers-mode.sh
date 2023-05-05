@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-eval "$(tmux show-env -g -s | grep ^FINGERS)"
+eval "$(echo -e "$(tmux show-env -g -s | grep ^FINGERS)")"
 
 tmux set-window-option automatic-rename off
 

@@ -1,3 +1,7 @@
+## 1.1.2 - 05 May 2023
+
+* Fix escaping issue with upcoming tmux 3.4 ( fixes #95 )
+
 ## 1.1.1 - 16 Nov 2020
 
 * Don't allow patterns matching empty string ( fixes #86 )
