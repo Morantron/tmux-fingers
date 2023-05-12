@@ -74,8 +74,9 @@ module Fingers
     def process_line(line, ending)
       result = line.gsub(pattern) { |_m| replace($~) }
       result = Fingers.config.backdrop_format + result
-      width_diff = result.size - line.size
-      output.print(result.ljust(width + width_diff, ' ') + ending)
+      double_width_correction = ((line.bytesize - line.size) / 3).round.to_i
+      padding = " " * (width - line.size - double_width_correction)
+      output.print(result + padding + ending)
     end
 
     def pattern : Regex
