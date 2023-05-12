@@ -44,7 +44,6 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   }
 
   def run
-    ensure_cache_folder
     validate_options!
     parse_tmux_conf
     setup_bindings
@@ -160,10 +159,6 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
     # TODO validate option
     true
-  end
-
-  def ensure_cache_folder
-    FileUtils.mkdir_p(Fingers::Dirs::CACHE) unless File.exists?(Fingers::Dirs::CACHE)
   end
 
   def fingers_options_names

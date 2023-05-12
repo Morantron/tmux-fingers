@@ -9,4 +9,7 @@ module Fingers::Dirs
   CACHE       = ROOT / "tmux-fingers"
   CONFIG_PATH = CACHE / "config.json"
   SOCKET_PATH = CACHE / "fingers.sock"
+
+  # ensure cache folder
+  FileUtils.mkdir_p(Fingers::Dirs::CACHE) unless File.exists?(Fingers::Dirs::CACHE)
 end
