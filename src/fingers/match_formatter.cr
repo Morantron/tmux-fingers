@@ -51,8 +51,8 @@ module Fingers
     private def format_offset(selected, hint, highlight)
       chopped_highlight = chop_highlight(hint, highlight)
 
-      hint_pair = (selected ? selected_hint_format : hint_format) + hint
-      highlight_pair = (selected ? selected_highlight_format : highlight_format) + chopped_highlight
+      hint_pair = (selected ? selected_hint_format : hint_format) + hint + reset_sequence
+      highlight_pair = (selected ? selected_highlight_format : highlight_format) + chopped_highlight + reset_sequence
 
       if hint_position == "right"
         highlight_pair + hint_pair + reset_sequence
