@@ -8,24 +8,27 @@ module Fingers
       highlight_format : String = Fingers.config.highlight_format,
       selected_hint_format : String = Fingers.config.selected_hint_format,
       selected_highlight_format : String = Fingers.config.selected_highlight_format,
+      backdrop_format : String = Fingers.config.backdrop_format,
       hint_position : String = Fingers.config.hint_position,
+      # TODO #perf remove this shell call
       reset_sequence : String = `tput sgr0`.chomp
     )
       @hint_format = hint_format
       @highlight_format = highlight_format
       @selected_hint_format = selected_hint_format
       @selected_highlight_format = selected_highlight_format
+      @backdrop_format = backdrop_format
       @hint_position = hint_position
       @reset_sequence = reset_sequence
     end
 
     def format(hint : String, highlight : String, selected : Bool, offset : Tuple(Int32, Int32) | Nil)
-      before_offset(offset, highlight) +
+      reset_sequence + before_offset(offset, highlight) +
         format_offset(selected, hint, within_offset(offset, highlight)) +
-        after_offset(offset, highlight)
+        after_offset(offset, highlight) + backdrop_format
     end
 
-    private getter :hint_format, :highlight_format, :selected_hint_format, :selected_highlight_format, :hint_position, :reset_sequence
+    private getter :hint_format, :highlight_format, :selected_hint_format, :selected_highlight_format, :hint_position, :reset_sequence, :backdrop_format
 
     private def before_offset(offset, highlight)
       return "" if offset.nil?
