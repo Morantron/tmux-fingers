@@ -131,7 +131,7 @@ class Tmux
   end
 
   def capture_pane(pane : Pane)
-    if pane.pane_in_mode
+    if pane.pane_in_mode && !pane.scroll_position.nil?
       scroll_position = pane.scroll_position.not_nil!
       start_line = -scroll_position.to_i
       end_line = pane.pane_height.to_i - scroll_position.to_i - 1
