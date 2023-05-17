@@ -28,8 +28,6 @@ module Fingers::Commands
     @original_options : Hash(String, String) = {} of String => String
 
     def run
-      pane_id, mode = @args
-
       track_options_to_restore!
       show_hints
 

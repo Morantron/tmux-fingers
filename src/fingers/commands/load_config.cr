@@ -102,7 +102,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   end
 
   def clean_up_patterns(patterns)
-    patterns.reject { |pattern| pattern.empty? }
+    patterns.reject(&.empty?)
   end
 
   def setup_bindings

@@ -50,7 +50,7 @@ module Fingers
     end
 
     def matches
-      @matches ||= @hints_by_text.keys.uniq.flatten
+      @matches ||= @hints_by_text.keys.uniq!.flatten
     end
 
     # private
@@ -97,7 +97,7 @@ module Fingers
       if match["capture"]?
         match_start, match_end = {match.begin(0), match.end(0)}
         capture_start, capture_end = find_capture_offset(match).not_nil!
-        capture_offset = {capture_start - match_start, capture_end - capture_start}
+        capture_offset = {capture_start - match_start, capture_end - match_end}
       else
         capture_offset = nil
       end
@@ -129,7 +129,7 @@ module Fingers
     end
 
     getter capture_indices : Array(Int32) do
-      pattern.name_table.map { |k, v| v == "capture" ? k : nil }.compact
+      pattern.name_table.compact_map { |k, v| v == "capture" ? k : nil }
     end
 
     def lines : Array(String)

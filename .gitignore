@@ -8,3 +8,4 @@ vendor/bundle
 .byebug_history
 shared
 bin/*
+lib/

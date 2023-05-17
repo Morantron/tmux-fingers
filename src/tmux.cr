@@ -218,12 +218,6 @@ class Tmux
   end
 
   def tmux
-    flags = [] of String
-
-    # flags.push("-L", socket_flag_value) if socket_flag_value
-
-    # return "tmux #{flags.join(" ")}" unless flags.empty?
-
     "tmux"
   end
 

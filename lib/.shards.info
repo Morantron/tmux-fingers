@@ -1,6 +1,0 @@
----
-version: 1.0
-shards:
-  priority_queue:
-    git: https://github.com/amadanmath/priority_queue.cr.git
-    version: 0.1.0+git.commit.5ce7c82b876644f28715d384f3615a2dc7b2a66b

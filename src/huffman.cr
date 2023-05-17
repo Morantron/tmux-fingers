@@ -26,7 +26,7 @@ class Huffman
     return cached_result unless cached_result.nil?
 
     if n <= alphabet.size
-      return alphabet 
+      return alphabet
     end
 
     setup!(alphabet: alphabet, n: n)
@@ -55,7 +55,7 @@ class Huffman
       result.push(translate_path(path)) if node.children.empty?
     end
 
-    final_result = result.sort_by { |hint| hint.size }
+    final_result = result.sort_by(&.size)
 
     save_to_cache(alphabet, n, final_result)
 

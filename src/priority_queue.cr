@@ -6,12 +6,12 @@ class PriorityQueue(T)
       h[k] = [] of T
     end
     data.each { |priority, item| @q[priority] << item } if data
-    @priorities = @q.keys.sort
+    @priorities = @q.keys.sort!
   end
 
   def push(priority : Int32, item : T)
     @q[priority].push(item)
-    @priorities = @q.keys.sort
+    @priorities = @q.keys.sort!
   end
 
   def pop
@@ -58,6 +58,6 @@ class PriorityQueue(T)
   end
 
   def size
-    @q.values.sum { |list| list.size }
+    @q.values.sum(&.size)
   end
 end
