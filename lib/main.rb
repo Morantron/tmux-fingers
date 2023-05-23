@@ -5,7 +5,6 @@ module Kernel
   end
 end
 
-puts "hello"
 begin
   absolute_fingers_path = "/home/morantron/hacking/tmux-fingers/build/tmux-fingers"
   ARGV.shift
@@ -15,4 +14,3 @@ rescue StandardError => e
   puts e
   puts e.backtrace
 end
-puts "goodbye"

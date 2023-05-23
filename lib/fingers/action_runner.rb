@@ -7,14 +7,15 @@ class Fingers::ActionRunner
   end
 
   def run
+    Fingers.logger.info "hey!"
     Tmux.instance.set_buffer(match)
 
-    return unless final_shell_command
+    #return unless final_shell_command
 
-    IO.popen(action_env, final_shell_command, "r+") do |io|
-      io.puts match
-      io.close_write
-    end
+    #IO.popen(action_env, final_shell_command, "r+") do |io|
+      #io.puts match
+      #io.close_write
+    #end
   end
 
   private
@@ -107,6 +108,7 @@ class Fingers::ActionRunner
   end
 
   def program_exists?(program)
-    system("which #{program}")
+    # TODO REMOVE THIS HEHEHE
+    return program == "xclip"
   end
 end

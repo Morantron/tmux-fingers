@@ -90,7 +90,9 @@ class Fingers::View
       state.input = ""
       render
     else
-      state.result = match
+      Fingers.logger.info "Match: #{match}"
+      Fingers.logger.info "Match: #{match.to_s}"
+      state.result = match.to_s
       request_exit!
     end
   end

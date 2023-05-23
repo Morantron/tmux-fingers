@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-MRUBY_REV = '1c765dc37a80bf681bbab271b0ba90711d935be9'
+TARGET="x86_64-macos-none"
+MRUBY_REV= 'c32f7915fb567c73b78db10ebc13c38a617a75aa'
 MRUBY_ROOT = 'build/mruby'
 RUBY_FILES = [
   'lib/tmux.rb',
@@ -11,9 +12,12 @@ RUBY_FILES = [
   'lib/fingers/dirs.rb',
   'lib/fingers/config.rb',
   'lib/fingers/commands.rb',
+  'lib/fingers/input_socket.rb',
+  'lib/fingers/action_runner.rb',
   'lib/fingers/commands/base.rb',
   'lib/fingers/commands/show_version.rb',
   'lib/fingers/commands/load_config.rb',
+  'lib/fingers/commands/send_input.rb',
   'lib/fingers/commands/start.rb',
   'lib/fingers/cli.rb',
 
@@ -35,13 +39,13 @@ end
 desc 'Compile mruby'
 task build_mruby: [MRUBY_ROOT] do
   Dir.chdir('build/mruby') do
-    sh 'MRUBY_CONFIG=../../build_config.rb rake'
+    sh "CC=\"zig cc -target #{TARGET}\" MRUBY_CONFIG=../../build_config.rb rake"
   end
 end
 
 desc 'Compile tmux-fingers'
 task compile: ['build_mruby'] do
   sh "#{MRUBY_ROOT}/bin/mrbc -B main_ruby -o build/bytecode.c #{RUBY_FILES.join(' ')}"
-  sh "gcc -std=c99 -I#{MRUBY_ROOT}/include main.c -o build/tmux-fingers #{MRUBY_ROOT}/build/host/lib/libmruby.a -lm"
+  sh "zig cc -target #{TARGET} -I#{MRUBY_ROOT}/include main.c -o build/tmux-fingers #{MRUBY_ROOT}/build/host/lib/libmruby.a -lm"
   sh 'echo tmux-fingers build complete'
 end

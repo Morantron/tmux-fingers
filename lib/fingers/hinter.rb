@@ -86,6 +86,8 @@ class ::Fingers::Hinter
       capture_offset = nil
     #end
 
+    # Converting match data to string
+    captured_text = captured_text.to_s
 
     if hints_by_text.has_key?(captured_text)
       hint = hints_by_text[captured_text]

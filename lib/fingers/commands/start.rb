@@ -41,8 +41,7 @@ class Fingers::Commands::Start < Fingers::Commands::Base
 
     show_hints
 
-    sleep 2
-    #handle_input
+    handle_input
     teardown
   end
 
@@ -124,13 +123,15 @@ class Fingers::Commands::Start < Fingers::Commands::Base
     tmux.disable_prefix
     tmux.set_key_table "fingers"
 
-    Fingers.benchmark_stamp("ready-for-input:end")
-    Fingers.trace_for_tests_do_not_remove_or_the_whole_fabric_of_reality_will_tear_apart_with_unforeseen_consequences("fingers-ready")
+    #Fingers.benchmark_stamp("ready-for-input:end")
+    #Fingers.trace_for_tests_do_not_remove_or_the_whole_fabric_of_reality_will_tear_apart_with_unforeseen_consequences("fingers-ready")
 
-    return if Fingers.config.trace_perf == "1"
+    #return if Fingers.config.trace_perf == "1"
 
     input_socket.on_input do |input|
       view.process_input(input)
+
+      Fingers.logger.info "state: #{state}"
 
       break if state.exiting
     end

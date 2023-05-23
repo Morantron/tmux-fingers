@@ -146,8 +146,10 @@ class Tmux
   end
 
   def set_key_table(table)
-    system(tmux, "set-window-option", "key-table", table)
-    system(tmux, "switch-client", "-T", table)
+    `#{tmux} set-window-option key-table #{table}`
+    `#{tmux} switch-client -T #{table}`
+    #system(tmux, "set-window-option", "key-table", table)
+    #system(tmux, "switch-client", "-T", table)
   end
 
   def disable_prefix
@@ -156,7 +158,8 @@ class Tmux
   end
 
   def set_global_option(name, value)
-    system(tmux, "set-option", "-g", name, value)
+    `#{tmux} set-option -g #{name} #{value}`
+    #system(tmux, "set-option", "-g", name, value)
   end
 
   def get_global_option(name)
@@ -166,7 +169,7 @@ class Tmux
   def set_buffer(value)
     return unless value
 
-    system(tmux, "set-buffer", value)
+    `#{tmux} set-buffer #{value}`
   end
 
   def select_pane(id)
