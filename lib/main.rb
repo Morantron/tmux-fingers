@@ -6,7 +6,7 @@ module Kernel
 end
 
 begin
-  absolute_fingers_path = "/home/morantron/hacking/tmux-fingers/build/tmux-fingers"
+  absolute_fingers_path = File.expand_path(ARGV[0])
   ARGV.shift
   Fingers::CLI.new(ARGV, absolute_fingers_path).run
 rescue StandardError => e

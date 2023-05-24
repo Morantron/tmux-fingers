@@ -2,6 +2,8 @@ MRuby::Build.new do |conf|
   # load specific toolchain settings
   conf.toolchain
 
+  #conf.enable_debug
+
   # Use mrbgems
   conf.gem :core => 'mruby-sleep'
   conf.gem :github => 'iij/mruby-env'
@@ -84,7 +86,7 @@ MRuby::Build.new do |conf|
   # conf.file_separator = '/'
 
   # Turn on `enable_debug` for better debugging
-  # conf.enable_debug
+  conf.enable_debug
   conf.enable_bintest
   conf.enable_test
 end

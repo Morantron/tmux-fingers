@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-TARGET="x86_64-macos-none"
 MRUBY_REV= 'c32f7915fb567c73b78db10ebc13c38a617a75aa'
 MRUBY_ROOT = 'build/mruby'
 RUBY_FILES = [
@@ -39,13 +38,13 @@ end
 desc 'Compile mruby'
 task build_mruby: [MRUBY_ROOT] do
   Dir.chdir('build/mruby') do
-    sh "CC=\"zig cc -target #{TARGET}\" MRUBY_CONFIG=../../build_config.rb rake"
+    sh "MRUBY_CONFIG=../../build_config.rb rake"
   end
 end
 
 desc 'Compile tmux-fingers'
 task compile: ['build_mruby'] do
   sh "#{MRUBY_ROOT}/bin/mrbc -B main_ruby -o build/bytecode.c #{RUBY_FILES.join(' ')}"
-  sh "zig cc -target #{TARGET} -I#{MRUBY_ROOT}/include main.c -o build/tmux-fingers #{MRUBY_ROOT}/build/host/lib/libmruby.a -lm"
+  sh "cc -I#{MRUBY_ROOT}/include main.c -o build/tmux-fingers #{MRUBY_ROOT}/build/host/lib/libmruby.a -lm"
   sh 'echo tmux-fingers build complete'
 end

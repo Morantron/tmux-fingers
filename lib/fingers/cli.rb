@@ -29,7 +29,8 @@ module Fingers
         command_class.new(args, cli_path).run
       rescue => e
         puts e
-        Fingers.logger.error(e)
+        puts e.backtrace
+        #Fingers.logger.error(e)
       end
     end
 
