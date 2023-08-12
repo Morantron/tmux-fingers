@@ -75,7 +75,8 @@ module Fingers
       result = line.gsub(pattern) { |_m| replace($~) }
       result = Fingers.config.backdrop_format + result
       double_width_correction = ((line.bytesize - line.size) / 3).round.to_i
-      padding = " " * (width - line.size - double_width_correction)
+      padding_amount = (width - line.size - double_width_correction)
+      padding = padding_amount > 0 ? " " * padding_amount : ""
       output.print(result + padding + ending)
     end
 
