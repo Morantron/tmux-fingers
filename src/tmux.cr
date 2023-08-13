@@ -197,7 +197,21 @@ class Tmux
   def set_buffer(value)
     return unless value
 
-    exec(["set-buffer", value].join(' '))
+    # To avoid shell escaping nightmares, we'll use Process and write directly to stdin
+    cmd = Process.new(
+      tmux,
+      ["load-buffer", "-w", "-"],
+      input: :pipe,
+      output: :pipe,
+      error: :pipe,
+    )
+
+    cmd.input.print(value)
+    cmd.input.flush
+
+    cmd.close
+
+    nil
   end
 
   def select_pane(id)
