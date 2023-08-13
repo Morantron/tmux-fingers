@@ -59,7 +59,6 @@ module Fingers::Commands
       fingers_pane_id = fingers_window.pane_id
 
       tmux.swap_panes(fingers_pane_id, target_pane.pane_id)
-      tmux.zoom_pane(fingers_pane_id) if pane_was_zoomed?
     end
 
     private def handle_input
@@ -74,17 +73,11 @@ module Fingers::Commands
       end
     end
 
-    private def pane_was_zoomed?
-      target_pane.window_zoomed_flag
-    end
-
     private def teardown
       tmux.set_key_table "root"
 
       tmux.swap_panes(fingers_pane_id, target_pane.pane_id)
       tmux.kill_pane(fingers_pane_id)
-
-      tmux.zoom_pane(target_pane.pane_id) if pane_was_zoomed?
 
       restore_options
       view.run_action if state.result

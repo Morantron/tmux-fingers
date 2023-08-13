@@ -151,7 +151,7 @@ class Tmux
   def swap_panes(src_id, dst_id)
     # TODO: -Z not supported on all tmux versions
 
-    system(tmux, ["swap-pane", "-d", "-s", src_id, "-t", dst_id])
+    system(tmux, ["swap-pane", "-d", "-s", src_id, "-t", dst_id, "-Z"])
   end
 
   def kill_pane(id)
