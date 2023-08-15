@@ -2,20 +2,62 @@
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PLATFORM=$(uname -s)
+action=$1
+
+
+# set up exit trap
+function finish {
+  exit_code=$?
+
+  # only intercept exit code when there is an action defined (download, or
+  # build from source), otherwise we'll enter an infinte loop of sourcing
+  # tmux.conf
+  if [[ -z "$action" ]]; then
+    exit $exit_code
+  fi
+
+  if [[ $exit_code -eq 0 ]]; then
+    echo "Reloading tmux.conf"
+    tmux source ~/.tmux.conf
+    exit 0
+  else
+    echo "Something went wrong. Please any key to close this window"
+    read -n 1
+    exit 1
+  fi
+}
+
+trap finish EXIT
+
+function install_from_source() {
+  echo "Installing from source..."
+
+  # check if shards is installed
+  if ! command -v shards >/dev/null 2>&1; then
+    echo "crystal is not installed. Please install it first."
+    exit 1
+  fi
+
+  pushd $CURRENT_DIR > /dev/null
+    shards build --production
+  popd > /dev/null
+
+  echo "Build complete!"
+  exit 0
+}
 
 if [[ "$1" == "download-binary" ]]; then
   echo "Downloading binary..."
-  exit 0
+  exit 1
 fi
 
 if [[ "$1" == "install-with-brew" ]]; then
   echo "Installing with brew..."
-  exit 0
+  exit 1
 fi
 
-if [[ "$1" == "install-fromsource" ]]; then
-  echo "Install from source..."
-  exit 0
+if [[ "$1" == "install-from-source" ]]; then
+  install_from_source
 fi
 
 function binary_or_brew_label() {
@@ -42,9 +84,7 @@ tmux display-menu -T "tmux-fingers" \
   "-  It looks like it is the first time you are running the plugin. We need the binary first for things to work. " "" "" \
   "- " "" ""\
   "" \
-  "$(binary_or_brew_label)" b "popup \"bash $CURRENT_DIR/install-wizard.sh $(binary_or_brew_action)\"" \
-  "Build from source" s "popup \"bash $CURRENT_DIR/install-wizard.sh install-from-source\"" \
+  "$(binary_or_brew_label)" b "popup -E \"$CURRENT_DIR/install-wizard.sh $(binary_or_brew_action)\"" \
+  "Build from source" s "popup -E \"$CURRENT_DIR/install-wizard.sh install-from-source\"" \
   "" \
   "Exit" q ""
-
-exit 0
