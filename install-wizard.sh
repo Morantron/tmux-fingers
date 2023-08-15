@@ -46,9 +46,28 @@ function install_from_source() {
   exit 0
 }
 
+function download_binary() {
+  mkdir -p $CURRENT_DIR/bin
+  # TODO check architecture
+
+  echo "Getting latest release..."
+
+  # TODO use "latest" tag
+  url=$(curl -s "https://api.github.com/repos/morantron/tmux-fingers/releases" | grep browser_download_url | tail -1 | grep -o https://.*x86_64)
+
+
+  echo "Downloading binary from $url"
+
+  # download binary to bin/tmux-fingers
+  curl -L $url -o $CURRENT_DIR/bin/tmux-fingers
+  chmod a+x $CURRENT_DIR/bin/tmux-fingers
+
+  echo "Download complete!"
+  exit 0
+}
+
 if [[ "$1" == "download-binary" ]]; then
-  echo "Downloading binary..."
-  exit 1
+  download_binary
 fi
 
 if [[ "$1" == "install-with-brew" ]]; then
