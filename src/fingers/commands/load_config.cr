@@ -95,7 +95,9 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
       *user_defined_patterns,
     ])
 
-    config.alphabet = ALPHABET_MAP[Fingers.config.keyboard_layout].split("")
+    config.alphabet = ALPHABET_MAP[Fingers.config.keyboard_layout].split("").reject do |char|
+      char.match(DISALLOWED_CHARS)
+    end
     config.save
 
     Fingers.reset_config
