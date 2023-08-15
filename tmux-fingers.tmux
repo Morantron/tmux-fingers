@@ -1,8 +1,10 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
 
-fingers_root = File.dirname(__FILE__)
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-redirect_to_log_file = ">>#{fingers_root}/fingers.log 2>&1"
+if [ ! -f "$CURRENT_DIR/bin/tmux-fingers" ]; then
+  echo "tmux-fingers not found. Please run ./install.sh"
+  exit 1
+fi
 
-`tmux run-shell -b "#{fingers_root}/bin/fingers load_config"`
-`tmux run-shell -b "#{fingers_root}/bin/fingers check_version #{redirect_to_log_file}"`
+"$CURRENT_DIR/bin/tmux-fingers" "load-config"
