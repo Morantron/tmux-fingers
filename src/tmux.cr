@@ -1,5 +1,5 @@
 require "json"
-require "./tmux_format_printer"
+require "./tmux_style_printer"
 
 def to_tmux_string(value)
   # TODO tmux syntax to escape quotes
@@ -223,12 +223,12 @@ class Tmux
   end
 
   # TODO
-  def parse_format(format)
-    format_printer.print(format).chomp
+  def parse_style(style)
+    style_printer.print(style).chomp
   end
 
-  def format_printer
-    @format_printer ||= TmuxFormatPrinter.new
+  def style_printer
+    @style_printer ||= TmuxStylePrinter.new
   end
 
   def tmux

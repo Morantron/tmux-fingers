@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe Fingers::MatchFormatter do
-  let(:hint_format) { '#[fg=yellow,bold]' }
-  let(:highlight_format) { '#[fg=yellow]' }
+  let(:hint_style) { '#[fg=yellow,bold]' }
+  let(:highlight_style) { '#[fg=yellow]' }
   let(:hint_position) { 'left' }
-  let(:selected_hint_format) { '#[fg=green,bold]' }
-  let(:selected_highlight_format) { '#[fg=green]' }
+  let(:selected_hint_style) { '#[fg=green,bold]' }
+  let(:selected_highlight_style) { '#[fg=green]' }
   let(:selected) { false }
   let(:offset) { nil }
 
@@ -14,10 +14,10 @@ describe Fingers::MatchFormatter do
 
   let(:formatter) do
     described_class.new(
-      highlight_format: highlight_format,
-      hint_format: hint_format,
-      selected_highlight_format: selected_highlight_format,
-      selected_hint_format: selected_hint_format,
+      highlight_style: highlight_style,
+      hint_style: hint_style,
+      selected_highlight_style: selected_highlight_style,
+      selected_hint_style: selected_hint_style,
       hint_position: hint_position,
       reset_sequence: '#[reset]'
     )

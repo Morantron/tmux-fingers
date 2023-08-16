@@ -13,13 +13,13 @@ module Fingers
     property alt_action : String
     property shift_action : String
     property hint_position : String
-    property hint_format : String
-    property selected_hint_format : String
-    property highlight_format : String
-    property selected_highlight_format : String
-    property backdrop_format : String
+    property hint_style : String
+    property selected_hint_style : String
+    property highlight_style : String
+    property selected_highlight_style : String
+    property backdrop_style : String
 
-    FORMAT_PRINTER = TmuxFormatPrinter.new
+    FORMAT_PRINTER = TmuxStylePrinter.new
 
     def initialize(
       @key = "F",
@@ -31,11 +31,11 @@ module Fingers
       @alt_action = "",
       @shift_action = ":paste:",
       @hint_position = "left",
-      @hint_format = FORMAT_PRINTER.print("fg=yellow,bold"),
-      @selected_hint_format = FORMAT_PRINTER.print("fg=green,bold"),
-      @selected_highlight_format = FORMAT_PRINTER.print("fg=green,dim"),
-      @highlight_format = FORMAT_PRINTER.print("fg=yellow,dim"),
-      @backdrop_format = FORMAT_PRINTER.print("bg=black,fg=color250")
+      @hint_style = FORMAT_PRINTER.print("fg=yellow,bold"),
+      @selected_hint_style = FORMAT_PRINTER.print("fg=green,bold"),
+      @selected_highlight_style = FORMAT_PRINTER.print("fg=green,dim"),
+      @highlight_style = FORMAT_PRINTER.print("fg=yellow,dim"),
+      @backdrop_style = FORMAT_PRINTER.print("bg=black,fg=color250")
     )
     end
 

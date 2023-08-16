@@ -1,9 +1,9 @@
-class TmuxFormatPrinter
+class TmuxStylePrinter
   abstract class Shell
     abstract def exec(cmd)
   end
 
-  FORMAT_SEPARATOR = /[ ,]+/
+  STYLE_SEPARATOR = /[ ,]+/
 
   COLOR_MAP = {
     black:   0,
@@ -50,8 +50,8 @@ class TmuxFormatPrinter
 
     output = ""
 
-    input.split(FORMAT_SEPARATOR).each do |format|
-      output += parse_format(format)
+    input.split(STYLE_SEPARATOR).each do |style|
+      output += parse_style_definition(style)
     end
 
     output += reset_sequence if reset_styles_after && !@applied_styles.empty?
@@ -59,16 +59,16 @@ class TmuxFormatPrinter
     output
   end
 
-  def parse_format(format)
-    if format.match(/^(bg|fg)=/)
-      parse_color(format)
+  private def parse_style_definition(style)
+    if style.match(/^(bg|fg)=/)
+      parse_color(style)
     else
-      parse_style(format)
+      parse_style(style)
     end
   end
 
-  def parse_color(format)
-    match = format.match(/(?<layer>bg|fg)=(?<color>(colou?r(?<color_code>[0-9]+)|.*))/)
+  private def parse_color(style)
+    match = style.match(/(?<layer>bg|fg)=(?<color>(colou?r(?<color_code>[0-9]+)|.*))/)
 
     return "" unless match
 
@@ -90,8 +90,8 @@ class TmuxFormatPrinter
     result
   end
 
-  def parse_style(format)
-    match = format.match(/(?<remove>no)?(?<style>.*)/)
+  private def parse_style(style)
+    match = style.match(/(?<remove>no)?(?<style>.*)/)
 
     return "" unless match
 
@@ -110,18 +110,15 @@ class TmuxFormatPrinter
     result
   end
 
-  def reset_to_applied_styles!
+  private def reset_to_applied_styles!
     [reset_sequence, @applied_styles.values].join
   end
 
-  def reset_sequence
+  private def reset_sequence
     @reset_sequence ||= shell.exec("tput sgr0").chomp
   end
 
-  def shell
+  private def shell
     @shell
   end
-
-  # private
-  # attr_reader :shell
 end

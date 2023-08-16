@@ -2,21 +2,21 @@ require "spec"
 require "../../../src/fingers/match_formatter"
 
 def setup(
-  hint_format : String = "#[fg=yellow,bold]",
-  highlight_format : String = "#[fg=yellow]",
+  hint_style : String = "#[fg=yellow,bold]",
+  highlight_style : String = "#[fg=yellow]",
   hint_position : String = "left",
-  selected_hint_format : String = "#[fg=green,bold]",
-  selected_highlight_format : String = "#[fg=green]",
+  selected_hint_style : String = "#[fg=green,bold]",
+  selected_highlight_style : String = "#[fg=green]",
   selected : Bool = false,
   offset : Tuple(Int32, Int32) | Nil = nil,
   hint : String = "a",
   highlight : String = "yolo"
 )
   formatter = Fingers::MatchFormatter.new(
-    highlight_format: highlight_format,
-    hint_format: hint_format,
-    selected_highlight_format: selected_highlight_format,
-    selected_hint_format: selected_hint_format,
+    highlight_style: highlight_style,
+    hint_style: hint_style,
+    selected_highlight_style: selected_highlight_style,
+    selected_hint_style: selected_hint_style,
     hint_position: hint_position,
     reset_sequence: "#[reset]"
   )

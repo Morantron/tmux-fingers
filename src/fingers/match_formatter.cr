@@ -4,20 +4,20 @@ require "./types"
 module Fingers
   class MatchFormatter < Fingers::Formatter
     def initialize(
-      hint_format : String = Fingers.config.hint_format,
-      highlight_format : String = Fingers.config.highlight_format,
-      selected_hint_format : String = Fingers.config.selected_hint_format,
-      selected_highlight_format : String = Fingers.config.selected_highlight_format,
-      backdrop_format : String = Fingers.config.backdrop_format,
+      hint_style : String = Fingers.config.hint_style,
+      highlight_style : String = Fingers.config.highlight_style,
+      selected_hint_style : String = Fingers.config.selected_hint_style,
+      selected_highlight_style : String = Fingers.config.selected_highlight_style,
+      backdrop_style : String = Fingers.config.backdrop_style,
       hint_position : String = Fingers.config.hint_position,
       # TODO #perf remove this shell call
       reset_sequence : String = `tput sgr0`.chomp
     )
-      @hint_format = hint_format
-      @highlight_format = highlight_format
-      @selected_hint_format = selected_hint_format
-      @selected_highlight_format = selected_highlight_format
-      @backdrop_format = backdrop_format
+      @hint_style = hint_style
+      @highlight_style = highlight_style
+      @selected_hint_style = selected_hint_style
+      @selected_highlight_style = selected_highlight_style
+      @backdrop_style = backdrop_style
       @hint_position = hint_position
       @reset_sequence = reset_sequence
     end
@@ -25,10 +25,10 @@ module Fingers
     def format(hint : String, highlight : String, selected : Bool, offset : Tuple(Int32, Int32) | Nil)
       reset_sequence + before_offset(offset, highlight) +
         format_offset(selected, hint, within_offset(offset, highlight)) +
-        after_offset(offset, highlight) + backdrop_format
+        after_offset(offset, highlight) + backdrop_style
     end
 
-    private getter :hint_format, :highlight_format, :selected_hint_format, :selected_highlight_format, :hint_position, :reset_sequence, :backdrop_format
+    private getter :hint_style, :highlight_style, :selected_hint_style, :selected_highlight_style, :hint_position, :reset_sequence, :backdrop_style
 
     private def before_offset(offset, highlight)
       return "" if offset.nil?
@@ -51,8 +51,8 @@ module Fingers
     private def format_offset(selected, hint, highlight)
       chopped_highlight = chop_highlight(hint, highlight)
 
-      hint_pair = (selected ? selected_hint_format : hint_format) + hint + reset_sequence
-      highlight_pair = (selected ? selected_highlight_format : highlight_format) + chopped_highlight + reset_sequence
+      hint_pair = (selected ? selected_hint_style : hint_style) + hint + reset_sequence
+      highlight_pair = (selected ? selected_highlight_style : highlight_style) + chopped_highlight + reset_sequence
 
       if hint_position == "right"
         highlight_pair + hint_pair + reset_sequence

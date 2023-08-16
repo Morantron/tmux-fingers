@@ -42,10 +42,10 @@ beep beep
 
   let(:formatter) do
     ::Fingers::MatchFormatter.new(
-      hint_format: '%s',
-      highlight_format: '%s',
-      selected_hint_format: '%s',
-      selected_highlight_format: '%s',
+      hint_style: '%s',
+      highlight_style: '%s',
+      selected_hint_style: '%s',
+      selected_highlight_style: '%s',
       hint_position: 'left'
     )
   end

@@ -75,14 +75,14 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
         config.alt_action = value
       when "shift_action"
         config.shift_action = value
-      when "hint_format"
-        config.hint_format = tmux.parse_format(value)
-      when "selected_hint_format"
-        config.selected_hint_format = tmux.parse_format(value)
-      when "highlight_format"
-        config.highlight_format = tmux.parse_format(value)
-      when "selected_highlight_format"
-        config.selected_highlight_format = tmux.parse_format(value)
+      when "hint_style"
+        config.hint_style = tmux.parse_style(value)
+      when "selected_hint_style"
+        config.selected_hint_style = tmux.parse_style(value)
+      when "highlight_style"
+        config.highlight_style = tmux.parse_style(value)
+      when "selected_highlight_style"
+        config.selected_highlight_style = tmux.parse_style(value)
       end
 
       if option.match(/pattern/)
