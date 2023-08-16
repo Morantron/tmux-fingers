@@ -41,9 +41,7 @@ While in **[fingers]** mode, you can use the following shortcuts:
 
 # Requirements
 
-* tmux 2.1+ ( 2.8 recommended )
-* bash 4+
-* gawk
+* tmux 3.0 or newer
 
 # Installation
 
@@ -55,16 +53,14 @@ Add the following to your list of TPM plugins in `.tmux.conf`:
 set -g @plugin 'Morantron/tmux-fingers'
 ```
 
-Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin. You should now be able to use
-the plugin!
+Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin. The first time you run it you'll be presented with a wizard to complete the installation.
 
 ## Manual
 
 Clone the repo:
 
 ```
-# Use --recursive flag to also fetch submodules
-➜ git clone --recursive https://github.com/Morantron/tmux-fingers ~/.tmux/plugins/tmux-fingers
+$ git clone https://github.com/Morantron/tmux-fingers ~/.tmux/plugins/tmux-fingers
 ```
 
 Source it in your `.tmux.conf`:
@@ -76,8 +72,10 @@ run-shell ~/.tmux/plugins/tmux-fingers/tmux-fingers.tmux
 Reload TMUX conf by running:
 
 ```
-➜ tmux source-file ~/.tmux.conf
+$ tmux source-file ~/.tmux.conf
 ```
+
+ The first time you run it you'll be presented with a wizard to complete the installation.
 
 # Configuration
 
