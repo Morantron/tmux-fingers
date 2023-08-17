@@ -98,7 +98,7 @@ class TmuxStylePrinter
     should_remove_style = match["remove"]? && match["remove"] == "no"
     style = match["style"]
 
-    result = shell.exec("tput #{STYLE_MAP[style]}")
+    result = style == "dim" ? "\033[2m" : shell.exec("tput #{STYLE_MAP[style]}")
 
     if should_remove_style
       @applied_styles.delete(style)
