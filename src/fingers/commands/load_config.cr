@@ -81,6 +81,8 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
         config.selected_hint_style = tmux.parse_style(value)
       when "highlight_style"
         config.highlight_style = tmux.parse_style(value)
+      when "backdrop_style"
+        config.backdrop_style = tmux.parse_style(value)
       when "selected_highlight_style"
         config.selected_highlight_style = tmux.parse_style(value)
       end

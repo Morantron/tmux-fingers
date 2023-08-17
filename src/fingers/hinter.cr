@@ -98,7 +98,7 @@ module Fingers
       if match["capture"]?
         match_start, match_end = {match.begin(0), match.end(0)}
         capture_start, capture_end = find_capture_offset(match).not_nil!
-        capture_offset = {capture_start - match_start, capture_end - match_end}
+        capture_offset = {capture_start - match_start, captured_text.size}
       else
         capture_offset = nil
       end

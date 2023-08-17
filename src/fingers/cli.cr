@@ -3,6 +3,8 @@ require "./commands/*"
 module Fingers
   class Cli
     def run
+      return if ARGV.size == 0
+
       command, *args = ARGV
 
       cmd = case command

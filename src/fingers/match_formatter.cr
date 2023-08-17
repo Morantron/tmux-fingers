@@ -33,7 +33,7 @@ module Fingers
     private def before_offset(offset, highlight)
       return "" if offset.nil?
       start, _ = offset
-      highlight[0..(start - 1)]
+      backdrop_style + highlight[0..(start - 1)]
     end
 
     private def within_offset(offset, highlight)
@@ -45,19 +45,19 @@ module Fingers
     private def after_offset(offset, highlight)
       return "" if offset.nil?
       start, length = offset
-      highlight[(start + length)..]
+      backdrop_style + highlight[(start + length)..]
     end
 
     private def format_offset(selected, hint, highlight)
       chopped_highlight = chop_highlight(hint, highlight)
 
-      hint_pair = (selected ? selected_hint_style : hint_style) + hint + reset_sequence
-      highlight_pair = (selected ? selected_highlight_style : highlight_style) + chopped_highlight + reset_sequence
+      hint_pair = (selected ? selected_hint_style : hint_style) + hint
+      highlight_pair = (selected ? selected_highlight_style : highlight_style) + chopped_highlight
 
       if hint_position == "right"
-        highlight_pair + hint_pair + reset_sequence
+        highlight_pair + reset_sequence + hint_pair + reset_sequence
       else
-        hint_pair + highlight_pair + reset_sequence
+        hint_pair + reset_sequence + highlight_pair + reset_sequence
       end
     end
 

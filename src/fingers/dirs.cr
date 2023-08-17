@@ -1,3 +1,5 @@
+require "file_utils"
+
 # TODO maybe use some xgd shite here?
 
 module Fingers::Dirs
