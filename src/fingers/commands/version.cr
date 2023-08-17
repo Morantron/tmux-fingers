@@ -3,7 +3,7 @@ require "./base"
 module Fingers::Commands
   class Version < Base
     def run
-      puts "version"
+      puts "#{Fingers::VERSION}"
     end
   end
 end
