@@ -95,12 +95,22 @@ function binary_or_brew_action() {
   fi
 }
 
+function get_message() {
+  # if FINGERS_UPDATE is 1
+  if [[ "$FINGERS_UPDATE" == "1" ]]; then
+    echo "It looks like tmux-fingers has been updated. We need to rebuild the binary."
+  else
+   echo "It looks like it is the first time you are running the plugin. We first need to get tmux-fingers binary for things to work."
+  fi
+
+}
+
 tmux display-menu -T "tmux-fingers" \
   "" \
   "- " "" ""\
   "-  #[nodim,bold]Welcome to tmux-fingers! ✌️ " "" ""\
   "- " "" ""\
-  "-  It looks like it is the first time you are running the plugin. We need the binary first for things to work. " "" "" \
+  "-  $(get_message) " "" "" \
   "- " "" ""\
   "" \
   "$(binary_or_brew_label)" b "popup -E \"$CURRENT_DIR/install-wizard.sh $(binary_or_brew_action)\"" \
