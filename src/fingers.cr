@@ -2,7 +2,7 @@ require "./fingers/logger"
 require "./fingers/cli"
 
 module Fingers
-  VERSION = "2.0.0"
+  VERSION = {{ %(#{`shards version`.chomp}) }}
 
   cli = Cli.new
   cli.run
