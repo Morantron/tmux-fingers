@@ -24,7 +24,7 @@ module Fingers
         env: action_env
       )
 
-      cmd.input.puts(match)
+      cmd.input.print(expanded_match)
       cmd.input.flush
     end
 
@@ -120,6 +120,13 @@ module Fingers
 
     def tmux
       Tmux.new
+    end
+
+    # This takes care of some path expansion weirdness when opening paths that start with ~ in MacOS
+    def expanded_match
+      return match unless action == ":open:"
+
+      Path[match].expand(base: original_pane.pane_current_path, home: Path.home)
     end
   end
 end
