@@ -209,7 +209,7 @@ class Tmux
     cmd.input.print(value)
     cmd.input.flush
 
-    cmd.close
+    cmd.wait
 
     nil
   end
