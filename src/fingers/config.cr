@@ -18,6 +18,7 @@ module Fingers
     property highlight_style : String
     property selected_highlight_style : String
     property backdrop_style : String
+    property tmux_version : String
 
     FORMAT_PRINTER = TmuxStylePrinter.new
 
@@ -67,7 +68,8 @@ module Fingers
       @selected_hint_style = FORMAT_PRINTER.print("fg=green,bold"),
       @selected_highlight_style = FORMAT_PRINTER.print("fg=green,dim"),
       @highlight_style = FORMAT_PRINTER.print("fg=yellow,dim"),
-      @backdrop_style = FORMAT_PRINTER.print("bg=black,fg=color250")
+      @backdrop_style = FORMAT_PRINTER.print("bg=black,fg=color250"),
+      @tmux_version = ""
     )
     end
 

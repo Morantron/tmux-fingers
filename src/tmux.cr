@@ -1,4 +1,5 @@
 require "json"
+require "semantic_version"
 require "./tmux_style_printer"
 
 def to_tmux_string(value)
@@ -38,7 +39,6 @@ end
 
 # rubocop:disable Metrics/ClassLength
 class Tmux
-
   class Shell
     def initialize
       @sh = Process.new("/bin/sh", input: :pipe, output: :pipe, error: :close)
@@ -109,11 +109,29 @@ class Tmux
   })
 
   @panes : Array(Pane) | Nil
+  @version : SemanticVersion
 
-  #@sh : Shell
+  def self.tmux_version_to_semver(version_string)
+    match = version_string.match(/(?<major>[1-9]+[0-9]*)\.(?<minor>[0-9]+)(?<patch_letter>[a-z]+)?/)
 
-  def initialize
+    raise "Invalid tmux version #{version_string}" unless match
+
+    major = match["major"].not_nil!
+    minor = match["minor"].not_nil!
+    patch_letter = match["patch_letter"]?
+
+    if patch_letter.nil?
+      patch = 0
+    else
+      patch = patch_letter[0].ord - 'a'.ord + 1
+    end
+
+    SemanticVersion.parse("#{major}.#{minor}.#{patch}")
+  end
+
+  def initialize(version_string)
     @sh = Shell.new
+    @version = Tmux.tmux_version_to_semver(version_string)
   end
 
   def panes : Array(Pane)
@@ -149,9 +167,13 @@ class Tmux
   end
 
   def swap_panes(src_id, dst_id)
-    # TODO: -Z not supported on all tmux versions
+    args = ["swap-pane", "-d", "-s", src_id, "-t", dst_id]
 
-    system(tmux, ["swap-pane", "-d", "-s", src_id, "-t", dst_id, "-Z"])
+    if @version >= Tmux.tmux_version_to_semver("3.1")
+      args << "-Z"
+    end
+
+    system(tmux, args)
   end
 
   def kill_pane(id)
@@ -197,10 +219,16 @@ class Tmux
   def set_buffer(value)
     return unless value
 
+    if @version >= Tmux.tmux_version_to_semver("3.2")
+      args = ["load-buffer", "-w", "-"]
+    else
+      args = ["load-buffer", "-"]
+    end
+
     # To avoid shell escaping nightmares, we'll use Process and write directly to stdin
     cmd = Process.new(
       tmux,
-      ["load-buffer", "-w", "-"],
+      args,
       input: :pipe,
       output: :pipe,
       error: :pipe,

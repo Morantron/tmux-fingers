@@ -26,6 +26,8 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
     config = Fingers::Config.new
 
+    config.tmux_version = `tmux -V`.chomp.split(" ").last
+
     options.each do |option, value|
       # TODO generate an enum somehow and use an exhaustive case
       case option
@@ -66,6 +68,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     config.alphabet = ::Fingers::Config::ALPHABET_MAP[Fingers.config.keyboard_layout].split("").reject do |char|
       char.match(DISALLOWED_CHARS)
     end
+
     config.save
 
     Fingers.reset_config
@@ -169,6 +172,6 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   end
 
   def tmux
-    Tmux.new
+    Tmux.new(`tmux -V`.chomp.split(" ").last)
   end
 end

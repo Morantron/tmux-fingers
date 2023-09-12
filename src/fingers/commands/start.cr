@@ -122,7 +122,7 @@ module Fingers::Commands
     end
 
     private getter tmux : Tmux do
-      Tmux.new
+      Tmux.new(Fingers.config.tmux_version)
     end
   end
 end
