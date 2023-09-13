@@ -58,11 +58,17 @@ module Fingers::Commands
     end
 
     private def show_hints
+      # Attention! It is very important to resize the window at this point to
+      # match the dimensions of the target pane. Otherwise weird linejumping
+      # will occur when we have wrapped lines.
+      tmux.resize_window(
+        fingers_window.window_id,
+        target_pane.pane_width,
+        target_pane.pane_height,
+      )
+
       view.render
-
-      fingers_pane_id = fingers_window.pane_id
-
-      tmux.swap_panes(fingers_pane_id, target_pane.pane_id)
+      tmux.swap_panes(fingers_window.pane_id, target_pane.pane_id)
     end
 
     private def handle_input
