@@ -31,6 +31,10 @@ module Fingers::Commands
       track_options_to_restore!
       show_hints
 
+      if Fingers.config.benchmark_mode == "1"
+        exit(0)
+      end
+
       handle_input
 
       teardown

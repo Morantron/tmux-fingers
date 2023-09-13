@@ -43,6 +43,8 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
         config.alt_action = value
       when "shift_action"
         config.shift_action = value
+      when "benchmark_mode"
+        config.benchmark_mode = value
       when "hint_style"
         config.hint_style = tmux.parse_style(value)
       when "selected_hint_style"

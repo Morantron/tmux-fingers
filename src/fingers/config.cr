@@ -8,6 +8,7 @@ module Fingers
     property keyboard_layout : String
     property patterns : Array(String)
     property alphabet : Array(String)
+    property benchmark_mode : String
     property main_action : String
     property ctrl_action : String
     property alt_action : String
@@ -69,7 +70,8 @@ module Fingers
       @selected_highlight_style = FORMAT_PRINTER.print("fg=green,dim"),
       @highlight_style = FORMAT_PRINTER.print("fg=yellow,dim"),
       @backdrop_style = FORMAT_PRINTER.print("bg=black,fg=color250"),
-      @tmux_version = ""
+      @tmux_version = "",
+      @benchmark_mode = "0"
     )
     end
 

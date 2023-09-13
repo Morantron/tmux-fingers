@@ -1,4 +1,5 @@
 require "spec"
+require "../../spec_helper.cr"
 require "../../../src/fingers/hinter"
 require "../../../src/fingers/state"
 require "../../../src/fingers/config"

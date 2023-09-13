@@ -113,7 +113,7 @@ tmux display-menu -T "tmux-fingers" \
   "-  $(get_message) " "" "" \
   "- " "" ""\
   "" \
-  "$(binary_or_brew_label)" b "popup -E \"$CURRENT_DIR/install-wizard.sh $(binary_or_brew_action)\"" \
-  "Build from source" s "popup -E \"$CURRENT_DIR/install-wizard.sh install-from-source\"" \
+  "$(binary_or_brew_label)" b "new-window \"$CURRENT_DIR/install-wizard.sh $(binary_or_brew_action)\"" \
+  "Build from source" s "new-window \"$CURRENT_DIR/install-wizard.sh install-from-source\"" \
   "" \
   "Exit" q ""

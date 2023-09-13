@@ -4,13 +4,13 @@ require "../../src/priority_queue"
 describe PriorityQueue do
   it "transforms tmux status line format into escape sequences" do
     test = [
-      [6, "drink tea"],
       [3, "Clear drains"],
-      [4, "Feed cat"],
+      [6, "drink tea"],
       [5, "Make tea"],
-      [6, "eat biscuit"],
-      [1, "Solve RC tasks"],
+      [4, "Feed cat"],
+      [7, "eat biscuit"],
       [2, "Tax return"],
+      [1, "Solve RC tasks"],
     ]
 
     results = [] of String
@@ -25,13 +25,13 @@ describe PriorityQueue do
     end
 
     expected = [
-      "Solve RC tasks",
-      "Tax return",
-      "Clear drains",
-      "Feed cat",
-      "Make tea",
-      "drink tea",
       "eat biscuit",
+      "drink tea",
+      "Make tea",
+      "Feed cat",
+      "Clear drains",
+      "Tax return",
+      "Solve RC tasks",
     ]
 
     results.should eq expected
