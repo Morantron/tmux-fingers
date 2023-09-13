@@ -173,7 +173,7 @@ class Tmux
       args << "-Z"
     end
 
-    system(tmux, args)
+    exec(args.join(" "))
   end
 
   def kill_pane(id)
