@@ -55,7 +55,6 @@ function download_binary() {
   # TODO use "latest" tag
   url=$(curl -s "https://api.github.com/repos/morantron/tmux-fingers/releases" | grep browser_download_url | tail -1 | grep -o https://.*x86_64)
 
-
   echo "Downloading binary from $url"
 
   # download binary to bin/tmux-fingers
