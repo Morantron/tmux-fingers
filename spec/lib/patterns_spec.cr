@@ -4,7 +4,7 @@ require "string_scanner"
 
 def matches_for(pattern_name, input)
   pattern = Regex.new(::Fingers::Config::DEFAULT_PATTERNS[pattern_name])
-  input.scan(pattern).map { |m| m[0] }
+  input.scan(pattern).map { |m| m["capture"]? || m[0] }
 end
 
 describe "default patterns" do
@@ -98,6 +98,81 @@ describe "default patterns" do
       expected = ["/foo/bar/lol", "./foo/bar/lol", "~/foo/bar/lol"]
 
       matches_for("path", input).should eq expected
+    end
+  end
+
+  describe "hex" do
+    it "should match hex numbers" do
+      input = "
+      hello 0xcafe
+      0xcaca
+      0xdeadbeef hehehe 0xCACA
+      "
+
+      expected = ["0xcafe", "0xcaca", "0xdeadbeef", "0xCACA"]
+
+      matches_for("hex", input).should eq expected
+    end
+  end
+
+  describe "git status" do
+    it "should match relevant stuff in git status output" do
+      input = "
+Your branch is up to date with 'origin/crystal-rewrite'.
+
+Changes to be committed:
+  (use \"git restore --staged <file>...\" to unstage)
+        deleted:    CHANGELOG.md
+        new file:   wat
+
+Changes not staged for commit:
+  (use \"git add <file>...\" to update what will be committed)
+  (use \"git restore <file>...\" to discard changes in working directory)
+        modified:   Makefile
+        modified:   spec/lib/patterns_spec.cr
+        modified:   src/fingers/config.cr
+      "
+
+      expected = ["CHANGELOG.md", "wat", "Makefile", "spec/lib/patterns_spec.cr", "src/fingers/config.cr"]
+
+      matches_for("git-status", input).should eq expected
+    end
+  end
+
+  describe "git status branch" do
+    it "should match branch in git status output" do
+      input = "
+Your branch is up to date with 'origin/crystal-rewrite'.
+
+Changes to be committed:
+  (use \"git restore --staged <file>...\" to unstage)
+        deleted:    CHANGELOG.md
+        new file:   wat
+
+Changes not staged for commit:
+  (use \"git add <file>...\" to update what will be committed)
+  (use \"git restore <file>...\" to discard changes in working directory)
+        modified:   Makefile
+        modified:   spec/lib/patterns_spec.cr
+        modified:   src/fingers/config.cr
+      "
+
+      expected = ["origin/crystal-rewrite"]
+
+      matches_for("git-status-branch", input).should eq expected
+    end
+  end
+
+  describe "git diff" do
+    it "should match a/b paths in git diff" do
+      input = "
+  diff --git a/spec/lib/patterns_spec.cr b/spec/lib/patterns_spec.cr
+  index 5281097..6c9c18e 100644
+  --- a/spec/lib/patterns_spec.cr
+  +++ b/spec/lib/patterns_spec.cr
+  "
+      expected = ["spec/lib/patterns_spec.cr", "spec/lib/patterns_spec.cr"]
+      matches_for("diff", input).should eq expected
     end
   end
 end
