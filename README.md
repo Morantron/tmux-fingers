@@ -21,9 +21,7 @@ Here is a list of the stuff highlighted by default.
 * IP addresses
 * kubernetes resources
 * UUIDs
-
-It also works on copy mode, but requires *tmux 2.2* or newer to properly take
-the scroll position into account.
+* git status/diff output
 
 ## Key shortcuts
 
@@ -34,10 +32,7 @@ While in **[fingers]** mode, you can use the following shortcuts:
 * <kbd>SHIFT</kbd> + <kbd>a</kbd>-<kbd>z</kbd>: copies selected match to the clipboard and triggers [@fingers-shift-action](#fingers-shift-action). By default it triggers `:paste:` action, which automatically pastes selected matches.
 * <kbd>ALT</kbd> + <kbd>a</kbd>-<kbd>z</kbd>: copies selected match to the clipboard and triggers [@fingers-alt-action](#fingers-alt-action). There is no default, configurable by the user.
 * <kbd>TAB</kbd>: toggle multi mode. First press enters multi mode, which allows to select multiple matches. Second press will exit with the selected matches copied to the clipboard.
-* <kbd>SPACE</kbd>: toggle compact hints ( see [@fingers-compact-hints](#fingers-compact-hints) ).
-* <kbd>CTRL</kbd> + <kbd>c</kbd>: exit **[fingers]** mode
-* <kbd>ESC</kbd>: exit help or **[fingers]** mode
-* <kbd>?</kbd>: show help.
+* <kbd>q</kbd>, <kbd>ESC</kbd> or <kbd>CTRL</kbd> + <kbd>c</kbd>: exit **[fingers]** mode
 
 # Requirements
 
@@ -87,19 +82,11 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 * [@fingers-ctrl-action](#fingers-ctrl-action)
 * [@fingers-alt-action](#fingers-alt-action)
 * [@fingers-shift-action](#fingers-shift-action)
-* [@fingers-compact-hints](#fingers-compact-hints)
 * [@fingers-hint-position](#fingers-hint-position)
-* [@fingers-hint-position-nocompact](#fingers-hint-position-nocompact)
 * [@fingers-hint-format](#fingers-hint-format)
-* [@fingers-hint-format-nocompact](#fingers-hint-format-nocompact)
 * [@fingers-highlight-format](#fingers-highlight-format)
-* [@fingers-highlight-format-nocompact](#fingers-highlight-format-nocompact)
 * [@fingers-selected-hint-format](#fingers-selected-hint-format)
-* [@fingers-selected-hint-format-nocompact](#fingers-selected-hint-format-nocompact)
 * [@fingers-selected-highlight-format](#fingers-selected-highlight-format)
-* [@fingers-selected-highlight-format-nocompact](#fingers-selected-highlight-format-nocompact)
-* deprecated: [@fingers-copy-command](#fingers-copy-command)
-* deprecated: [@fingers-copy-command-uppercase](#fingers-copy-command-uppercase)
 
 ## @fingers-key
 
@@ -163,13 +150,9 @@ You can also use the following special values:
 
 Same as [@fingers-main-action](#fingers-main-action) but only called when match is selected by holding <kbd>ctrl</kbd>
 
-This option requires `tmux 2.8` or higher.
-
 ## @fingers-alt-action
 
 Same as [@fingers-main-action](#fingers-main-action) but only called when match is selected by holding <kbd>alt</kbd>
-
-This option requires `tmux 2.8` or higher.
 
 ## @fingers-shift-action
 
@@ -177,42 +160,35 @@ This option requires `tmux 2.8` or higher.
 
 Same as [@fingers-main-action](#fingers-main-action) but only called when match is selected by holding <kbd>shift</kbd>
 
-## @fingers-copy-command
+## @fingers-hint-style
 
-_DEPRECATED: this option is deprecated, please use [@fingers-main-action](#fingers-main-action) instead_
+`default: "fg=yellow,bold`
 
-## @fingers-copy-command-uppercase
+With this option you can define the styles for the letter hints.
 
-_DEPRECATED: this option is deprecated, please use [@fingers-shift-action](#fingers-shift-action) instead_
+You can customize the styles using the same syntax used in `.tmux.conf` for styling the status bar.
 
-## @fingers-compact-hints
+More info in the `STYLES` section of `man tmux`.
 
-`default: 1`
+Supported styles are: `bright`, `bold`, `dim`, `underscore`, `italics`.
 
-By default **tmux-fingers** will show hints in a compact format. For example:
+## @fingers-highlight-style
 
-<pre>
-/path/to/foo/bar/lol
+`default: "fg=yellow,bold]"`
 
-<i>with <bold>@fingers-compact-hints</bold> set to <bold>1</bold>:</i>
+Custom styles for the highlighted match. See [@fingers-hint-format](#fingers-hint-format) for more details.
 
-<strong>aw</strong>ath/to/foo/bar/lol
+## @fingers-selected-hint-style
 
-<i>with <bold>@fingers-compact-hints</bold> set to <bold>0</bold>:</i>
+`default: "#fg=green,green"`
 
-/path/to/foo/bar/lol <strong>[aw]</strong>
-</pre>
+Format for hints in selected matches in multimode.
 
-( _pressing *aw* would copy `/path/to/foo/bar/lol`_ )
+## @fingers-selected-highlight-style
 
-While in **[fingers]** mode you can press <kbd>SPACE</kbd> to toggle compact mode on/off.
+`default: "#fg=green,nobold,dim"`
 
-Compact mode is preferred because it preserves the length of lines and doesn't
-cause line wraps, making it easier to follow.
-
-However for small hints this can be troublesome: a path as small as `/a/b`
-would have half of its original content concealed. If that's the case you can
-quickly toggle off compact mode by pressing <kbd>SPACE</kbd>.
+Format for selected matches in multimode.
 
 ## @fingers-hint-position
 
@@ -220,64 +196,6 @@ quickly toggle off compact mode by pressing <kbd>SPACE</kbd>.
 
 Control the position where the hint is rendered. Possible values are `"left"`
 and `"right"`.
-
-## @fingers-hint-position-nocompact
-
-`default: "right"`
-
-Same as above, used when `@fingers-compact-hints` is set to `0`.
-
-## @fingers-hint-format
-
-`default: "#[fg=yellow,bold]%s"`
-
-You can customize the colors using the same syntax used in `.tmux.conf` for
-styling the status bar. You'll need to include the `%s` placeholder in your
-custom format, that's where the content will be rendered.
-
-Check all supported features [here](https://github.com/morantron/tmux-printer).
-
-## @fingers-hint-format-nocompact
-
-`default: "#[fg=yellow,bold][%s]"`
-
-Same as above, used when `@fingers-compact-hints` is set to `0`.
-
-## @fingers-highlight-format
-
-`default: "#[fg=yellow,nobold,dim]%s"`
-
-Custom format for the highlighted match. See [@fingers-hint-format](#fingers-hint-format) for more details.
-
-## @fingers-highlight-format-nocompact
-
-`default: "#[fg=yellow,nobold,dim]%s"`
-
-Same as above, used when `@fingers-compact-hints` is set to `0`.
-
-## @fingers-selected-hint-format
-
-`default: "#[fg=green,green]%s"`
-
-Format for hints in selected matches in multimode.
-
-## @fingers-selected-hint-format-nocompact
-
-`default: "#[fg=green,bold][%s]"`
-
-Same as above, used when `@fingers-compact-hints` is set to `0`.
-
-## @fingers-selected-highlight-format
-
-`default: "#[fg=green,nobold,dim]%s"`
-
-Format for selected matches in multimode.
-
-## @fingers-selected-hint-format-nocompact
-
-`default: "#[fg=green,nobold,dim][%s]"`
-
-Same as above, used when `@fingers-compact-hints` is set to `0`.
 
 ## @fingers-keyboard-layout
 
@@ -305,14 +223,6 @@ Hints are generated taking optimal finger movement into account. You can choose 
   * `dvorak-left-hand`
   * `dvorak-right-hand`
   * `dvorak-homerow`
-
-# Troubleshooting
-
-If you encounter any problems you can run the following command to automatically detect common problems:
-
-` $ /path/to/tmux-fingers/scripts/health-check.sh`
-
-More info in [health-check.md](./docs/health-check.md)
 
 # Acknowledgements and inspiration
 

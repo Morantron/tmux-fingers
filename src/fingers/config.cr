@@ -70,11 +70,11 @@ module Fingers
       @alt_action = "",
       @shift_action = ":paste:",
       @hint_position = "left",
-      @hint_style = FORMAT_PRINTER.print("fg=yellow,bold"),
-      @selected_hint_style = FORMAT_PRINTER.print("fg=green,bold"),
-      @selected_highlight_style = FORMAT_PRINTER.print("fg=green,dim"),
-      @highlight_style = FORMAT_PRINTER.print("fg=yellow,dim"),
-      @backdrop_style = FORMAT_PRINTER.print("bg=black,fg=color250"),
+      @hint_style = FORMAT_PRINTER.print("fg=green,bold"),
+      @highlight_style = FORMAT_PRINTER.print("fg=yellow"),
+      @selected_hint_style = FORMAT_PRINTER.print("fg=blue,bold"),
+      @selected_highlight_style = FORMAT_PRINTER.print("fg=blue"),
+      @backdrop_style = "",
       @tmux_version = "",
       @benchmark_mode = "0"
     )
