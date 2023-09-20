@@ -1,4 +1,8 @@
 class TmuxStylePrinter
+
+  class InvalidFormat < Exception
+  end
+
   abstract class Shell
     abstract def exec(cmd)
   end
@@ -70,7 +74,7 @@ class TmuxStylePrinter
   private def parse_color(style)
     match = style.match(/(?<layer>bg|fg)=(?<color>(colou?r(?<color_code>[0-9]+)|.*))/)
 
-    return "" unless match
+    raise InvalidFormat.new("Invalid color definition: #{style}") unless match
 
     layer = match["layer"]
     color = match["color"]
@@ -81,7 +85,9 @@ class TmuxStylePrinter
       return reset_to_applied_styles!
     end
 
-    color_to_apply = color_code || COLOR_MAP[color]
+    color_to_apply = color_code || COLOR_MAP[color]?
+
+    raise InvalidFormat.new("Invalid color definition: #{style}") if color_to_apply.nil?
 
     result = shell.exec("tput #{LAYER_MAP[layer]} #{color_to_apply}")
 
@@ -93,10 +99,14 @@ class TmuxStylePrinter
   private def parse_style(style)
     match = style.match(/(?<remove>no)?(?<style>.*)/)
 
-    return "" unless match
+    raise InvalidFormat.new("Invalid style definition: #{style}") unless match
 
     should_remove_style = match["remove"]? && match["remove"] == "no"
     style = match["style"]
+
+    style_to_apply = STYLE_MAP[style]?
+
+    raise InvalidFormat.new("Invalid style definition: #{style}") if style_to_apply.nil?
 
     result = style == "dim" ? "\033[2m" : shell.exec("tput #{STYLE_MAP[style]}")
 

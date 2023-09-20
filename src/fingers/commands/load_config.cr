@@ -80,6 +80,9 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     config.save
 
     Fingers.reset_config
+  rescue e : TmuxStylePrinter::InvalidFormat
+    puts "[tmux-fingers] #{e.message}"
+    exit(1)
   end
 
   def clean_up_patterns(patterns)
