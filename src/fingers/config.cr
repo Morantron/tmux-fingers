@@ -87,6 +87,10 @@ module Fingers
     def save
       to_json(File.open(::Fingers::Dirs::CONFIG_PATH, "w"))
     end
+
+    def members : Array(String)
+      JSON.parse(to_json).as_h.keys
+    end
   end
 
   def self.config

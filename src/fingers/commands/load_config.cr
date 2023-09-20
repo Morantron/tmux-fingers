@@ -7,7 +7,14 @@ require "../../tmux"
 class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   @fingers_options_names : Array(String) | Nil
 
+  property config : Fingers::Config
+
   DISALLOWED_CHARS = /cimqn/
+
+  def initialize(*args)
+    super(*args)
+    @config = Fingers::Config.new
+  end
 
   def run
     validate_options!
@@ -23,8 +30,6 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     user_defined_patterns = [] of String
 
     Fingers.reset_config
-
-    config = Fingers::Config.new
 
     config.tmux_version = `tmux -V`.chomp.split(" ").last
 
@@ -58,6 +63,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
       end
 
       if option.match(/pattern/)
+        check_pattern!(value)
         user_defined_patterns.push(value)
       end
     end
@@ -132,8 +138,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   def valid_option?(option)
     option_method = option_to_method(option)
 
-    # TODO validate option
-    true
+    @config.members.includes?(option_method) || option_method.match(/pattern_[0-9]+/) || option_method == "skip_wizard"
   end
 
   def fingers_options_names
@@ -142,6 +147,16 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
   def unset_tmux_option!(option)
     `tmux set-option -ug #{option}`
+  end
+
+  def check_pattern!(pattern)
+    begin
+      Regex.new(pattern)
+    rescue e: ArgumentError
+      puts "[tmux-fingers] Invalid pattern: #{pattern}"
+      puts "[tmux-fingers] #{e.message}"
+      exit(1)
+    end
   end
 
   def validate_options!
