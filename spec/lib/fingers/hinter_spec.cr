@@ -39,7 +39,7 @@ describe Fingers::Hinter do
     alphabet = "asdf".split("")
 
     hinter = Fingers::Hinter.new(
-      input: input,
+      input: input.split("\n"),
       width: width,
       patterns: patterns,
       state: ::Fingers::State.new,
@@ -82,7 +82,7 @@ Changes not staged for commit:
     alphabet = "asdf".split("")
 
     hinter = Fingers::Hinter.new(
-      input: input,
+      input: input.split("\n"),
       width: width,
       patterns: patterns,
       state: ::Fingers::State.new,

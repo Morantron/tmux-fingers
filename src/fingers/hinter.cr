@@ -8,13 +8,12 @@ module Fingers
     @formatter : Formatter
     @patterns : Array(String)
     @alphabet : Array(String)
-    @lines : Array(String) | Nil
     @pattern : Regex | Nil
     @hints : Array(String) | Nil
     @n_matches : Int32 | Nil
 
     def initialize(
-      input : String,
+      input : Array(String),
       width : Int32,
       state : Fingers::State,
       output : Printer,
@@ -23,7 +22,7 @@ module Fingers
       huffman = Huffman.new,
       formatter = ::Fingers::MatchFormatter.new
     )
-      @input = input
+      @lines = input
       @width = width
       @hints_by_text = {} of String => String
       @lookup_table = {} of String => String
@@ -133,10 +132,6 @@ module Fingers
       pattern.name_table.compact_map { |k, v| v == "capture" ? k : nil }
     end
 
-    def lines : Array(String)
-      @lines ||= input.split("\n")
-    end
-
     def n_matches : Int32
       return @n_matches.as(Int32) if !@n_matches.nil?
 
@@ -152,5 +147,7 @@ module Fingers
 
       match_set.size
     end
+
+    private property lines : Array(String)
   end
 end

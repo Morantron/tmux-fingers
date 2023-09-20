@@ -65,7 +65,7 @@ module Fingers::Commands
         fingers_window.window_id,
         target_pane.pane_width,
         target_pane.pane_height,
-      )
+      ) if needs_resize?
 
       view.render
       tmux.swap_panes(fingers_window.pane_id, target_pane.pane_id)
@@ -81,6 +81,11 @@ module Fingers::Commands
         view.process_input(input)
         break if state.exiting
       end
+    end
+
+    private def needs_resize?
+      pane_width = target_pane.pane_width.to_i
+      pane_contents.any? { |line| line.size > pane_width }
     end
 
     private def teardown
@@ -115,11 +120,15 @@ module Fingers::Commands
 
     private getter hinter : Hinter do
       Fingers::Hinter.new(
-        input: tmux.capture_pane(target_pane),
+        input: pane_contents,
         width: target_pane.pane_width.to_i,
         state: state,
         output: pane_printer
       )
+    end
+
+    private getter pane_contents : Array(String) do
+      tmux.capture_pane(target_pane).split("\n")
     end
 
     private getter view : View do
