@@ -1,6 +1,5 @@
-# tmux-fingers
 
-**tmux-fingers**: copy pasting with vimium/vimperator like hints.
+![tmux-fingers](./logo.svg)
 
 ![yay](http://i.imgur.com/5bSrBew.gif)
 
