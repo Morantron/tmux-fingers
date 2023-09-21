@@ -147,7 +147,10 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   end
 
   def fingers_options_names
-    @fingers_options_names ||= `tmux show-options -g | grep ^@fingers`.chomp.split("\n").map { |line| line.split(" ")[0] }
+    @fingers_options_names ||= `tmux show-options -g | grep ^@fingers`
+                                 .chomp.split("\n")
+                                 .map { |line| line.split(" ")[0] }
+                                 .reject { |option| option.empty? }
   end
 
   def unset_tmux_option!(option)
@@ -169,7 +172,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
     fingers_options_names.each do |option|
       unless valid_option?(option)
-        errors << "#{option} is not a valid option"
+        errors << "'#{option}' is not a valid option"
         unset_tmux_option!(option)
       end
     end
