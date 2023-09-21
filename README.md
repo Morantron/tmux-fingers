@@ -80,11 +80,13 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 * [@fingers-ctrl-action](#fingers-ctrl-action)
 * [@fingers-alt-action](#fingers-alt-action)
 * [@fingers-shift-action](#fingers-shift-action)
+* [@fingers-hint-style](#fingers-hint-style)
+* [@fingers-highlight-style](#fingers-highlight-style)
+* [@fingers-backdrop-style](#fingers-backdrop-style)
+* [@fingers-selected-hint-style](#fingers-selected-hint-style)
+* [@fingers-selected-highlight-style](#fingers-selected-highlight-style)
 * [@fingers-hint-position](#fingers-hint-position)
-* [@fingers-hint-format](#fingers-hint-format)
-* [@fingers-highlight-format](#fingers-highlight-format)
-* [@fingers-selected-hint-format](#fingers-selected-hint-format)
-* [@fingers-selected-highlight-format](#fingers-selected-highlight-format)
+* [@fingers-keyboard-layout](#fingers-keyboard-layout)
 
 ## @fingers-key
 
