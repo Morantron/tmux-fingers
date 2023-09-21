@@ -34,3 +34,7 @@ Here's the mappings between format and style options.
 | @fingers-selected-hint-format-nocompact      | _No equivalent_                              |
 
 That should be it!
+
+## Regex syntax
+
+The regex engine has been changed from ERE to PCRE. You might need to update your custom patterns.

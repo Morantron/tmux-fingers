@@ -1,7 +1,5 @@
 # tmux-fingers
 
-[![Build Status](https://travis-ci.com/Morantron/tmux-fingers.svg?branch=develop)](https://travis-ci.com/Morantron/tmux-fingers)
-
 **tmux-fingers**: copy pasting with vimium/vimperator like hints.
 
 ![yay](http://i.imgur.com/5bSrBew.gif)
@@ -105,21 +103,25 @@ set -g @fingers-key F
 You can also add additional patterns if you want more stuff to be highlighted:
 
 ```
+# You can define custom patterns like this
 set -g @fingers-pattern-0 'git rebase --(abort|continue)'
-set -g @fingers-pattern-1 'yolo'
-.
-.
-.
-set -g @fingers-pattern-50 'whatever'
+
+# Increment the number and define more patterns
+set -g @fingers-pattern-1 'some other pattern'
+
+# You can use a named capture group like this (?<match>YOUR-REGEX-HERE)
+# to only highlight and copy part of the match.
+set -g @fingers-pattern-2 'capture (?<match>only this)'
+
+# Watch out for backslashes! For example the regex \d{50} matches 50 digits.
+set -g @fingers-pattern-3 '\d{50}'  # No need to escape if you use single quotes
+set -g @fingers-pattern-4 "\\d{50}" # If you use double quotes, you'll need to escape backslashes for special characters to work
+set -g @fingers-pattern-5 \\d{50} # Escaping also needed if you don't use any quotes
 ```
 
-Patterns are case insensitive, and
-[`gawk`'s syntax for extended regular expressions (EREs)](https://github.com/Morantron/tmux-fingers/issues/96)
-should be used (see also `man gawk`). It is very similar to, but slightly
-different from, the `grep -E` ERE syntax.
+Patterns use [PCRE pattern syntax](https://www.pcre.org/original/doc/html/pcrepattern.html).
 
-If the introduced regexp contains an error, an error will be shown when
-invoking the plugin. Patterns matching the empty string are disallowed. 
+If the introduced regex contains an error, an error will be shown when invoking the plugin.
 
 ## @fingers-main-action
 
@@ -162,7 +164,7 @@ Same as [@fingers-main-action](#fingers-main-action) but only called when match 
 
 ## @fingers-hint-style
 
-`default: "fg=yellow,bold`
+`default: "fg=green,bold`
 
 With this option you can define the styles for the letter hints.
 
@@ -174,19 +176,25 @@ Supported styles are: `bright`, `bold`, `dim`, `underscore`, `italics`.
 
 ## @fingers-highlight-style
 
-`default: "fg=yellow,bold]"`
+`default: "fg=yellow"`
 
 Custom styles for the highlighted match. See [@fingers-hint-format](#fingers-hint-format) for more details.
 
+## @fingers-backdrop-style
+
+`default: ""`
+
+Custom styles for all the text that is not matched. See [@fingers-hint-format](#fingers-hint-format) for more details.
+
 ## @fingers-selected-hint-style
 
-`default: "#fg=green,green"`
+`default: "fg=blue,bold"`
 
 Format for hints in selected matches in multimode.
 
 ## @fingers-selected-highlight-style
 
-`default: "#fg=green,nobold,dim"`
+`default: "fg=blue"`
 
 Format for selected matches in multimode.
 

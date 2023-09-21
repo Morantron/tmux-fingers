@@ -1,3 +1,14 @@
+## 2.0.0 - ?? 2023
+
+* Code rewritten in [Crystal language](https://crystal-lang.org/).
+* Greatly improved performance.
+* Switched regex syntax from ERE to PCRE.
+* Deprecated `@fingers-compact-hints` and all `@fingers-*-format-nocompact` format options.
+* Deprecated all `@fingers-*-format` options in favour of their `@fingers-*-style` counterparts.
+* Added new `@fingers-backdrop-style` option that allows you to customize all the background text that is not highlighted by the plugin. More info in `docs/migrating-from-1.md`.
+* Patterns can now define a named capture to only highlight a part of the match.
+* Added new built-in patterns.
+
 ## 1.1.3 - 27 Sep 2023
 
 * Removed unused .cache folder creation ( fixes #98 )
