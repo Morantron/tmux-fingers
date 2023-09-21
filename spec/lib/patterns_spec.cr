@@ -4,7 +4,7 @@ require "string_scanner"
 
 def matches_for(pattern_name, input)
   pattern = Regex.new(::Fingers::Config::DEFAULT_PATTERNS[pattern_name])
-  input.scan(pattern).map { |m| m["capture"]? || m[0] }
+  input.scan(pattern).map { |m| m["match"]? || m[0] }
 end
 
 describe "default patterns" do

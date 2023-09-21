@@ -92,9 +92,9 @@ module Fingers
     def replace(match)
       text = match[0]
 
-      captured_text = match["capture"]? || text
+      captured_text = match["match"]? || text
 
-      if match["capture"]?
+      if match["match"]?
         match_start, match_end = {match.begin(0), match.end(0)}
         capture_start, capture_end = find_capture_offset(match).not_nil!
         capture_offset = {capture_start - match_start, captured_text.size}
@@ -129,7 +129,7 @@ module Fingers
     end
 
     getter capture_indices : Array(Int32) do
-      pattern.name_table.compact_map { |k, v| v == "capture" ? k : nil }
+      pattern.name_table.compact_map { |k, v| v == "match" ? k : nil }
     end
 
     def n_matches : Int32
