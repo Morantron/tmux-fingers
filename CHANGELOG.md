@@ -1,3 +1,7 @@
+## 2.0.1 - 27 Sep 2023
+
+* Fix brew installation method and display load-config errors.
+
 ## 2.0.0 - 27 Sep 2023
 
 * Code rewritten in [Crystal language](https://crystal-lang.org/).
