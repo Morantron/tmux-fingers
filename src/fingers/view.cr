@@ -54,7 +54,7 @@ module Fingers
         original_pane: original_pane
       ).run
 
-      tmux.display_message("Copied: #{state.result}", 500) unless state.result.empty?
+      tmux.display_message("Copied: #{state.result}", 1000) unless state.result.empty?
     end
 
     private def hide_cursor
