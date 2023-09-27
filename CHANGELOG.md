@@ -1,3 +1,8 @@
+## 1.1.3 - 27 Sep 2023
+
+* Removed unused .cache folder creation ( fixes #98 )
+* Clarified regexp syntax in README ( thanks @ilyagr ! )
+
 ## 1.1.2 - 05 May 2023
 
 * Fix escaping issue with upcoming tmux 3.4 ( fixes #95 )
