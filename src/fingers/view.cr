@@ -6,7 +6,7 @@ require "./action_runner"
 module Fingers
   class View
     CLEAR_SEQ = "\e[H\e[J"
-    HIDE_CURSOR_SEQ = "\e[25h"
+    HIDE_CURSOR_SEQ = "\e[?25l"
 
     @hinter : Hinter
     @state : State
