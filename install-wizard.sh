@@ -46,6 +46,16 @@ function install_from_source() {
   exit 0
 }
 
+function install_with_brew() {
+  echo "Installing with brew..."
+  brew tap morantron/tmux-fingers
+  brew install tmux-fingers
+
+  echo "Installation complete!"
+  exit 0
+}
+
+
 function download_binary() {
   mkdir -p $CURRENT_DIR/bin
   # TODO check architecture
@@ -71,6 +81,7 @@ fi
 
 if [[ "$1" == "install-with-brew" ]]; then
   echo "Installing with brew..."
+  install_with_brew
   exit 1
 fi
 
@@ -95,7 +106,6 @@ function binary_or_brew_action() {
 }
 
 function get_message() {
-  # if FINGERS_UPDATE is 1
   if [[ "$FINGERS_UPDATE" == "1" ]]; then
     echo "It looks like tmux-fingers has been updated. We need to rebuild the binary."
   else
