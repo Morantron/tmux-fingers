@@ -22,5 +22,3 @@ else
 fi
 
 tmux bind-key $FINGERS_KEY run-shell "$THIS_CURRENT_DIR/scripts/tmux-fingers.sh '$input_method'"
-
-mkdir -p $THIS_CURRENT_DIR/.cache
