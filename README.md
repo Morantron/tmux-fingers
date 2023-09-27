@@ -128,12 +128,13 @@ set -g @fingers-pattern-1 'yolo'
 set -g @fingers-pattern-50 'whatever'
 ```
 
-Patterns are case insensitive, and grep's extended syntax ( ERE ) should be used. Patterns
-matching the empty string are disallowed.
-`man grep` for more info.
+Patterns are case insensitive, and
+[`gawk`'s syntax for extended regular expressions (EREs)](https://github.com/Morantron/tmux-fingers/issues/96)
+should be used (see also `man gawk`). It is very similar to, but slightly
+different from, the `grep -E` ERE syntax.
 
 If the introduced regexp contains an error, an error will be shown when
-invoking the plugin.
+invoking the plugin. Patterns matching the empty string are disallowed. 
 
 ## @fingers-main-action
 
