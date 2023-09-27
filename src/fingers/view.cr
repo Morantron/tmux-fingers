@@ -12,12 +12,14 @@ module Fingers
     @state : State
     @output : Printer
     @original_pane : Tmux::Pane
+    @tmux : Tmux
 
     def initialize(
       @hinter,
       @output,
       @original_pane,
-      @state
+      @state,
+      @tmux
     )
     end
 
@@ -51,6 +53,8 @@ module Fingers
         match: state.result,
         original_pane: original_pane
       ).run
+
+      tmux.display_message("Copied: #{state.result}", 500) unless state.result.empty?
     end
 
     private def hide_cursor
@@ -67,6 +71,7 @@ module Fingers
       match = hinter.lookup(state.input)
 
       handle_match(match) if match
+      tmux.display_message(state.input, 300)
     end
 
     private def process_multimode
@@ -80,7 +85,7 @@ module Fingers
       end
     end
 
-    private getter :output, :hinter, :original_pane, :state
+    private getter :output, :hinter, :original_pane, :state, :tmux
 
     private def handle_match(match)
       if state.multi_mode

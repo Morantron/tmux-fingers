@@ -279,8 +279,8 @@ class Tmux
     socket
   end
 
-  def display_message(msg)
-    exec("display-message \"#{msg}\"")
+  def display_message(msg, delay = 100)
+    exec(Process.quote(["display-message", "-d", delay.to_s, msg]))
   end
 
   private def exec(cmd)

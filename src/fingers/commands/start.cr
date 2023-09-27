@@ -136,7 +136,8 @@ module Fingers::Commands
         hinter: hinter,
         state: state,
         output: pane_printer,
-        original_pane: target_pane
+        original_pane: target_pane,
+        tmux: tmux
       )
     end
 
