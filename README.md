@@ -1,7 +1,7 @@
 
 ![tmux-fingers](./logo.svg)
 
-![yay](http://i.imgur.com/5bSrBew.gif)
+![demo](https://github.com/Morantron/tmux-fingers/assets/3304507/cafe8877-1c98-41b1-bb65-b72129fea701)
 
 # Usage
 
