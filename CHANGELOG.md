@@ -1,4 +1,4 @@
-## 2.0.2 - 27 Sep 2023
+## 2.0.2 - 28 Sep 2023
 
 * Fix `prefix2` being lost after exiting fingers mode ( fixes #100 ).
 
