@@ -54,7 +54,7 @@ module Fingers::Commands
     end
 
     private def options_to_preserve
-      %w[prefix]
+      %w[prefix prefix2]
     end
 
     private def show_hints
