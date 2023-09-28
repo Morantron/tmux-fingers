@@ -9,7 +9,6 @@ elif [[ -f "$CURRENT_DIR/bin/tmux-fingers" ]]; then
 fi
 
 if [[ -z "$FINGERS_BINARY" ]]; then
-  tmux display-message "running wisar because binary not found"
   tmux run-shell -b "bash $CURRENT_DIR/install-wizard.sh"
   exit 0
 fi
