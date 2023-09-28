@@ -63,7 +63,7 @@ function download_binary() {
   echo "Getting latest release..."
 
   # TODO use "latest" tag
-  url=$(curl -s "https://api.github.com/repos/morantron/tmux-fingers/releases" | grep browser_download_url | tail -1 | grep -o https://.*x86_64)
+  url=$(curl -s "https://api.github.com/repos/morantron/tmux-fingers/releases" | grep browser_download_url | head -1 | grep -o https://.*x86_64)
 
   echo "Downloading binary from $url"
 
