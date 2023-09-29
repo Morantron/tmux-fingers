@@ -1,3 +1,7 @@
+## 2.0.3 - 28 Sep 2023
+
+* Fix git/binary version mismatch by publishing a new version ( fixes #101 ).
+
 ## 2.0.2 - 28 Sep 2023
 
 * Fix `prefix2` being lost after exiting fingers mode ( fixes #100 ).
