@@ -1,4 +1,4 @@
-## 2.0.3 - 28 Sep 2023
+## 2.0.3 - 29 Sep 2023
 
 * Fix git/binary version mismatch by publishing a new version ( fixes #101 ).
 
