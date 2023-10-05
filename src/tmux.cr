@@ -209,7 +209,7 @@ class Tmux
   end
 
   def set_global_option(name, value)
-    exec(["set-option", "-g", name, value].join(' '))
+    exec(Process.quote(["set-option", "-g", name, value]))
   end
 
   def get_global_option(name)
