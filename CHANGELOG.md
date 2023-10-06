@@ -1,3 +1,7 @@
+## 2.0.5 - 06 Oct 2023
+
+* Fix git/binary version mismatch again ( fixes #103 ).
+
 ## 2.0.4 - 05 Oct 2023
 
 * Fix issues when using backquote as tmux prefix ( fixes #102 ).
