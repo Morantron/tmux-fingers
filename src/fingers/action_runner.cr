@@ -124,9 +124,14 @@ module Fingers
 
     # This takes care of some path expansion weirdness when opening paths that start with ~ in MacOS
     def expanded_match
-      return match unless action == ":open:"
+      return match unless should_expand_match?
 
       Path[match].expand(base: original_pane.pane_current_path, home: Path.home)
     end
+
+    private def should_expand_match?
+      action == ":open:" && match.starts_with?("~")
+    end
+
   end
 end
