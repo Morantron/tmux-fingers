@@ -1,6 +1,6 @@
 require "./priority_queue"
 
-class HuffmanNode
+struct HuffmanNode
   def initialize(weight : Int32, children : Array(HuffmanNode))
     @weight = weight
     @children = children
