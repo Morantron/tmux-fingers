@@ -9,7 +9,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
   property config : Fingers::Config
 
-  DISALLOWED_CHARS = /cimqn/
+  DISALLOWED_CHARS = /[cimqn]/
 
   def initialize(*args)
     super(*args)
