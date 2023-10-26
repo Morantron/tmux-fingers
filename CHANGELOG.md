@@ -1,3 +1,10 @@
+## 2.0.6 - 26 Oct 2023
+
+* Added new option @fingers-show-copied-notification ( fixes #104 ).
+* Fix problem expanding paths in Mac OS ( thanks @brttbndr ! ).
+* Fix hints using disallowed characters like "q" ( fixes #105 ).
+* Improve performance in hint generation.
+
 ## 2.0.5 - 06 Oct 2023
 
 * Fix git/binary version mismatch again ( fixes #103 ).
