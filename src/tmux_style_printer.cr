@@ -1,10 +1,8 @@
+require "./fingers/types"
+
 class TmuxStylePrinter
 
   class InvalidFormat < Exception
-  end
-
-  abstract class Shell
-    abstract def exec(cmd)
   end
 
   STYLE_SEPARATOR = /[ ,]+/

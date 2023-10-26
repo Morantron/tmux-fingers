@@ -2,22 +2,30 @@ require "file_utils"
 require "./base"
 require "../dirs"
 require "../config"
+require "../types"
 require "../../tmux"
+require "../../persistent_shell"
 
-class Fingers::Commands::LoadConfig < Fingers::Commands::Base
+class Fingers::Commands::LoadConfig
   @fingers_options_names : Array(String) | Nil
 
   property config : Fingers::Config
+  property shell : Shell
+  property log_path : String
+  property executable_path : String
+  property errors : Array(String) = [] of String
+  property output : IO
 
-  DISALLOWED_CHARS = /cimqn/
-
-  def initialize(*args)
-    super(*args)
-    @config = Fingers::Config.new
+  def initialize(
+    @shell = PersistentShell.new,
+    @log_path = Fingers::Dirs::LOG_PATH.to_s,
+    @executable_path = Process.executable_path.to_s,
+    @output = STDOUT
+  )
+    @config = Fingers::Config.build
   end
 
   def run
-    validate_options!
     parse_tmux_conf
     setup_bindings
   end
@@ -31,75 +39,46 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
     Fingers.reset_config
 
-    config.tmux_version = `tmux -V`.chomp.split(" ").last
+    config.tmux_version = shell.exec("tmux -V").chomp.split(" ").last
 
     options.each do |option, value|
-      # TODO generate an enum somehow and use an exhaustive case
-      case option
-      when "key"
-        config.key = value
-      when "keyboard_layout"
-        config.keyboard_layout = value
-      when "main_action"
-        config.main_action = value
-      when "ctrl_action"
-        config.ctrl_action = value
-      when "alt_action"
-        config.alt_action = value
-      when "shift_action"
-        config.shift_action = value
-      when "benchmark_mode"
-        config.benchmark_mode = value
-      when "hint_position"
-        config.hint_position = value
-      when "hint_style"
-        config.hint_style = tmux.parse_style(value)
-      when "selected_hint_style"
-        config.selected_hint_style = tmux.parse_style(value)
-      when "highlight_style"
-        config.highlight_style = tmux.parse_style(value)
-      when "backdrop_style"
-        config.backdrop_style = tmux.parse_style(value)
-      when "selected_highlight_style"
-        config.selected_highlight_style = tmux.parse_style(value)
+      if option.match(/pattern_[0-9]+/)
+        user_defined_patterns << value
+        next
       end
 
-      if option.match(/pattern/)
-        check_pattern!(value)
-        user_defined_patterns.push(value)
+      config.set_option(option, value)
+
+      if !config.valid?
+        unset_tmux_option!(method_to_option(option))
+        output.puts "Found errors #{config.errors}"
+        self.errors = config.errors.clone
       end
     end
 
-    config.patterns = clean_up_patterns([
+    config.patterns = [
       *enabled_default_patterns,
       *user_defined_patterns,
-    ])
+    ]
 
-    config.alphabet = ::Fingers::Config::ALPHABET_MAP[Fingers.config.keyboard_layout].split("").reject do |char|
-      char.match(DISALLOWED_CHARS)
+    if !config.valid?
+      output.puts "Found errors #{config.errors}"
+      #exit(1)
     end
 
     config.save
 
     Fingers.reset_config
-  rescue e : TmuxStylePrinter::InvalidFormat
-    puts "[tmux-fingers] #{e.message}"
-    exit(1)
-  end
-
-  def clean_up_patterns(patterns)
-    patterns.reject(&.empty?)
   end
 
   def setup_bindings
-    `tmux bind-key #{Fingers.config.key} run-shell -b "#{cli} start "\#{pane_id}" self >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
-    `tmux bind-key O run-shell -b "#{cli} start "\#{pane_id}" other >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
+    shell.exec(%(tmux bind-key #{Fingers.config.key} run-shell -b "#{executable_path} start '\#{pane_id}' self >>#{log_path} 2>&1"))
     setup_fingers_mode_bindings
   end
 
   def setup_fingers_mode_bindings
     ("a".."z").to_a.each do |char|
-      next if char.match(DISALLOWED_CHARS)
+      next if char.match(Fingers::Config::DISALLOWED_CHARS)
 
       fingers_mode_bind(char, "hint:#{char}:main")
       fingers_mode_bind(char.upcase, "hint:#{char}:shift")
@@ -124,79 +103,43 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     ::Fingers::Config::DEFAULT_PATTERNS.values
   end
 
-  def to_bool(input)
-    input == "1"
-  end
-
   def shell_safe_options
     options = {} of String => String
 
     fingers_options_names.each do |option|
       option_method = option_to_method(option)
 
-      options[option_method] = `tmux show-option -gv #{option}`.chomp
+      options[option_method] = shell.exec(%(tmux show-option -gv #{option})).chomp
     end
 
     options
   end
 
-  def valid_option?(option)
-    option_method = option_to_method(option)
-
-    @config.members.includes?(option_method) || option_method.match(/pattern_[0-9]+/) || option_method == "skip_wizard"
-  end
-
   def fingers_options_names
-    @fingers_options_names ||= `tmux show-options -g | grep ^@fingers`
+    @fingers_options_names ||= shell.exec(%(tmux show-options -g | grep ^@fingers))
                                  .chomp.split("\n")
                                  .map { |line| line.split(" ")[0] }
                                  .reject { |option| option.empty? }
   end
 
   def unset_tmux_option!(option)
-    `tmux set-option -ug #{option}`
-  end
-
-  def check_pattern!(pattern)
-    begin
-      Regex.new(pattern)
-    rescue e: ArgumentError
-      puts "[tmux-fingers] Invalid pattern: #{pattern}"
-      puts "[tmux-fingers] #{e.message}"
-      exit(1)
-    end
-  end
-
-  def validate_options!
-    errors = [] of String
-
-    fingers_options_names.each do |option|
-      unless valid_option?(option)
-        errors << "'#{option}' is not a valid option"
-        unset_tmux_option!(option)
-      end
-    end
-
-    return if errors.empty?
-
-    puts "[tmux-fingers] Errors found in tmux.conf:"
-    errors.each { |error| puts "  - #{error}" }
-    exit(1)
+    shell.exec(%(tmux set-option -ug #{option}))
   end
 
   def option_to_method(option)
     option.gsub(/^@fingers-/, "").tr("-", "_")
   end
 
-  def fingers_mode_bind(key, command)
-    `tmux bind-key -Tfingers "#{key}" run-shell -b "#{cli} send-input #{command}"`
+  def method_to_option(method)
+    "@fingers-#{method.tr("_", "-")}"
   end
 
-  def cli
-    Process.executable_path
+  def fingers_mode_bind(key, command)
+    shell.exec(%(tmux bind-key -Tfingers "#{key}" run-shell -b "#{executable_path} send-input #{command}"))
   end
+
 
   def tmux
-    Tmux.new(`tmux -V`.chomp.split(" ").last)
+    Tmux.new(shell.exec("tmux -V").chomp.split(" ").last)
   end
 end

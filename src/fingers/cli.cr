@@ -11,7 +11,7 @@ module Fingers
             when "start"
               Fingers::Commands::Start.new(args)
             when "load-config"
-              Fingers::Commands::LoadConfig.new(args)
+              Fingers::Commands::LoadConfig.new
             when "send-input"
               Fingers::Commands::SendInput.new(args)
             when "version"

@@ -1,7 +1,7 @@
 require "spec"
 require "../../src/tmux_style_printer"
 
-class FakeShell < TmuxStylePrinter::Shell
+class FakeShell < Shell
   def exec(cmd)
     "$(#{cmd})"
   end

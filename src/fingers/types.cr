@@ -8,3 +8,7 @@ module Fingers
     abstract def format(hint : String, highlight : String, selected : Bool, offset : Tuple(Int32, Int32) | Nil)
   end
 end
+
+abstract class Shell
+  abstract def exec(cmd)
+end
