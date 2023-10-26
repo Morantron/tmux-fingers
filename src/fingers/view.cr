@@ -54,7 +54,7 @@ module Fingers
         original_pane: original_pane
       ).run
 
-      tmux.display_message("Copied: #{state.result}", 1000) unless state.result.empty?
+      tmux.display_message("Copied: #{state.result}", 1000) if should_notify?
     end
 
     private def hide_cursor
@@ -70,8 +70,11 @@ module Fingers
       state.modifier = modifier
       match = hinter.lookup(state.input)
 
-      handle_match(match) if match
-      tmux.display_message(state.input, 300)
+      if match
+        handle_match(match)
+      else
+        tmux.display_message(state.input, 300)
+      end
     end
 
     private def process_multimode
@@ -101,6 +104,10 @@ module Fingers
 
     private def request_exit!
       state.exiting = true
+    end
+
+    private def should_notify?
+      !state.result.empty? && Fingers.config.show_copied_notification == "1"
     end
   end
 end

@@ -62,6 +62,8 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
         config.backdrop_style = tmux.parse_style(value)
       when "selected_highlight_style"
         config.selected_highlight_style = tmux.parse_style(value)
+      when "show_copied_notification"
+        config.show_copied_notification = value
       end
 
       if option.match(/pattern/)

@@ -86,6 +86,7 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 * [@fingers-selected-highlight-style](#fingers-selected-highlight-style)
 * [@fingers-hint-position](#fingers-hint-position)
 * [@fingers-keyboard-layout](#fingers-keyboard-layout)
+* [@fingers-show-copied-notification](#fingers-show-copied-notification)
 
 ## @fingers-key
 
@@ -232,6 +233,12 @@ Hints are generated taking optimal finger movement into account. You can choose 
   * `dvorak-left-hand`
   * `dvorak-right-hand`
   * `dvorak-homerow`
+
+## @fingers-show-copied-notification
+
+`default: 0`
+
+Show a message using `tmux display-message` notifying about the copied result.
 
 # Acknowledgements and inspiration
 
