@@ -73,7 +73,7 @@ module Fingers
       if match
         handle_match(match)
       else
-        tmux.display_message(state.input, 300)
+        render
       end
     end
 

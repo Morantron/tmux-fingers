@@ -112,6 +112,10 @@ module Fingers
         hints_by_text[captured_text] = hint
       end
 
+      if !state.input.empty? && !hint.starts_with?(state.input)
+        return text
+      end
+
       formatter.format(
         hint: hint,
         highlight: text,
