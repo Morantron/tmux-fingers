@@ -5,6 +5,7 @@ module Fingers
     include JSON::Serializable
 
     property key : String
+    property jump_key : String
     property keyboard_layout : String
     property patterns : Array(String)
     property alphabet : Array(String)
@@ -63,6 +64,7 @@ module Fingers
 
     def initialize(
       @key = "F",
+      @jump_key = "J",
       @keyboard_layout = "qwerty",
       @alphabet = [] of String,
       @patterns = [] of String,

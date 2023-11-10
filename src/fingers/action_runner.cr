@@ -4,7 +4,7 @@ module Fingers
   class ActionRunner
     @final_shell_command : String | Nil
 
-    def initialize(@modifier : String, @match : String, @hint : String, @original_pane : Tmux::Pane)
+    def initialize(@modifier : String, @match : String, @hint : String, @original_pane : Tmux::Pane, @offset : Tuple(Int32, Int32) | Nil, @mode : String)
     end
 
     def run
@@ -28,9 +28,10 @@ module Fingers
       cmd.input.flush
     end
 
-    private getter :match, :modifier, :hint, :original_pane
+    private getter :match, :modifier, :hint, :original_pane, :offset, :mode
 
     def final_shell_command
+      return jump if mode == "jump"
       return @final_shell_command if @final_shell_command
 
       @final_shell_command = case action
@@ -40,6 +41,8 @@ module Fingers
                                open
                              when ":paste:"
                                paste
+                             when ":jump:"
+                               jump
                              when nil
                                # do nothing
                              else
@@ -57,6 +60,18 @@ module Fingers
       return unless system_open_command
 
       system_open_command
+    end
+
+    def jump
+      return nil if offset.nil?
+
+      `tmux copy-mode -t #{original_pane.pane_id}`
+      `tmux send-keys -t #{original_pane.pane_id} -X start-of-line`
+      `tmux send-keys -t #{original_pane.pane_id} -X top-line`
+      `tmux send-keys -t #{original_pane.pane_id} -N #{offset.not_nil![0]} -X cursor-down`
+      `tmux send-keys -t #{original_pane.pane_id} -N #{offset.not_nil![1]} -X cursor-right`
+
+      nil
     end
 
     def paste

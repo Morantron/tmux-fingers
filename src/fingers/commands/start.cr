@@ -102,6 +102,10 @@ module Fingers::Commands
       tmux.find_pane_by_id(@args[0]).not_nil!
     end
 
+    private getter mode : String do
+      @args[1].not_nil!
+    end
+
     private getter fingers_window : Tmux::Window do
       tmux.create_window("[fingers]", "cat", 80, 24)
     end
@@ -123,7 +127,8 @@ module Fingers::Commands
         input: pane_contents,
         width: target_pane.pane_width.to_i,
         state: state,
-        output: pane_printer
+        output: pane_printer,
+        reuse_hints: mode != "jump",
       )
     end
 
@@ -137,7 +142,8 @@ module Fingers::Commands
         state: state,
         output: pane_printer,
         original_pane: target_pane,
-        tmux: tmux
+        tmux: tmux,
+        mode: mode
       )
     end
 

@@ -38,6 +38,8 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
       case option
       when "key"
         config.key = value
+      when "jump_key"
+        config.jump_key = value
       when "keyboard_layout"
         config.keyboard_layout = value
       when "main_action"
@@ -95,7 +97,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
 
   def setup_bindings
     `tmux bind-key #{Fingers.config.key} run-shell -b "#{cli} start "\#{pane_id}" self >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
-    `tmux bind-key O run-shell -b "#{cli} start "\#{pane_id}" other >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
+    `tmux bind-key #{Fingers.config.jump_key} run-shell -b "#{cli} start "\#{pane_id}" jump >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
     setup_fingers_mode_bindings
   end
 

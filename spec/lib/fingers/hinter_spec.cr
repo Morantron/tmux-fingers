@@ -46,13 +46,6 @@ describe Fingers::Hinter do
       alphabet: alphabet,
       output: output,
     )
-
-    puts "before"
-    puts input
-    puts "---------"
-    puts "after"
-    hinter.run
-    puts output.contents
   end
 
   it "only highlights captured groups" do
@@ -89,12 +82,58 @@ Changes not staged for commit:
       alphabet: alphabet,
       output: output,
     )
+  end
 
-    puts "before"
-    puts input
-    puts "---------"
-    puts "after"
+  it "only reuses hints when allow duplicates is false" do
+    width = 100
+    output = TextOutput.new
+
+    patterns = Fingers::Config::DEFAULT_PATTERNS.values.to_a
+    alphabet = "asdf".split("")
+
+    input = "
+          modified:   src/fingers/cli.cr
+          modified:   src/fingers/cli.cr
+          modified:   src/fingers/cli.cr
+    "
+
+    hinter = Fingers::Hinter.new(
+      input: input.split("\n"),
+      width: width,
+      patterns: patterns,
+      state: ::Fingers::State.new,
+      alphabet: alphabet,
+      output: output,
+      reuse_hints: false
+    )
+
     hinter.run
-    puts output.contents
+  end
+
+  it "can rerender when not reusing hints" do
+    width = 100
+    output = TextOutput.new
+
+    patterns = Fingers::Config::DEFAULT_PATTERNS.values.to_a
+    alphabet = "asdf".split("")
+
+    input = "
+          modified:   src/fingers/cli.cr
+          modified:   src/fingers/cli.cr
+          modified:   src/fingers/cli.cr
+    "
+
+    hinter = Fingers::Hinter.new(
+      input: input.split("\n"),
+      width: width,
+      patterns: patterns,
+      state: ::Fingers::State.new,
+      alphabet: alphabet,
+      output: output,
+      reuse_hints: false
+    )
+
+    hinter.run
+    hinter.run
   end
 end

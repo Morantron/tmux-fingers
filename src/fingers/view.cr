@@ -13,13 +13,15 @@ module Fingers
     @output : Printer
     @original_pane : Tmux::Pane
     @tmux : Tmux
+    @mode : String
 
     def initialize(
       @hinter,
       @output,
       @original_pane,
       @state,
-      @tmux
+      @tmux,
+      @mode
     )
     end
 
@@ -47,11 +49,15 @@ module Fingers
     end
 
     def run_action
+      match = hinter.lookup(state.input)
+
       ActionRunner.new(
         hint: state.input,
         modifier: state.modifier,
         match: state.result,
-        original_pane: original_pane
+        original_pane: original_pane,
+        offset: match ? match.not_nil!.offset : nil,
+        mode: mode
       ).run
 
       tmux.display_message("Copied: #{state.result}", 1000) if should_notify?
@@ -68,12 +74,13 @@ module Fingers
     private def process_hint(char, modifier)
       state.input += char
       state.modifier = modifier
+
       match = hinter.lookup(state.input)
 
-      if match
-        handle_match(match)
-      else
+      if match.nil?
         render
+      else
+        handle_match(match.not_nil!.text)
       end
     end
 
@@ -88,7 +95,7 @@ module Fingers
       end
     end
 
-    private getter :output, :hinter, :original_pane, :state, :tmux
+    private getter :output, :hinter, :original_pane, :state, :tmux, :mode
 
     private def handle_match(match)
       if state.multi_mode
