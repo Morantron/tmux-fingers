@@ -92,13 +92,21 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 
 `default: F`
 
-Customize how to enter fingers mode. Always preceded by prefix: `prefix + @fingers-key`
+Customize how to enter fingers mode. Always preceded by prefix: `prefix + @fingers-key`.
 
 For example:
 
 ```
 set -g @fingers-key F
 ```
+
+## @fingers-jump-key
+
+`default: J`
+
+Customize how to enter fingers jump mode. Always preceded by prefix: `prefix + @fingers-jump-key`.
+
+In jump mode, the cursor will be placed in the position of the match after the hint is selected.
 
 ## @fingers-patterns-N
 
