@@ -66,7 +66,6 @@ module Fingers
       return nil if offset.nil?
 
       `tmux copy-mode -t #{original_pane.pane_id}`
-      `tmux send-keys -t #{original_pane.pane_id} -X start-of-line`
       `tmux send-keys -t #{original_pane.pane_id} -X top-line`
       `tmux send-keys -t #{original_pane.pane_id} -N #{offset.not_nil![0]} -X cursor-down`
       `tmux send-keys -t #{original_pane.pane_id} -N #{offset.not_nil![1]} -X cursor-right`

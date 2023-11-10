@@ -133,7 +133,7 @@ module Fingers::Commands
     end
 
     private getter pane_contents : Array(String) do
-      tmux.capture_pane(target_pane).split("\n")
+      tmux.capture_pane(target_pane, join: mode != "jump").split("\n")
     end
 
     private getter view : View do
