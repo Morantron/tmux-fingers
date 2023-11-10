@@ -85,6 +85,8 @@ module Fingers
     end
 
     private def process_multimode
+      return if mode == "jump"
+
       prev_state = state.multi_mode
       state.multi_mode = !state.multi_mode
       current_state = state.multi_mode
