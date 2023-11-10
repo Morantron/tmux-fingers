@@ -1,3 +1,8 @@
+## 2.1.0 - 10 Nov 2023
+
+* Added new jump functionality.
+* Improved visual feedback by discarding unreachable highlights.
+
 ## 2.0.6 - 26 Oct 2023
 
 * Added new option @fingers-show-copied-notification ( fixes #104 ).
