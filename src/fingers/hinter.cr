@@ -107,10 +107,15 @@ module Fingers
       text = match[0]
 
       captured_text = match["match"]? || text
-      capture_offset = capture_offset_for_match(match, captured_text)
+      relative_capture_offset = relative_capture_offset_for_match(match, captured_text)
+
+      absolute_offset = {
+        line_index,
+        match.begin(0) + (relative_capture_offset ? relative_capture_offset[0] : 0)
+      }
 
       hint = hint_for_text(text)
-      build_target(text, hint, {line_index, match.begin(0)})
+      build_target(captured_text, hint, absolute_offset)
 
       if !state.input.empty? && !hint.starts_with?(state.input)
         return text
@@ -120,7 +125,7 @@ module Fingers
         hint: hint,
         highlight: text,
         selected: state.selected_hints.includes?(hint),
-        offset: capture_offset
+        offset: relative_capture_offset
       )
     end
 
@@ -146,7 +151,7 @@ module Fingers
       hint
     end
 
-    def capture_offset_for_match(match, captured_text)
+    def relative_capture_offset_for_match(match, captured_text)
       return nil unless match["match"]?
 
       match_start, match_end = {match.begin(0), match.end(0)}
