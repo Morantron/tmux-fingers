@@ -1,3 +1,7 @@
+## 2.1.1 - 16 Nov 2023
+
+* Fix copy/jump when using special named capture group "match".
+
 ## 2.1.0 - 10 Nov 2023
 
 * Added new jump functionality.
