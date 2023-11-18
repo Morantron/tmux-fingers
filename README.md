@@ -74,6 +74,7 @@ $ tmux source-file ~/.tmux.conf
 NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` file.
 
 * [@fingers-key](#fingers-key)
+* [@fingers-jump-key](#fingers-jump-key)
 * [@fingers-patterns-N](#fingers-patterns-N)
 * [@fingers-main-action](#fingers-main-action)
 * [@fingers-ctrl-action](#fingers-ctrl-action)
