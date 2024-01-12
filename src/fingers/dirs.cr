@@ -8,8 +8,8 @@ module Fingers::Dirs
   TMP =  Path[File.dirname(File.tempname)]
 
   ROOT = TMP / "tmux-#{TMUX_PID}"
-  LOG_PATH    = ROOT / "fingers.log"
-  CACHE       = TMP / "tmux-fingers"
+  LOG_PATH    = TMP / "fingers.log"
+  CACHE       = ROOT / "tmux-fingers"
   CONFIG_PATH = CACHE / "config.json"
   SOCKET_PATH = CACHE / "fingers.sock"
 
