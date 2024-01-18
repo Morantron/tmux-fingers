@@ -28,7 +28,13 @@ module Fingers
     def render
       clear_screen
       hide_cursor
-      hinter.run
+
+      begin
+        hinter.run
+      rescue e
+        Log.fatal { e }
+        request_exit!
+      end
     end
 
     def process_input(input : String)
