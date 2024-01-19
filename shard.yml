@@ -8,11 +8,6 @@ targets:
   tmux-fingers:
     main: src/fingers.cr
 
-development_dependencies:
-  ameba:
-    github: crystal-ameba/ameba
-    version: ~> 1.5.0
-
-crystal: 1.9.2
+crystal: 1.11.2
 
 license: MIT
