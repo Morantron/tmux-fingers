@@ -4,7 +4,6 @@ CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PLATFORM=$(uname -s)
 action=$1
 
-
 # set up exit trap
 function finish {
   exit_code=$?
@@ -58,7 +57,11 @@ function install_with_brew() {
 
 function download_binary() {
   mkdir -p $CURRENT_DIR/bin
-  # TODO check architecture
+
+  if [[ ! "$(uname -m)" == "x86_64" ]]; then
+    echo "tmux-fingers binaries are only provided for x86_64 architecture."
+    exit 1
+  fi
 
   echo "Getting latest release..."
 
