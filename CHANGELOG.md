@@ -1,3 +1,10 @@
+## 2.1.2 - 19 Jan 2024
+
+* Added termux support.
+* Fixes to Fingers::Dirs to remove hardcoded paths. Default log path is now /tmp/fingers.log.
+* Updated Crystal version to generate clean ELF executables.
+* Improve exception handling when rendering.
+
 ## 2.1.1 - 16 Nov 2023
 
 * Fix copy/jump when using special named capture group "match".
