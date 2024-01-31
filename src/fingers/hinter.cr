@@ -47,7 +47,7 @@ module Fingers
     end
 
     def run
-      regenerate_hints! unless reuse_hints
+      regenerate_hints!
       lines[0..-2].each_with_index { |line, index| process_line(line, index, "\n") }
       process_line(lines[-1], lines.size - 1, "")
 
