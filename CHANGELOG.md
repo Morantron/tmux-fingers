@@ -1,3 +1,7 @@
+## 2.1.3 - 31 Jan 2024
+
+* Fix "Too many matches" exception ( fixes #112 ).
+
 ## 2.1.2 - 19 Jan 2024
 
 * Added termux support.
