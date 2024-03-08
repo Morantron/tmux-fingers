@@ -283,7 +283,7 @@ class Tmux
     exec(Process.quote(["display-message", "-d", delay.to_s, msg]))
   end
 
-  private def exec(cmd)
+  def exec(cmd)
     @sh.exec("#{tmux} #{cmd}")
   end
 end

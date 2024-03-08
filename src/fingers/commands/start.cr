@@ -26,9 +26,11 @@ module Fingers::Commands
 
   class Start < Base
     @original_options : Hash(String, String) = {} of String => String
+    @last_pane_id : String | Nil
 
     def run
-      track_options_to_restore!
+      track_options_to_restore
+      track_last_pane
       show_hints
 
       if Fingers.config.benchmark_mode == "1"
@@ -40,7 +42,7 @@ module Fingers::Commands
       teardown
     end
 
-    private def track_options_to_restore!
+    private def track_options_to_restore
       options_to_preserve.each do |option|
         value = tmux.get_global_option(option)
         @original_options[option] = value
@@ -51,6 +53,16 @@ module Fingers::Commands
       @original_options.each do |option, value|
         tmux.set_global_option(option, value)
       end
+    end
+
+    private def restore_last_pane
+      tmux.select_pane(@last_pane_id)
+      tmux.select_pane(target_pane.pane_id)
+    end
+
+    private def track_last_pane
+      last_pane_id = tmux.exec("display-message -t '{last}' -p '\#{pane_id}'").chomp
+      @last_pane_id = last_pane_id unless last_pane_id.empty?
     end
 
     private def options_to_preserve
@@ -94,7 +106,9 @@ module Fingers::Commands
       tmux.swap_panes(fingers_pane_id, target_pane.pane_id)
       tmux.kill_pane(fingers_pane_id)
 
+      restore_last_pane
       restore_options
+
       view.run_action if state.result
     end
 
