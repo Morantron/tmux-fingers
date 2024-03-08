@@ -1,3 +1,7 @@
+## 2.1.4 - 08 Mar 2024
+
+* Fixed "No last pane" error when using "tmux last-pane" ( Fixes #48 )
+
 ## 2.1.3 - 31 Jan 2024
 
 * Fix "Too many matches" exception ( fixes #112 ).
