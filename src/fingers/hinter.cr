@@ -106,7 +106,7 @@ module Fingers
     def replace(match, line_index)
       text = match[0]
 
-      captured_text = match["match"]? || text
+      captured_text = captured_text_for_match(match)
       relative_capture_offset = relative_capture_offset_for_match(match, captured_text)
 
       absolute_offset = {
@@ -114,7 +114,7 @@ module Fingers
         match.begin(0) + (relative_capture_offset ? relative_capture_offset[0] : 0)
       }
 
-      hint = hint_for_text(text)
+      hint = hint_for_text(captured_text)
       build_target(captured_text, hint, absolute_offset)
 
       if !state.input.empty? && !hint.starts_with?(state.input)
@@ -127,6 +127,10 @@ module Fingers
         selected: state.selected_hints.includes?(hint),
         offset: relative_capture_offset
       )
+    end
+
+    def captured_text_for_match(match)
+      match["match"]? || match[0]
     end
 
     def hint_for_text(text)
@@ -195,7 +199,7 @@ module Fingers
 
       lines.each do |line|
         line.scan(pattern) do |match|
-          match_set.add(match[0]?.not_nil!)
+          match_set.add(captured_text_for_match(match))
         end
       end
 
