@@ -75,8 +75,8 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
     end
 
     config.patterns = clean_up_patterns([
-      *enabled_default_patterns,
       *user_defined_patterns,
+      *enabled_default_patterns,
     ])
 
     config.alphabet = ::Fingers::Config::ALPHABET_MAP[Fingers.config.keyboard_layout].split("").reject do |char|
