@@ -1,13 +1,10 @@
+---
+version: 2.1.5
 name: fingers
-version: 2.1.4
-
 authors:
-  - Jorge Morante <jorge@morante.eu>
-
+- Jorge Morante <jorge@morante.eu>
 targets:
   tmux-fingers:
     main: src/fingers.cr
-
 crystal: 1.11.2
-
 license: MIT
