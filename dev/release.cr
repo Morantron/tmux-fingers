@@ -58,9 +58,9 @@ File.write("CHANGELOG.md", content_to_prepend + original_content)
 Process.run(ENV["EDITOR"], args: ["CHANGELOG.md"], input: :inherit, output: :inherit, error: :inherit)
 
 `git add CHANGELOG.md`
-`git commit -am 'updated CHANGELOG.md`
+`git commit -am 'updated CHANGELOG.md'`
 
-print "Confirm release? Y/n"
+print "Confirm release? [Y/n]\n >"
 answer = gets
 
 if answer == "n"
