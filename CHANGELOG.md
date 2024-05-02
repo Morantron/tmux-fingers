@@ -1,3 +1,8 @@
+## 2.1.5 - 02 May 2024
+
+* User defined patterns now take precedence over built-in ones.
+* Fix blank screen under certain circumstances due to incorrect handling of capture groups.
+
 ## 2.1.4 - 08 Mar 2024
 
 * Fixed "No last pane" error when using "tmux last-pane" ( Fixes #48 )
