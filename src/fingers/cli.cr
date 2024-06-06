@@ -1,24 +1,32 @@
 require "./commands/*"
+require "cling"
 
 module Fingers
+  class MainCommand < Cling::Command
+    def setup : Nil
+      @description = "description"
+      @name = "tmux-fingers"
+      add_command Fingers::Commands::Version.new
+      add_command Fingers::Commands::LoadConfig.new
+      add_command Fingers::Commands::SendInput.new
+      add_command Fingers::Commands::Start.new
+    end
+
+    def run(arguments, options) : Nil
+      puts help_template
+    end
+  end
+
   class Cli
     def run
-      return if ARGV.size == 0
+      main = MainCommand.new
 
-      command, *args = ARGV
-
-      cmd = case command
-            when "start"
-              Fingers::Commands::Start.new(args)
-            when "load-config"
-              Fingers::Commands::LoadConfig.new(args)
-            when "send-input"
-              Fingers::Commands::SendInput.new(args)
-            when "version"
-              Fingers::Commands::Version.new(args)
-            end
-
-      cmd.run if cmd
+      main.execute ARGV
     end
   end
 end
+
+# fingers load-config
+# fingers version
+# fingers send-input INPUT
+# fingers start --mode default|jump --pane #{pane_id}

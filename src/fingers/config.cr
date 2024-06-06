@@ -78,7 +78,7 @@ module Fingers
       @selected_hint_style = FORMAT_PRINTER.print("fg=blue,bold"),
       @selected_highlight_style = FORMAT_PRINTER.print("fg=blue"),
       @backdrop_style = "",
-      @tmux_version = "",
+      @tmux_version = "3.1",
       @show_copied_notification = "0",
       @benchmark_mode = "0"
     )

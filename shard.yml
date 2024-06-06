@@ -6,5 +6,9 @@ authors:
 targets:
   tmux-fingers:
     main: src/fingers.cr
+dependencies:
+  cling:
+    github: devnote-dev/cling
+    version: ">= 3.0.0"
 crystal: 1.11.2
 license: MIT

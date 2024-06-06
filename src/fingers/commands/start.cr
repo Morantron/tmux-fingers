@@ -1,3 +1,4 @@
+require "cling"
 require "./base"
 require "../hinter"
 require "../view"
@@ -24,11 +25,25 @@ module Fingers::Commands
     end
   end
 
-  class Start < Base
+  class Start < Cling::Command
     @original_options : Hash(String, String) = {} of String => String
     @last_pane_id : String | Nil
+    @mode : String = "default"
+    @pane_id : String = ""
 
-    def run
+    def setup : Nil
+      @name = "start"
+      add_argument "pane_id", required: true
+      add_option "mode",
+                 description: "jump or not",
+                 type: :single,
+                 default: "default"
+    end
+
+    def run(arguments, options) : Nil
+      @mode = options.get("mode").as_s
+      @pane_id = arguments.get("pane_id").as_s
+
       track_options_to_restore
       track_last_pane
       show_hints
@@ -113,11 +128,11 @@ module Fingers::Commands
     end
 
     private getter target_pane : Tmux::Pane do
-      tmux.find_pane_by_id(@args[0]).not_nil!
+      tmux.find_pane_by_id(@pane_id).not_nil!
     end
 
     private getter mode : String do
-      @args[1].not_nil!
+      @mode.not_nil!
     end
 
     private getter fingers_window : Tmux::Window do

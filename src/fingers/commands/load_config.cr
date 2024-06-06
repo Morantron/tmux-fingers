@@ -1,22 +1,23 @@
+require "cling"
 require "file_utils"
 require "./base"
 require "../dirs"
 require "../config"
 require "../../tmux"
 
-class Fingers::Commands::LoadConfig < Fingers::Commands::Base
+class Fingers::Commands::LoadConfig < Cling::Command
   @fingers_options_names : Array(String) | Nil
 
-  property config : Fingers::Config
+  property config : Fingers::Config = Fingers::Config.new
 
   DISALLOWED_CHARS = /[cimqn]/
 
-  def initialize(*args)
-    super(*args)
+  def setup : Nil
     @config = Fingers::Config.new
+    @name = "load-config"
   end
 
-  def run
+  def run(arguments, options) : Nil
     validate_options!
     parse_tmux_conf
     setup_bindings
@@ -96,8 +97,8 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   end
 
   def setup_bindings
-    `tmux bind-key #{Fingers.config.key} run-shell -b "#{cli} start "\#{pane_id}" self >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
-    `tmux bind-key #{Fingers.config.jump_key} run-shell -b "#{cli} start "\#{pane_id}" jump >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
+    `tmux bind-key #{Fingers.config.key} run-shell -b "#{cli} start "\#{pane_id}" >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
+    `tmux bind-key #{Fingers.config.jump_key} run-shell -b "#{cli} start --mode jump "\#{pane_id}" >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
     setup_fingers_mode_bindings
   end
 
@@ -147,7 +148,7 @@ class Fingers::Commands::LoadConfig < Fingers::Commands::Base
   def valid_option?(option)
     option_method = option_to_method(option)
 
-    @config.members.includes?(option_method) || option_method.match(/pattern_[0-9]+/) || option_method == "skip_wizard"
+    config.members.includes?(option_method) || option_method.match(/pattern_[0-9]+/) || option_method == "skip_wizard"
   end
 
   def fingers_options_names
