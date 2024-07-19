@@ -30,6 +30,7 @@ module Fingers::Commands
     @last_pane_id : String | Nil
     @mode : String = "default"
     @pane_id : String = ""
+    @patterns : Array(String) = [] of String
 
     def setup : Nil
       @name = "start"
@@ -38,11 +39,21 @@ module Fingers::Commands
                  description: "jump or not",
                  type: :single,
                  default: "default"
+
+      add_option "patterns",
+                 description: "comma separated list of pattern names",
+                 type: :single
     end
 
     def run(arguments, options) : Nil
       @mode = options.get("mode").as_s
       @pane_id = arguments.get("pane_id").as_s
+
+      if options.has?("patterns")
+        @patterns = patterns_from_options(options.get("patterns").as_s)
+      else
+        @patterns = Fingers.config.patterns.values
+      end
 
       track_options_to_restore
       track_last_pane
@@ -55,6 +66,24 @@ module Fingers::Commands
       handle_input
 
       teardown
+    end
+
+    private def patterns_from_options(pattern_names_option : String)
+      pattern_names = pattern_names_option.split(",")
+
+      result = [] of String
+
+      pattern_names.each do |pattern_name|
+        pattern = Fingers.config.patterns[pattern_name]?
+        if pattern
+          result << pattern
+        else
+          tmux.display_message("[tmux-fingers] error: Unknown pattern #{pattern_name}", 5000)
+          exit 0
+        end
+      end
+
+      result
     end
 
     private def track_options_to_restore
@@ -154,6 +183,7 @@ module Fingers::Commands
     private getter hinter : Hinter do
       Fingers::Hinter.new(
         input: pane_contents,
+        patterns: @patterns,
         width: target_pane.pane_width.to_i,
         state: state,
         output: pane_printer,

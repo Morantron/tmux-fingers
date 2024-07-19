@@ -7,7 +7,7 @@ module Fingers
     property key : String
     property jump_key : String
     property keyboard_layout : String
-    property patterns : Array(String)
+    property patterns : Hash(String, String)
     property alphabet : Array(String)
     property benchmark_mode : String
     property main_action : String
@@ -22,10 +22,11 @@ module Fingers
     property backdrop_style : String
     property tmux_version : String
     property show_copied_notification : String
+    property enabled_builtin_patterns : String
 
     FORMAT_PRINTER = TmuxStylePrinter.new
 
-    DEFAULT_PATTERNS = {
+    BUILTIN_PATTERNS = {
       "ip":    "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}",
       "uuid":  "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
       "sha":   "[0-9a-f]{7,128}",
@@ -67,7 +68,7 @@ module Fingers
       @jump_key = "J",
       @keyboard_layout = "qwerty",
       @alphabet = [] of String,
-      @patterns = [] of String,
+      @patterns = {} of String => String,
       @main_action = ":copy:",
       @ctrl_action = ":open:",
       @alt_action = "",
@@ -80,6 +81,7 @@ module Fingers
       @backdrop_style = "",
       @tmux_version = "3.1",
       @show_copied_notification = "0",
+      @enabled_builtin_patterns = "all",
       @benchmark_mode = "0"
     )
     end

@@ -3,11 +3,11 @@ require "../../src/fingers/config"
 require "string_scanner"
 
 def matches_for(pattern_name, input)
-  pattern = Regex.new(::Fingers::Config::DEFAULT_PATTERNS[pattern_name])
+  pattern = Regex.new(::Fingers::Config::BUILTIN_PATTERNS[pattern_name])
   input.scan(pattern).map { |m| m["match"]? || m[0] }
 end
 
-describe "default patterns" do
+describe "builtin patterns" do
   describe "ip" do
     it "should match ip addresses" do
       input = "

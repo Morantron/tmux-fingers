@@ -12,6 +12,11 @@ class Fingers::Commands::LoadConfig < Cling::Command
 
   DISALLOWED_CHARS = /[cimqn]/
 
+  PRIVATE_OPTIONS = [
+    "skip_wizard",
+    "cli"
+  ]
+
   def setup : Nil
     @config = Fingers::Config.new
     @name = "load-config"
@@ -28,7 +33,7 @@ class Fingers::Commands::LoadConfig < Cling::Command
   def parse_tmux_conf
     options = shell_safe_options
 
-    user_defined_patterns = [] of String
+    user_defined_patterns = [] of Tuple(String, String)
 
     Fingers.reset_config
 
@@ -67,18 +72,18 @@ class Fingers::Commands::LoadConfig < Cling::Command
         config.selected_highlight_style = tmux.parse_style(value)
       when "show_copied_notification"
         config.show_copied_notification = value
+      when "enabled_builtin_patterns"
+        config.enabled_builtin_patterns = value
       end
 
-      if option.match(/pattern/)
+      if option.match(/^pattern/) && !value.empty?
         check_pattern!(value)
-        user_defined_patterns.push(value)
+        user_defined_patterns.push({ option.gsub(/^pattern_/, ""), value })
       end
     end
 
-    config.patterns = clean_up_patterns([
-      *user_defined_patterns,
-      *enabled_default_patterns,
-    ])
+    add_user_defined_patterns(user_defined_patterns)
+    add_builtin_patterns
 
     config.alphabet = ::Fingers::Config::ALPHABET_MAP[Fingers.config.keyboard_layout].split("").reject do |char|
       char.match(DISALLOWED_CHARS)
@@ -92,14 +97,34 @@ class Fingers::Commands::LoadConfig < Cling::Command
     exit(1)
   end
 
-  def clean_up_patterns(patterns)
-    patterns.reject(&.empty?)
+  def add_user_defined_patterns(patterns : Array(Tuple(String, String)))
+    patterns.each do |p|
+      name, pattern = p
+
+      config.patterns[name] = pattern
+    end
+  end
+
+  def add_builtin_patterns
+    pattern_names = [] of String
+
+    if config.enabled_builtin_patterns == "all"
+      pattern_names = ::Fingers::Config::BUILTIN_PATTERNS.keys
+    else
+      pattern_names = config.enabled_builtin_patterns.split(",")
+    end
+
+    pattern_names.each do |name|
+      pattern = Fingers::Config::BUILTIN_PATTERNS[name]?
+      config.patterns[name.to_s] = pattern if pattern
+    end
   end
 
   def setup_bindings
     `tmux bind-key #{Fingers.config.key} run-shell -b "#{cli} start "\#{pane_id}" >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
     `tmux bind-key #{Fingers.config.jump_key} run-shell -b "#{cli} start --mode jump "\#{pane_id}" >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
     setup_fingers_mode_bindings
+    `tmux set-option -g @fingers-cli #{cli}`
   end
 
   def setup_fingers_mode_bindings
@@ -126,7 +151,7 @@ class Fingers::Commands::LoadConfig < Cling::Command
   end
 
   def enabled_default_patterns
-    ::Fingers::Config::DEFAULT_PATTERNS.values
+    ::Fingers::Config::BUILTIN_PATTERNS.values
   end
 
   def to_bool(input)
@@ -148,7 +173,7 @@ class Fingers::Commands::LoadConfig < Cling::Command
   def valid_option?(option)
     option_method = option_to_method(option)
 
-    config.members.includes?(option_method) || option_method.match(/pattern_[0-9]+/) || option_method == "skip_wizard"
+    config.members.includes?(option_method) || option_method.match(/^pattern_+/) || PRIVATE_OPTIONS.includes?(option_method)
   end
 
   def fingers_options_names

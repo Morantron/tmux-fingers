@@ -35,7 +35,7 @@ describe Fingers::Hinter do
     input = generate_lines
     output = TextOutput.new
 
-    patterns = Fingers::Config::DEFAULT_PATTERNS.values.to_a
+    patterns = Fingers::Config::BUILTIN_PATTERNS.values.to_a
     alphabet = "asdf".split("")
 
     hinter = Fingers::Hinter.new(
@@ -70,7 +70,7 @@ Changes not staged for commit:
     "
     output = TextOutput.new
 
-    patterns = Fingers::Config::DEFAULT_PATTERNS.values.to_a
+    patterns = Fingers::Config::BUILTIN_PATTERNS.values.to_a
     patterns << "On branch (?<capture>.*)"
     alphabet = "asdf".split("")
 
@@ -88,7 +88,7 @@ Changes not staged for commit:
     width = 100
     output = TextOutput.new
 
-    patterns = Fingers::Config::DEFAULT_PATTERNS.values.to_a
+    patterns = Fingers::Config::BUILTIN_PATTERNS.values.to_a
     alphabet = "asdf".split("")
 
     input = "
@@ -114,7 +114,7 @@ Changes not staged for commit:
     width = 100
     output = TextOutput.new
 
-    patterns = Fingers::Config::DEFAULT_PATTERNS.values.to_a
+    patterns = Fingers::Config::BUILTIN_PATTERNS.values.to_a
     alphabet = "asdf".split("")
 
     input = "
