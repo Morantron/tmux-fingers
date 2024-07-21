@@ -3,7 +3,7 @@
 if [[ -n "$CI_TMUX_VERSION" ]]; then
   VERSIONS=("$CI_TMUX_VERSION")
 else
-  VERSIONS=("3.0a" "3.1c" "3.2a" "3.3a")
+  VERSIONS=("3.0a" "3.1c" "3.2a" "3.3a" "3.4")
 fi
 
 mkdir -p /opt
