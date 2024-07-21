@@ -161,7 +161,7 @@ class Tmux
   end
 
   def create_window(name, cmd, _pane_width, _pane_height)
-    output = exec("new-window -P -d -n '#{name}' -F '#{WINDOW_FORMAT}' '#{cmd}'").chomp
+    output = exec("new-window -c '\#{pane_current_path}' -P -d -n '#{name}' -F '#{WINDOW_FORMAT}' '#{cmd}'").chomp
 
     Window.from_json(output)
   end
