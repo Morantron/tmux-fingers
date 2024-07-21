@@ -1,3 +1,10 @@
+## 2.2.0 - 21 Jul 2024
+
+* Add new option @fingers-enabled-builtin-patterns ( Fixes #19 )
+* New way of setting up tmux-fingers bindings, with command line option to allow using only specific patterns (built-in or custom) ( Fixes #117 )
+* Fix issue where zoom panes would be unzoomed when closing ( Fixes #123 ).
+* Open tmux-fingers in same path as target pane path ( Fixes #120 ).
+
 ## 2.1.5 - 02 May 2024
 
 * User defined patterns now take precedence over built-in ones.
