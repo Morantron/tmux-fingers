@@ -243,7 +243,13 @@ class Tmux
   end
 
   def select_pane(id)
-    exec(["select-pane", "-t", id].join(' '))
+    args = ["select-pane", "-t", id]
+
+    if @version >= Tmux.tmux_version_to_semver("3.1")
+      args << "-Z"
+    end
+
+    exec(args.join(' '))
   end
 
   def zoom_pane(id)
