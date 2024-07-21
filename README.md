@@ -20,6 +20,8 @@ Here is a list of the stuff highlighted by default.
 * UUIDs
 * git status/diff output
 
+Checkout [list of built-in patterns](#fingers-enabled-builtin-patterns).
+
 ## Key shortcuts
 
 While in **[fingers]** mode, you can use the following shortcuts:
@@ -88,6 +90,12 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 * [@fingers-hint-position](#fingers-hint-position)
 * [@fingers-keyboard-layout](#fingers-keyboard-layout)
 * [@fingers-show-copied-notification](#fingers-show-copied-notification)
+* [@fingers-enabled-builtin-patterns](#fingers-enabled-builtin-patterns)
+
+Recipes:
+
+* [Start tmux-fingers without prefix](#start-tmux-fingers-without-prefix)
+* [Using only specific patterns](#using-only-specific-patterns)
 
 ## @fingers-key
 
@@ -248,6 +256,60 @@ Hints are generated taking optimal finger movement into account. You can choose 
 `default: 0`
 
 Show a message using `tmux display-message` notifying about the copied result.
+
+## @fingers-enabled-builtin-patterns
+
+`default: all`
+
+A list of comma separated pattern names. Built-in patterns are the following:
+
+| Name              | Description                                               | Example                                        |
+| ----------------- | --------------------------------------------------------- | ---------------------------------------------- |
+| ip                | ipv4 addresses                                            | `192.168.0.1`                                  |
+| uuid              | uuid identifier                                           | `f1b43afb-773c-4da2-9ae5-fef1aa6945ce`         |
+| sha               | sha identifier                                            | `c8b911e2c7e9a6cc57143eaa12cad57c1f0d69df`     |
+| digit             | four or more digits                                       | `1337`                                         |
+| url               | urls (supported protocols: http/https/git/ssh/file)       | `https://asdf.com`                             |
+| kubernetes        | kubernetes identifer                                      | `deployment.apps/zookeeper`                    |
+| git-status        | will match file paths in the output of git status         | `modified: ./path/to/file`                     |
+| git-status-branch | will match branch name in the output of git status        | `Your branch is up to date withname-of-branch` |
+| diff              | will match paths in diff output                           | `+++ a/path/to/file`                           |
+
+# Recipes
+
+## Start tmux-fingers without prefix
+
+You can start tmux-fingers without having to press tmux prefix by adding bindings like this:
+
+```
+# tmux.conf
+
+# Start tmux fingers by pressing Alt+F
+bind -n M-f run -b "#{@fingers-cli} start #{pane_id}"
+
+# Start tmux fingers in jump mode by pressing Alt+J
+bind -n M-j run -b "#{@fingers-cli} start #{pane_id} --mode jump"
+
+```
+
+## Using only specific patterns
+
+You can start tmux-fingers with an specific set of built-in or custom patterns.
+
+```
+# match urls with prefix + u
+bind -n u run -b "#{@fingers-cli} start #{pane_id} --patterns url"
+
+# match hashes with prefix + h
+bind -n h run -b "#{@fingers-cli} start #{pane_id} --patterns sha"
+
+# match git stuff with prefix + g
+bind -n g run -b "#{@fingers-cli} start #{pane_id} --patterns git-status,git-status-branch"
+
+# match custom pattern with prefix + y
+set -g @fingers-pattern-yolo "yolo.*"
+bind -n y run -b "#{@fingers-cli} start #{pane_id} --patterns yolo"
+```
 
 # Acknowledgements and inspiration
 
