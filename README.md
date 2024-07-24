@@ -270,6 +270,8 @@ A list of comma separated pattern names. Built-in patterns are the following:
 | sha               | sha identifier                                            | `c8b911e2c7e9a6cc57143eaa12cad57c1f0d69df`     |
 | digit             | four or more digits                                       | `1337`                                         |
 | url               | urls (supported protocols: http/https/git/ssh/file)       | `https://asdf.com`                             |
+| path              | file paths                                                | `path/to/file`                                 |
+| hex               | hexidecimal numbers                                       | `0x00FF`                                       |
 | kubernetes        | kubernetes identifer                                      | `deployment.apps/zookeeper`                    |
 | git-status        | will match file paths in the output of git status         | `modified: ./path/to/file`                     |
 | git-status-branch | will match branch name in the output of git status        | `Your branch is up to date withname-of-branch` |
