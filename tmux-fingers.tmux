@@ -16,7 +16,7 @@ fi
 CURRENT_FINGERS_VERSION="$($FINGERS_BINARY version)"
 
 pushd $CURRENT_DIR &> /dev/null
-CURRENT_GIT_VERSION=$(git describe --tags | sed "s/-.*//g")
+CURRENT_GIT_VERSION=$(cat shard.yml | grep "^version" | cut -f2 -d':' | sed "s/ //g")
 popd &> /dev/null
 
 SKIP_WIZARD=$(tmux show-option -gqv @fingers-skip-wizard)
