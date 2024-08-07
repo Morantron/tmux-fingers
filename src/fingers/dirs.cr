@@ -5,10 +5,8 @@ require "file_utils"
 module Fingers::Dirs
   TMUX_PID = (ENV["TMUX"] || ",0000").split(",")[1]
 
-  TMP =  Path[File.dirname(File.tempname)]
-
-  ROOT = TMP / "tmux-#{TMUX_PID}"
-  LOG_PATH    = TMP / "fingers.log"
+  ROOT = Path[File.dirname(File.tempname)] / "tmux-#{TMUX_PID}"
+  LOG_PATH    = ROOT / "fingers.log"
   CACHE       = ROOT / "tmux-fingers"
   CONFIG_PATH = CACHE / "config.json"
   SOCKET_PATH = CACHE / "fingers.sock"
