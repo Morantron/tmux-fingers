@@ -19,7 +19,7 @@ module Fingers
         args,
         input: :pipe,
         output: :pipe,
-        error: File.open("/tmp/action-stderr", "a"),
+        error: File.open(::Fingers::Dirs::ROOT / "action-stderr", "a"),
         chdir: original_pane.pane_current_path,
         env: action_env
       )
