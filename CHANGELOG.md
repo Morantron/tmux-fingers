@@ -1,3 +1,9 @@
+## 2.2.2 - 14 Aug 2024
+
+* Fixed error in multi-user environments.
+* Added XDG dirs, logs are now in ~/.local/state/tmux-fingers/fingers.log instead of /tmp/fingers.log.
+* Action stderr is now logged to ~/.local/state/tmux-fingers/action-stderr
+
 ## 2.2.1 - 29 Jul 2024
 
 * Tweaks to version detection logic ( Fixes #125 ).
