@@ -1,16 +1,22 @@
 require "file_utils"
-
-# TODO maybe use some xgd shite here?
+require "xdg_base_directory"
 
 module Fingers::Dirs
   TMUX_PID = (ENV["TMUX"] || ",0000").split(",")[1]
+  XDG = XdgBaseDirectory.app_directories("tmux-fingers")
 
-  ROOT = Path[File.dirname(File.tempname)] / "tmux-#{TMUX_PID}"
-  LOG_PATH    = ROOT / "fingers.log"
-  CACHE       = ROOT / "tmux-fingers"
+  TMP = Path[File.dirname(File.tempname)]
+
+  ROOT = Path[XDG.state.file_path("tmux-#{TMUX_PID}")]
+  LOG_PATH    = Path[XDG.state.file_path("fingers.log")]
+  CACHE       = ROOT
   CONFIG_PATH = CACHE / "config.json"
   SOCKET_PATH = CACHE / "fingers.sock"
 
-  # ensure cache folder
-  FileUtils.mkdir_p(Fingers::Dirs::CACHE) unless File.exists?(Fingers::Dirs::CACHE)
+  def self.ensure_folders!
+    Fingers::Dirs::XDG.state.mkdir unless Fingers::Dirs::XDG.state.exists?
+    FileUtils.mkdir_p(Fingers::Dirs::ROOT) unless File.exists?(Fingers::Dirs::ROOT)
+  end
+
+  Fingers::Dirs.ensure_folders!
 end

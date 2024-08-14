@@ -10,5 +10,7 @@ dependencies:
   cling:
     github: devnote-dev/cling
     version: '>= 3.0.0'
+  xdg_base_directory:
+    github: tijn/xdg_base_directory
 crystal: 1.11.2
 license: MIT
