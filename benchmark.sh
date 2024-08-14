@@ -11,10 +11,10 @@ tmux send-keys Enter
 sleep 5
 
 echo "Running benchmarks ..."
-tmux new-window 'hyperfine --warmup 5 --runs 1000 "bin/tmux-fingers start %0 self" --export-markdown /tmp/benchmark-output'
+tmux new-window 'hyperfine --prepare "bash kill-windows.sh" --warmup 5 --runs 1000 "bin/tmux-fingers start %0" --export-markdown /tmp/benchmark-output'
 
 echo "Waiting for results ..."
 
-timeout 60 bash -c 'while [[ ! -s /tmp/benchmark-output ]]; do sleep 1; done'
+timeout 300 bash -c 'while [[ ! -s /tmp/benchmark-output ]]; do sleep 1; done'
 
 cat /tmp/benchmark-output
