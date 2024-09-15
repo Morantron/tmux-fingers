@@ -30,6 +30,7 @@ module Fingers::Commands
     @last_pane_id : String | Nil
     @mode : String = "default"
     @pane_id : String = ""
+    @active_pane_id : String | Nil
     @patterns : Array(String) = [] of String
 
     def setup : Nil
@@ -47,7 +48,7 @@ module Fingers::Commands
 
     def run(arguments, options) : Nil
       @mode = options.get("mode").as_s
-      @pane_id = arguments.get("pane_id").as_s
+      parse_pane_target_format!(arguments.get("pane_id").as_s)
 
       if options.has?("patterns")
         @patterns = patterns_from_options(options.get("patterns").as_s)
@@ -101,7 +102,7 @@ module Fingers::Commands
 
     private def restore_last_pane
       tmux.select_pane(@last_pane_id)
-      tmux.select_pane(target_pane.pane_id)
+      select_active_pane
     end
 
     private def track_last_pane
@@ -111,6 +112,18 @@ module Fingers::Commands
 
     private def options_to_preserve
       %w[prefix prefix2]
+    end
+
+    private def parse_pane_target_format!(pane_target_format)
+      if pane_target_format.match(/^%[0-9]+$/)
+        @pane_id = pane_target_format
+        @active_pane_id = pane_target_format
+        return
+      end
+
+      @pane_id = tmux.exec("display-message -t #{pane_target_format} -p '\#{pane_id}'").chomp
+      active_pane = tmux.list_panes("{active}").first
+      @active_pane_id = active_pane.pane_id unless active_pane.nil?
     end
 
     private def show_hints
@@ -137,6 +150,10 @@ module Fingers::Commands
         view.process_input(input)
         break if state.exiting
       end
+    end
+
+    private def select_active_pane
+      tmux.select_pane(@active_pane_id) if @active_pane_id
     end
 
     private def needs_resize?

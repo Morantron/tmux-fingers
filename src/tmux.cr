@@ -134,8 +134,14 @@ class Tmux
     @version = Tmux.tmux_version_to_semver(version_string)
   end
 
-  def panes : Array(Pane)
-    exec("list-panes -a -F '#{PANE_FORMAT}'").chomp.split("\n").map do |pane|
+  def list_panes(filters = "") : Array(Pane)
+    args = ["list-panes", "-a", "-F", PANE_FORMAT]
+
+    if !filters.empty?
+      args.concat(["-f", "filters"])
+    end
+
+    exec(Process.quote(args)).chomp.split("\n").map do |pane|
       Pane.from_json(pane)
     end
   end
