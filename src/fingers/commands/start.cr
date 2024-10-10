@@ -27,7 +27,8 @@ module Fingers::Commands
 
   class Start < Cling::Command
     @original_options : Hash(String, String) = {} of String => String
-    @last_pane_id : String | Nil
+    @last_key_table : String | Nil
+    @last_pane_id : String = "root"
     @mode : String = "default"
     @pane_id : String = ""
     @patterns : Array(String) = [] of String
@@ -56,6 +57,7 @@ module Fingers::Commands
       end
 
       track_options_to_restore
+      track_last_key_table
       track_last_pane
       show_hints
 
@@ -97,6 +99,15 @@ module Fingers::Commands
       @original_options.each do |option, value|
         tmux.set_global_option(option, value)
       end
+    end
+
+    private def restore_last_key_table
+      tmux.set_key_table(@last_key_table)
+    end
+
+    private def track_last_key_table
+      last_key_table = tmux.exec("display-message -p '\#{client_key_table}'").chomp
+      @last_key_table = last_key_table unless last_key_table.empty?
     end
 
     private def restore_last_pane
@@ -145,12 +156,11 @@ module Fingers::Commands
     end
 
     private def teardown
-      tmux.set_key_table "root"
-
       tmux.swap_panes(fingers_pane_id, target_pane.pane_id)
       tmux.kill_pane(fingers_pane_id)
 
       restore_last_pane
+      restore_last_key_table
       restore_options
 
       view.run_action if state.result
