@@ -14,6 +14,7 @@ module Fingers
     @original_pane : Tmux::Pane
     @tmux : Tmux
     @mode : String
+    @shell_command : String | Nil
 
     def initialize(
       @hinter,
@@ -21,7 +22,8 @@ module Fingers
       @original_pane,
       @state,
       @tmux,
-      @mode
+      @mode,
+      @shell_command
     )
     end
 
@@ -63,7 +65,8 @@ module Fingers
         match: state.result,
         original_pane: original_pane,
         offset: match ? match.not_nil!.offset : nil,
-        mode: mode
+        mode: mode,
+        shell_command: shell_command
       ).run
 
       tmux.display_message("Copied: #{state.result}", 1000) if should_notify?
@@ -103,7 +106,7 @@ module Fingers
       end
     end
 
-    private getter :output, :hinter, :original_pane, :state, :tmux, :mode
+    private getter :output, :hinter, :original_pane, :state, :tmux, :mode, :shell_command
 
     private def handle_match(match)
       if state.multi_mode

@@ -313,6 +313,15 @@ set -g @fingers-pattern-yolo "yolo.*"
 bind y run -b "#{@fingers-cli} start #{pane_id} --patterns yolo"
 ```
 
+## Using arbitrary commands
+
+You can use tmux-fingers with any arbitrary command.
+
+```
+# edit file using nvim in a new tmux window with prefix + e
+bind e run -b "#{@fingers-cli} start #{pane_id} --patterns path --shell-command 'xargs tmux new-window nvim'"
+```
+
 # Acknowledgements and inspiration
 
 This plugin is heavily inspired by
