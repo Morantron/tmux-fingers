@@ -32,6 +32,7 @@ module Fingers::Commands
     @pane_id : String = ""
     @active_pane_id : String | Nil
     @patterns : Array(String) = [] of String
+    @shell_command : String | Nil
 
     def setup : Nil
       @name = "start"
@@ -44,6 +45,10 @@ module Fingers::Commands
       add_option "patterns",
                  description: "comma separated list of pattern names",
                  type: :single
+
+      add_option "shell-command",
+                 description: "command to which the output will be piped",
+                 type: :single
     end
 
     def run(arguments, options) : Nil
@@ -54,6 +59,10 @@ module Fingers::Commands
         @patterns = patterns_from_options(options.get("patterns").as_s)
       else
         @patterns = Fingers.config.patterns.values
+      end
+
+      if options.has?("shell-command")
+        @shell_command = shell_command_from_options(options.get("shell-command").as_s)
       end
 
       track_options_to_restore
@@ -85,6 +94,15 @@ module Fingers::Commands
       end
 
       result
+    end
+
+    private def shell_command_from_options(shell_command_option : String)
+      if shell_command_option.blank?
+        tmux.display_message("[tmux-fingers] error: shell-command can not be blank", 5000)
+        exit 0
+      end
+
+      shell_command_option
     end
 
     private def track_options_to_restore
@@ -219,7 +237,8 @@ module Fingers::Commands
         output: pane_printer,
         original_pane: target_pane,
         tmux: tmux,
-        mode: mode
+        mode: mode,
+        shell_command: @shell_command
       )
     end
 

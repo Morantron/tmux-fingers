@@ -300,17 +300,26 @@ You can start tmux-fingers with an specific set of built-in or custom patterns.
 
 ```
 # match urls with prefix + u
-bind -n u run -b "#{@fingers-cli} start #{pane_id} --patterns url"
+bind u run -b "#{@fingers-cli} start #{pane_id} --patterns url"
 
 # match hashes with prefix + h
-bind -n h run -b "#{@fingers-cli} start #{pane_id} --patterns sha"
+bind h run -b "#{@fingers-cli} start #{pane_id} --patterns sha"
 
 # match git stuff with prefix + g
-bind -n g run -b "#{@fingers-cli} start #{pane_id} --patterns git-status,git-status-branch"
+bind g run -b "#{@fingers-cli} start #{pane_id} --patterns git-status,git-status-branch"
 
 # match custom pattern with prefix + y
 set -g @fingers-pattern-yolo "yolo.*"
-bind -n y run -b "#{@fingers-cli} start #{pane_id} --patterns yolo"
+bind y run -b "#{@fingers-cli} start #{pane_id} --patterns yolo"
+```
+
+## Using arbitrary commands
+
+You can use tmux-fingers with any arbitrary command.
+
+```
+# edit file using nvim in a new tmux window with prefix + e
+bind e run -b "#{@fingers-cli} start #{pane_id} --patterns path --shell-command 'xargs tmux new-window nvim'"
 ```
 
 # Acknowledgements and inspiration

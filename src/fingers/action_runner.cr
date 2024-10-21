@@ -4,7 +4,8 @@ module Fingers
   class ActionRunner
     @final_shell_command : String | Nil
 
-    def initialize(@modifier : String, @match : String, @hint : String, @original_pane : Tmux::Pane, @offset : Tuple(Int32, Int32) | Nil, @mode : String)
+    def initialize(@modifier : String, @match : String, @hint : String, @original_pane : Tmux::Pane,
+      @offset : Tuple(Int32, Int32) | Nil, @mode : String, @shell_command : String | Nil)
     end
 
     def run
@@ -28,24 +29,28 @@ module Fingers
       cmd.input.flush
     end
 
-    private getter :match, :modifier, :hint, :original_pane, :offset, :mode
+    private getter :match, :modifier, :hint, :original_pane, :offset, :mode, :shell_command
 
     def final_shell_command
       return jump if mode == "jump"
       return @final_shell_command if @final_shell_command
 
-      @final_shell_command = case action
-                             when ":copy:"
-                               copy
-                             when ":open:"
-                               open
-                             when ":paste:"
-                               paste
-                             when nil
-                               # do nothing
-                             else
-                               shell_action
-                             end
+      @final_shell_command = shell_command || action_command
+    end
+
+    private def action_command
+      case action
+      when ":copy:"
+        copy
+      when ":open:"
+        open
+      when ":paste:"
+        paste
+      when nil
+        # do nothing
+      else
+        shell_action
+      end
     end
 
     def copy
