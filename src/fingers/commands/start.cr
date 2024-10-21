@@ -27,8 +27,8 @@ module Fingers::Commands
 
   class Start < Cling::Command
     @original_options : Hash(String, String) = {} of String => String
-    @last_key_table : String | Nil
-    @last_pane_id : String = "root"
+    @last_key_table : String = "root"
+    @last_pane_id : String | Nil
     @mode : String = "default"
     @pane_id : String = ""
     @patterns : Array(String) = [] of String
