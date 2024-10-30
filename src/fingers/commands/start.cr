@@ -66,9 +66,8 @@ module Fingers::Commands
         @shell_command = shell_command_from_options(options.get("shell-command").as_s)
       end
 
-      track_options_to_restore
-      track_last_key_table
-      track_last_pane
+      track_tmux_state
+
       show_hints
 
       if Fingers.config.benchmark_mode == "1"
@@ -107,11 +106,16 @@ module Fingers::Commands
       shell_command_option
     end
 
-    private def track_options_to_restore
-      options_to_preserve.each do |option|
-        value = tmux.get_global_option(option)
-        @original_options[option] = value
-      end
+    private def track_tmux_state
+      output = tmux.exec("display-message -t '{last}' -p '\#{pane_id};\#{client_key_table};\#{prefix};\#{prefix2}'").chomp
+
+      last_pane_id, last_key_table, prefix, prefix2 = output.split(";")
+
+      @last_pane_id = last_pane_id
+      @last_key_table = last_key_table
+
+      @original_options["prefix"] = prefix
+      @original_options["prefix2"] = prefix2
     end
 
     private def restore_options
@@ -124,19 +128,9 @@ module Fingers::Commands
       tmux.set_key_table(@last_key_table)
     end
 
-    private def track_last_key_table
-      last_key_table = tmux.exec("display-message -p '\#{client_key_table}'").chomp
-      @last_key_table = last_key_table unless last_key_table.empty?
-    end
-
     private def restore_last_pane
       tmux.select_pane(@last_pane_id)
       select_active_pane
-    end
-
-    private def track_last_pane
-      last_pane_id = tmux.exec("display-message -t '{last}' -p '\#{pane_id}'").chomp
-      @last_pane_id = last_pane_id unless last_pane_id.empty?
     end
 
     private def options_to_preserve
