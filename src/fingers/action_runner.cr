@@ -4,8 +4,18 @@ module Fingers
   class ActionRunner
     @final_shell_command : String | Nil
 
-    def initialize(@modifier : String, @match : String, @hint : String, @original_pane : Tmux::Pane,
-      @offset : Tuple(Int32, Int32) | Nil, @mode : String, @shell_command : String | Nil)
+    def initialize(
+      @modifier : String,
+      @match : String,
+      @hint : String,
+      @original_pane : Tmux::Pane,
+      @offset : Tuple(Int32, Int32) | Nil,
+      @mode : String,
+      @main_action : String | Nil,
+      @ctrl_action : String | Nil,
+      @alt_action : String | Nil,
+      @shift_action : String | Nil,
+    )
     end
 
     def run
@@ -29,13 +39,13 @@ module Fingers
       cmd.input.flush
     end
 
-    private getter :match, :modifier, :hint, :original_pane, :offset, :mode, :shell_command
+    private getter :match, :modifier, :hint, :original_pane, :offset, :mode, :main_action, :ctrl_action, :alt_action, :shift_action
 
     def final_shell_command
       return jump if mode == "jump"
       return @final_shell_command if @final_shell_command
 
-      @final_shell_command = shell_command || action_command
+      @final_shell_command = action_command
     end
 
     private def action_command
@@ -91,13 +101,13 @@ module Fingers
     private property action : String | Nil do
       case modifier
       when "main"
-        Fingers.config.main_action
+        main_action || Fingers.config.main_action
       when "shift"
-        Fingers.config.shift_action
+        shift_action || Fingers.config.shift_action
       when "alt"
-        Fingers.config.alt_action
+        alt_action || Fingers.config.alt_action
       when "ctrl"
-        Fingers.config.ctrl_action
+        ctrl_action || Fingers.config.ctrl_action
       end
     end
 

@@ -33,7 +33,10 @@ module Fingers::Commands
     @pane_id : String = ""
     @active_pane_id : String | Nil
     @patterns : Array(String) = [] of String
-    @shell_command : String | Nil
+    @main_action : String | Nil
+    @ctrl_action : String | Nil
+    @shift_action : String | Nil
+    @alt_action : String | Nil
 
     def setup : Nil
       @name = "start"
@@ -47,8 +50,20 @@ module Fingers::Commands
                  description: "comma separated list of pattern names",
                  type: :single
 
-      add_option "shell-command",
+      add_option "main-action",
                  description: "command to which the output will be piped",
+                 type: :single
+
+      add_option "ctrl-action",
+                 description: "command to which the output will be piped when holding CTRL key",
+                 type: :single
+
+      add_option "alt-action",
+                 description: "command to which the output will be piped when holding ALT key",
+                 type: :single
+
+      add_option "shift-action",
+                 description: "command to which the output will be pipedwhen holding SHIFT key",
                  type: :single
     end
 
@@ -62,9 +77,10 @@ module Fingers::Commands
         @patterns = Fingers.config.patterns.values
       end
 
-      if options.has?("shell-command")
-        @shell_command = shell_command_from_options(options.get("shell-command").as_s)
-      end
+      @main_action = options.get?("main-action").try(&.as_s)
+      @ctrl_action = options.get?("ctrl-action").try(&.as_s)
+      @alt_action = options.get?("alt-action").try(&.as_s)
+      @shift_action = options.get?("shift-action").try(&.as_s)
 
       track_tmux_state
 
@@ -77,6 +93,8 @@ module Fingers::Commands
       handle_input
 
       teardown
+
+      process_result
     end
 
     private def patterns_from_options(pattern_names_option : String)
@@ -95,15 +113,6 @@ module Fingers::Commands
       end
 
       result
-    end
-
-    private def shell_command_from_options(shell_command_option : String)
-      if shell_command_option.blank?
-        tmux.display_message("[tmux-fingers] error: shell-command can not be blank", 5000)
-        exit 0
-      end
-
-      shell_command_option
     end
 
     private def track_tmux_state
@@ -175,6 +184,27 @@ module Fingers::Commands
       end
     end
 
+    private def process_result
+      return unless state.result
+
+      match = hinter.lookup(state.input)
+
+      ActionRunner.new(
+        hint: state.input,
+        modifier: state.modifier,
+        match: state.result,
+        original_pane: target_pane,
+        offset: match ? match.not_nil!.offset : nil,
+        mode: mode,
+        main_action: @main_action,
+        ctrl_action: @ctrl_action,
+        alt_action: @alt_action,
+        shift_action: @shift_action,
+      ).run
+
+      tmux.display_message("Copied: #{state.result}", 1000) if should_notify?
+    end
+
     private def select_active_pane
       tmux.select_pane(@active_pane_id) if @active_pane_id
     end
@@ -191,8 +221,6 @@ module Fingers::Commands
       restore_last_pane
       restore_last_key_table
       restore_options
-
-      view.run_action if state.result
     end
 
     private getter target_pane : Tmux::Pane do
@@ -242,12 +270,15 @@ module Fingers::Commands
         original_pane: target_pane,
         tmux: tmux,
         mode: mode,
-        shell_command: @shell_command
       )
     end
 
     private getter tmux : Tmux do
       Tmux.new(Fingers.config.tmux_version)
+    end
+
+    private def should_notify?
+      !state.result.empty? && Fingers.config.show_copied_notification == "1"
     end
   end
 end
