@@ -5,6 +5,7 @@ module Fingers::Commands
   class SendInput < Cling::Command
     def setup : Nil
       @name = "send-input"
+      @hidden = true
       add_argument "input", required: true
     end
 
