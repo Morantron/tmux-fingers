@@ -1,10 +1,8 @@
+require "colorize"
+
 class TmuxStylePrinter
 
   class InvalidFormat < Exception
-  end
-
-  abstract class Shell
-    abstract def exec(cmd)
   end
 
   STYLE_SEPARATOR = /[ ,]+/
@@ -26,26 +24,19 @@ class TmuxStylePrinter
   }
 
   STYLE_MAP = {
-    bright:     "bold",
+    bright:     "bright",
     bold:       "bold",
     dim:        "dim",
-    underscore: "smul",
-    reverse:    "rev",
-    italics:    "sitm",
+    underscore: "underline",
+    reverse:    "reverse",
+    italics:    "italics",
   }
 
-  class ShellExec < Shell
-    def exec(cmd)
-      `#{cmd}`.chomp
-    end
-  end
+  RESET_SEQUENCE = "\e[0m"
 
-  @shell : Shell
   @applied_styles : Hash(String, String)
-  @reset_sequence : String | Nil
 
-  def initialize(shell = ShellExec.new)
-    @shell = shell
+  def initialize
     @applied_styles = {} of String => String
   end
 
@@ -58,7 +49,7 @@ class TmuxStylePrinter
       output += parse_style_definition(style)
     end
 
-    output += reset_sequence if reset_styles_after && !@applied_styles.empty?
+    output += RESET_SEQUENCE if reset_styles_after && !@applied_styles.empty?
 
     output
   end
@@ -89,7 +80,15 @@ class TmuxStylePrinter
 
     raise InvalidFormat.new("Invalid color definition: #{style}") if color_to_apply.nil?
 
-    result = shell.exec("tput #{LAYER_MAP[layer]} #{color_to_apply}")
+    # TODO parse color codes
+    if layer == "bg"
+      result = "".colorize.back(Colorize::ColorANSI.parse(color))
+    else
+      result = "".colorize.fore(Colorize::ColorANSI.parse(color))
+    end
+
+    # deletes reset scape sequence
+    result = strip_reset_sequence(result.to_s)
 
     @applied_styles[layer] = result
 
@@ -108,7 +107,7 @@ class TmuxStylePrinter
 
     raise InvalidFormat.new("Invalid style definition: #{style}") if style_to_apply.nil?
 
-    result = style == "dim" ? "\033[2m" : shell.exec("tput #{STYLE_MAP[style]}")
+    result = strip_reset_sequence("".colorize.mode(Colorize::Mode.parse(style_to_apply)).to_s)
 
     if should_remove_style
       @applied_styles.delete(style)
@@ -121,14 +120,10 @@ class TmuxStylePrinter
   end
 
   private def reset_to_applied_styles!
-    [reset_sequence, @applied_styles.values].join
+    [RESET_SEQUENCE, @applied_styles.values].join
   end
 
-  private def reset_sequence
-    @reset_sequence ||= shell.exec("tput sgr0").chomp
-  end
-
-  private def shell
-    @shell
+  def strip_reset_sequence(str)
+    str.delete_at(-4, 5)
   end
 end
