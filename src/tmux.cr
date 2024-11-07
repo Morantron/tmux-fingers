@@ -48,14 +48,13 @@ class Tmux
       ch = Channel(String).new
 
       spawn do
-        output = ""
-        while line = @sh.output.read_line
-          break if line == "cmd-end"
+        ch.send(String.build do |io|
+          while line = @sh.output.read_line
+            break if line == "cmd-end"
 
-          output += "#{line}\n"
-        end
-
-        ch.send(output)
+            io << "#{line}\n"
+          end
+        end)
       end
 
       @sh.input.print("#{cmd}; echo cmd-end\n")
