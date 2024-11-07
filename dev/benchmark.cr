@@ -1,7 +1,7 @@
 require "json"
 
 def fix_git_shit
-  `git config --global --add safe.directory /app`
+  `git config --global --add safe.directory /app/.git`
 end
 
 def cleanup
@@ -19,7 +19,7 @@ def run_benchmark
   `tmux send-keys 'COLUMNS=300 LINES=100 crystal run spec/fill_screen.cr'`
   `tmux send-keys Enter`
 
-  sleep 5
+  ::sleep(5.seconds)
 
   puts "Running benchmarks ..."
 
@@ -29,7 +29,7 @@ def run_benchmark
 
   while File.size(output_file.path) == 0
     puts "Waiting for benchmark results"
-    sleep 5
+    ::sleep(5.seconds)
   end
 
   cleanup
