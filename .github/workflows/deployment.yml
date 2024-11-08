@@ -9,7 +9,7 @@ jobs:
   dist_linux:
     runs-on: ubuntu-latest
     container:
-      image: crystallang/crystal:latest-alpine
+      image: crystallang/crystal:1.14-alpine
     steps:
     - uses: actions/checkout@v3
     - name: Update Libs

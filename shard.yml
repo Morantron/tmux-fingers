@@ -12,5 +12,5 @@ dependencies:
     version: '>= 3.0.0'
   xdg_base_directory:
     github: tijn/xdg_base_directory
-crystal: 1.11.2
+crystal: 1.14
 license: MIT
