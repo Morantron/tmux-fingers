@@ -65,6 +65,17 @@ module Fingers::Commands
       add_option "shift-action",
                  description: "command to which the output will be pipedwhen holding SHIFT key",
                  type: :single
+
+      add_option 'h', "help", description: "prints help"
+    end
+
+    def pre_run(arguments, options) : Bool
+      if options.has?("help")
+        puts help_template
+        false
+      else
+        true
+      end
     end
 
     def run(arguments, options) : Nil
