@@ -2,7 +2,7 @@ require "file_utils"
 require "xdg_base_directory"
 
 module Fingers::Dirs
-  TMUX_PID = (ENV["TMUX"] || ",0000").split(",")[1]
+  TMUX_PID = (ENV.fetch("TMUX", ",0000")).split(",")[1]
   XDG = XdgBaseDirectory.app_directories("tmux-fingers")
 
   TMP = Path[File.dirname(File.tempname)]

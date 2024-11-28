@@ -4,6 +4,10 @@ shards:
     git: https://github.com/devnote-dev/cling.git
     version: 3.0.0
 
+  tablo:
+    git: https://github.com/hutou/tablo.git
+    version: 0.10.1
+
   xdg_base_directory:
     git: https://github.com/tijn/xdg_base_directory.git
     version: 1.0.5+git.commit.60bf28dc060c221d5af52727927e92b840022eb0

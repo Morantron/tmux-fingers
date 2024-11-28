@@ -16,6 +16,8 @@ jobs:
       run: apk add --update --upgrade --no-cache --force-overwrite libxml2-dev yaml-dev yaml-static
     - name: Build
       run: shards build --production --release --static --no-debug
+      env:
+        WIZARD_INSTALLATION_METHOD: download-binary
     - name: Upload
       uses: actions/upload-release-asset@v1.0.1
       env:

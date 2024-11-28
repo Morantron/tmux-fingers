@@ -38,7 +38,7 @@ function install_from_source() {
   fi
 
   pushd $CURRENT_DIR > /dev/null
-    shards build --production
+    WIZARD_INSTALLATION_METHOD=build-from-source shards build --production
   popd > /dev/null
 
   echo "Build complete!"

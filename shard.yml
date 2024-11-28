@@ -12,5 +12,7 @@ dependencies:
     version: '>= 3.0.0'
   xdg_base_directory:
     github: tijn/xdg_base_directory
+  tablo:
+    github: hutou/tablo
 crystal: 1.14
 license: MIT
