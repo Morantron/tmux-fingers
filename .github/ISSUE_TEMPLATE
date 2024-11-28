@@ -1,0 +1,14 @@
+<!--
+Note: Please search to see if an issue already exists for the bug you encountered.
+-->
+
+### Description
+
+<!-- Description of issue you are experiencing -->
+
+### tmux-fingers info output
+
+<!-- Output of "tmux-fingers info" command -->
+<!-- installed with tpm: ~/.tmux/plugins/tmux-fingers/bin/tmux-fingers info --!>
+<!-- installed with brew: tmux-fingers info --!>
+<!-- manual: path/to/tmux-fingers info --!>
