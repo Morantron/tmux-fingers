@@ -1,3 +1,13 @@
+## 2.3.0 - 09 Dec 2024
+
+* Added --(main|ctrl|alt|shift)-action cli options.
+* Add info command to show information.
+* Improved git-status builtin pattern
+* Fixed root key table not being properly restored ( Fixes #130 )
+* Updated to Crystal 1.14.
+* Various perfomance improvements (from 50ms to 40ms on my machine :tm:)
+* Improved benchmark and development scripts.
+
 ## 2.2.2 - 14 Aug 2024
 
 * Fixed error in multi-user environments.
