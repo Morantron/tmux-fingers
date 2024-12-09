@@ -8,7 +8,14 @@ module Fingers::Dirs
   TMP = Path[File.dirname(File.tempname)]
 
   ROOT = Path[XDG.state.file_path("tmux-#{TMUX_PID}")]
-  LOG_PATH    = Path[XDG.state.file_path("fingers.log")]
+
+  {% if env("FINGERS_LOG_PATH") %}
+    # used in development to read logs outside container more easily
+    LOG_PATH = {{ env("FINGERS_LOG_PATH") }}
+  {% else %}
+    LOG_PATH = Path[XDG.state.file_path("fingers.log")]
+  {% end %}
+
   CACHE       = ROOT
   CONFIG_PATH = CACHE / "config.json"
   SOCKET_PATH = CACHE / "fingers.sock"
