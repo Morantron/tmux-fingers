@@ -102,10 +102,8 @@ module Fingers::Commands
       end
 
       handle_input
-
-      teardown
-
       process_result
+      teardown
     end
 
     private def patterns_from_options(pattern_names_option : String)
@@ -132,7 +130,11 @@ module Fingers::Commands
       last_pane_id, last_key_table, prefix, prefix2 = output.split(";")
 
       @last_pane_id = last_pane_id
-      @last_key_table = last_key_table
+      @last_key_table = if last_key_table.empty?
+                          "root"
+                        else
+                          last_key_table
+                        end
 
       @original_options["prefix"] = prefix
       @original_options["prefix2"] = prefix2
