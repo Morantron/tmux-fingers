@@ -21,7 +21,7 @@ module Fingers
     def run
       tmux.set_buffer(match)
 
-      return if final_shell_command.nil?
+      return if final_shell_command.nil? || final_shell_command.not_nil!.empty?
 
       cmd_path, *args = Process.parse_arguments(final_shell_command.not_nil!)
 
