@@ -277,6 +277,31 @@ A list of comma separated pattern names. Built-in patterns are the following:
 | git-status-branch | will match branch name in the output of git status        | `Your branch is up to date withname-of-branch` |
 | diff              | will match paths in diff output                           | `+++ a/path/to/file`                           |
 
+## @fingers-cli
+
+You can set up key bindings directly to invoke tmux-fingers by using a special global option `@fingers-cli` exposed by the plugin.
+
+The following options are available:
+
+```
+Usage:
+        tmux-fingers start <arguments> [options]
+
+Arguments:
+        pane_id     (required)
+
+Options:
+        --mode              jump or not (default: default)
+        --patterns          comma separated list of pattern names
+        --main-action       command to which the output will be piped
+        --ctrl-action       command to which the output will be piped when holding CTRL key
+        --alt-action        command to which the output will be piped when holding ALT key
+        --shift-action      command to which the output will be pipedwhen holding SHIFT key
+        -h, --help          prints help
+```
+
+Check some examples in the [Recipes](#Recipes) section below.
+
 # Recipes
 
 ## Start tmux-fingers without prefix
@@ -319,7 +344,7 @@ You can use tmux-fingers with any arbitrary command.
 
 ```
 # edit file using nvim in a new tmux window with prefix + e
-bind e run -b "#{@fingers-cli} start #{pane_id} --patterns path --shell-command 'xargs tmux new-window nvim'"
+bind e run -b "#{@fingers-cli} start #{pane_id} --patterns path --main-action 'xargs tmux new-window nvim'"
 ```
 
 # Acknowledgements and inspiration
