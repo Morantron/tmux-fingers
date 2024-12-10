@@ -1,3 +1,7 @@
+## 2.3.1 - 10 Dec 2024
+
+* Fix :paste: action.
+
 ## 2.3.0 - 09 Dec 2024
 
 * Added --(main|ctrl|alt|shift)-action cli options.
