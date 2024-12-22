@@ -95,15 +95,29 @@ module Fingers::Commands
 
       track_tmux_state
 
-      show_hints
+      display_popup_over(target_pane)
+
+      #show_hints
 
       if Fingers.config.benchmark_mode == "1"
         exit(0)
       end
 
-      handle_input
-      process_result
-      teardown
+      #handle_input
+      #process_result
+      #teardown
+    end
+
+    private def display_popup_over(pane : Tmux::Pane)
+      coords = pane.coords
+
+      return nil unless coords
+
+      pane_x, pane_y = coords
+
+      Log.info { "coords: #{coords}" }
+
+      tmux.exec("display-popup -B -x #{pane_x} -y #{pane_y.to_i + pane.pane_height} -w #{pane.pane_width} -h #{pane.pane_height} 'echo ola'")
     end
 
     private def patterns_from_options(pattern_names_option : String)

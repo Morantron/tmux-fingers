@@ -72,10 +72,23 @@ class Tmux
     property window_id : String
     property pane_width : Int32
     property pane_height : Int32
+    property pane_index : Int32
     property pane_current_path : String
     property pane_in_mode : Bool
     property scroll_position : Int32 | Nil
     property window_zoomed_flag : Bool
+    property window_layout : String
+
+    # parses window_layout tmux format, and uses pane_index to find the pane coordinates
+    def coords
+      layout = pane_layout
+
+      return nil unless layout
+
+      _, x, y = pane_layout
+
+      {x, y}
+    end
   end
 
   struct Window
@@ -94,7 +107,9 @@ class Tmux
     window_id:         String,
     pane_width:        Int32,
     pane_height:       Int32,
+    pane_index:       Int32,
     pane_current_path: String,
+    window_layout: String,
     pane_in_mode:      Bool,
     scroll_position: Int32 | Nil,
     window_zoomed_flag: Bool,
