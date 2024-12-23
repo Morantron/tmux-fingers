@@ -11,6 +11,7 @@ module Fingers
       add_command Fingers::Commands::SendInput.new
       add_command Fingers::Commands::Start.new
       add_command Fingers::Commands::Info.new
+      add_command Fingers::Commands::ReportTty.new
     end
 
     def run(arguments, options) : Nil

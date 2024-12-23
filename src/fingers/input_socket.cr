@@ -13,6 +13,7 @@ module Fingers
       remove_socket_file
 
       loop do
+        Log.info { "waiting for socket" }
         socket = server.accept
         message = socket.gets
 

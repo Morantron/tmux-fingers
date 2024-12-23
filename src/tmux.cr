@@ -81,13 +81,29 @@ class Tmux
 
     # parses window_layout tmux format, and uses pane_index to find the pane coordinates
     def coords
-      layout = pane_layout
+      layouts = Tmux.parse_window_layout(window_layout)
 
-      return nil unless layout
+      pane_layout = layouts[pane_index - 1]?
 
-      _, x, y = pane_layout
+      if pane_layout.nil?
+        x = 0
+        y = 0
 
-      {x, y}
+        # TODO raise error here
+        {x, y}
+      else
+        {pane_layout.x, pane_layout.y}
+      end
+    end
+  end
+
+  struct WindowLayout
+    property width : Int32
+    property height : Int32
+    property x : Int32
+    property y : Int32
+
+    def initialize(@x, @y, @width, @height)
     end
   end
 
@@ -142,6 +158,35 @@ class Tmux
     end
 
     SemanticVersion.parse("#{major}.#{minor}.#{patch}")
+  end
+
+  def self.parse_window_layout(input) : Array(WindowLayout)
+    result = [] of WindowLayout
+
+    input
+      .gsub(/[\]\}]/, "")
+      .gsub(/[\[\{]/, ",skip,")
+      .gsub(/^\w+,/, "")
+      .split(",")
+      .each_slice(4)
+      .to_a
+      .map do |slice|
+        puts slice
+        size, x, y, skip = slice
+
+        next if skip == "skip"
+
+        width, height = size.split("x")
+
+        result << WindowLayout.new(
+          x.to_i,
+          y.to_i,
+          width.to_i,
+          height.to_i
+        )
+      end
+
+    result
   end
 
   def initialize(version_string)

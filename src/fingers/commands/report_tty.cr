@@ -15,7 +15,14 @@ module Fingers::Commands
     def run(arguments, options) : Nil
       socket = InputSocket.new
 
-      socket.send_message("tty:#{tty}")
+      tty_val = tty
+      Log.info { "reporting tty: #{tty_val}" }
+      socket.send_message("tty:#{tty_val}")
+
+      loop do
+        Log.info { "waiting for tty to be overwritten" }
+        sleep 1
+      end
     end
 
     private def tty

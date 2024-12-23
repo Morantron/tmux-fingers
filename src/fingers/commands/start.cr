@@ -37,6 +37,7 @@ module Fingers::Commands
     @ctrl_action : String | Nil
     @shift_action : String | Nil
     @alt_action : String | Nil
+    @popup_tty : String = ""
 
     def setup : Nil
       @name = "start"
@@ -79,6 +80,7 @@ module Fingers::Commands
     end
 
     def run(arguments, options) : Nil
+      Log.info { "----" }
       @mode = options.get("mode").as_s
       parse_pane_target_format!(arguments.get("pane_id").as_s)
 
@@ -95,15 +97,32 @@ module Fingers::Commands
 
       track_tmux_state
 
+      ch = Channel(String).new
+
+      #handle_input(ch)
+
       display_popup_over(target_pane)
 
-      #show_hints
+      #loop do
+        #Log.info { "waiting for cmd" }
+        #input = ch.receive
+
+        #cmd, val = input.split(":")
+
+        #if cmd == "tty"
+          #@popup_tty = val
+          #show_hints
+        #else
+          #view.process_input(input)
+          #break if state.exiting
+        #end
+      #end
+
 
       if Fingers.config.benchmark_mode == "1"
         exit(0)
       end
 
-      #handle_input
       #process_result
       #teardown
     end
@@ -115,9 +134,7 @@ module Fingers::Commands
 
       pane_x, pane_y = coords
 
-      Log.info { "coords: #{coords}" }
-
-      tmux.exec("display-popup -B -x #{pane_x} -y #{pane_y.to_i + pane.pane_height} -w #{pane.pane_width} -h #{pane.pane_height} 'echo ola'")
+      tmux.exec("display-popup -B -x #{pane_x} -y #{pane_y.to_i + pane.pane_height} -w #{pane.pane_width} -h #{pane.pane_height} '#{Process.executable_path} report-tty'")
     end
 
     private def patterns_from_options(pattern_names_option : String)
@@ -189,25 +206,25 @@ module Fingers::Commands
       # Attention! It is very important to resize the window at this point to
       # match the dimensions of the target pane. Otherwise weird linejumping
       # will occur when we have wrapped lines.
-      tmux.resize_window(
-        fingers_window.window_id,
-        target_pane.pane_width,
-        target_pane.pane_height,
-      ) if needs_resize?
+      #tmux.resize_window(
+        #fingers_window.window_id,
+        #target_pane.pane_width,
+        #target_pane.pane_height,
+      #) if needs_resize?
 
+      Log.info { "showing hints: #{@popup_tty}" }
       view.render
       tmux.swap_panes(fingers_window.pane_id, target_pane.pane_id)
     end
 
-    private def handle_input
+    private def handle_input(channel)
       input_socket = InputSocket.new
 
-      tmux.disable_prefix
-      tmux.set_key_table "fingers"
+      #tmux.disable_prefix
+      #tmux.set_key_table "fingers"
 
       input_socket.on_input do |input|
-        view.process_input(input)
-        break if state.exiting
+        channel.send(input)
       end
     end
 
@@ -267,7 +284,8 @@ module Fingers::Commands
     end
 
     private getter pane_printer : PanePrinter do
-      PanePrinter.new(fingers_window.pane_tty)
+      Log.info { "lazy init pane_printer" }
+      PanePrinter.new(@popup_tty)
     end
 
     private getter state : Fingers::State do
@@ -275,6 +293,7 @@ module Fingers::Commands
     end
 
     private getter hinter : Hinter do
+      Log.info { "lazy init hinter" }
       Fingers::Hinter.new(
         input: pane_contents,
         patterns: @patterns,
