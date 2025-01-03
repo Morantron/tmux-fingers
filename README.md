@@ -77,7 +77,7 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 
 * [@fingers-key](#fingers-key)
 * [@fingers-jump-key](#fingers-jump-key)
-* [@fingers-patterns-N](#fingers-patterns-N)
+* [@fingers-pattern-N](#fingers-pattern-n)
 * [@fingers-main-action](#fingers-main-action)
 * [@fingers-ctrl-action](#fingers-ctrl-action)
 * [@fingers-alt-action](#fingers-alt-action)
@@ -117,7 +117,7 @@ Customize how to enter fingers jump mode. Always preceded by prefix: `prefix + @
 
 In jump mode, the cursor will be placed in the position of the match after the hint is selected.
 
-## @fingers-patterns-N
+## @fingers-pattern-N
 
 You can also add additional patterns if you want more stuff to be highlighted:
 
@@ -197,13 +197,13 @@ Supported styles are: `bright`, `bold`, `dim`, `underscore`, `italics`.
 
 `default: "fg=yellow"`
 
-Custom styles for the highlighted match. See [@fingers-hint-format](#fingers-hint-format) for more details.
+Custom styles for the highlighted match. See [@fingers-hint-style](#fingers-hint-style) for more details.
 
 ## @fingers-backdrop-style
 
 `default: ""`
 
-Custom styles for all the text that is not matched. See [@fingers-hint-format](#fingers-hint-format) for more details.
+Custom styles for all the text that is not matched. See [@fingers-hint-style](#fingers-hint-style) for more details.
 
 ## @fingers-selected-hint-style
 
