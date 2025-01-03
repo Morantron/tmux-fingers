@@ -97,37 +97,22 @@ module Fingers::Commands
 
       track_tmux_state
 
-      ch = Channel(String).new
+      #input_socket.remove_socket_file
 
-      #handle_input(ch)
-
-      display_popup_over(target_pane)
-
-      #loop do
-        #Log.info { "waiting for cmd" }
-        #input = ch.receive
-
-        #cmd, val = input.split(":")
-
-        #if cmd == "tty"
-          #@popup_tty = val
-          #show_hints
-        #else
-          #view.process_input(input)
-          #break if state.exiting
-        #end
-      #end
-
+      wait_for_tty
+      spawn display_popup_over(target_pane)
 
       if Fingers.config.benchmark_mode == "1"
         exit(0)
       end
 
+      Log.info { "pues nada nos vamos" }
       #process_result
       #teardown
     end
 
     private def display_popup_over(pane : Tmux::Pane)
+      Log.info { "displaying pane" }
       coords = pane.coords
 
       return nil unless coords
@@ -214,17 +199,21 @@ module Fingers::Commands
 
       Log.info { "showing hints: #{@popup_tty}" }
       view.render
-      tmux.swap_panes(fingers_window.pane_id, target_pane.pane_id)
+      #tmux.swap_panes(fingers_window.pane_id, target_pane.pane_id)
     end
 
-    private def handle_input(channel)
+    private def wait_for_tty
+      Log.info { "wait for tty" }
       input_socket = InputSocket.new
+      input_socket.remove_socket_file
 
-      #tmux.disable_prefix
-      #tmux.set_key_table "fingers"
+      input_socket.on_input do |msg|
+        cmd, val = msg.split(":")
 
-      input_socket.on_input do |input|
-        channel.send(input)
+        @popup_tty = val if cmd == "tty"
+
+        input_socket.server.close
+        break
       end
     end
 

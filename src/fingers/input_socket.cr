@@ -12,10 +12,17 @@ module Fingers
     def on_input
       remove_socket_file
 
-      loop do
-        Log.info { "waiting for socket" }
-        socket = server.accept
+      while socket = server.accept?
+        Fiber.yield
+
+        Log.info { "input socket: WAITING FOR CONN" }
+        break if socket.nil?
+
+        Fiber.yield
+
         message = socket.gets
+
+        Fiber.yield
 
         yield (message || "")
       end
@@ -32,8 +39,6 @@ module Fingers
       remove_socket_file
     end
 
-    private getter :path
-
     def server
       @server ||= UNIXServer.new(path)
     end
@@ -41,5 +46,7 @@ module Fingers
     def remove_socket_file
       `rm -rf #{path}`
     end
+
+    private getter :path
   end
 end

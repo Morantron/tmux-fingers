@@ -26,6 +26,7 @@ module Fingers
     end
 
     def render
+      Log.info { "view render" }
       clear_screen
       hide_cursor
 

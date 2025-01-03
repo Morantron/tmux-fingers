@@ -13,7 +13,9 @@ module Fingers::Commands
     end
 
     def run(arguments, options) : Nil
+      puts "hello from report tty :)"
       socket = InputSocket.new
+
 
       tty_val = tty
       Log.info { "reporting tty: #{tty_val}" }
