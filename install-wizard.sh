@@ -70,6 +70,11 @@ function download_binary() {
 
   echo "Downloading binary from $url"
 
+  if [[ -z "$url" ]]; then
+    echo "Could not find a release for tmux-fingers. Please try again later."
+    exit 1
+  fi
+
   # download binary to bin/tmux-fingers
   curl -L $url -o $CURRENT_DIR/bin/tmux-fingers
   chmod a+x $CURRENT_DIR/bin/tmux-fingers
