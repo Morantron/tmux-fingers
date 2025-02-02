@@ -1,4 +1,3 @@
-
 ![tmux-fingers](./logo.svg)
 
 ![demo](https://github.com/Morantron/tmux-fingers/assets/3304507/cafe8877-1c98-41b1-bb65-b72129fea701)
@@ -47,7 +46,11 @@ Add the following to your list of TPM plugins in `.tmux.conf`:
 set -g @plugin 'Morantron/tmux-fingers'
 ```
 
-Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin. The first time you run it you'll be presented with a wizard to complete the installation.
+Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin. The first time you run it you'll be presented with a wizard to complete the installation. Depending on the platform, the wizard will offer the following installation methods:
+
+- Building from source (requires [crystal](https://crystal-lang.org/install/)). _Available in all platforms_
+- Install through [brew](https://brew.sh). _Mac OS only_.
+- Download standalone binary. _Linux x86 only_.
 
 ## Manual
 
@@ -69,7 +72,7 @@ Reload TMUX conf by running:
 $ tmux source-file ~/.tmux.conf
 ```
 
- The first time you run it you'll be presented with a wizard to complete the installation.
+The first time you run it you'll be presented with a wizard to complete the installation.
 
 # Configuration
 
