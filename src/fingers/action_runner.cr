@@ -87,7 +87,7 @@ module Fingers
     end
 
     def paste
-      "tmux paste-buffer -t #{original_pane.pane_id}"
+      "tmux paste-buffer -t #{original_pane.pane_id} \; send-keys -t #{original_pane.pane_id} -X cancel"
     end
 
     def shell_action
