@@ -1,3 +1,7 @@
+## 2.3.3 - 06 Feb 2025
+
+* Fix :paste: action again, this time for real. Working in copy mode and non-copy mode. ( Fixes #137 )
+
 ## 2.3.2 - 02 Feb 2025
 
 * :paste: will now exit copy mode right before pasting.
