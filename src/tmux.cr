@@ -138,7 +138,7 @@ class Tmux
     args = ["list-panes", "-a", "-F", PANE_FORMAT]
 
     if !filters.empty?
-      args.concat(["-f", "filters"])
+      args.concat(["-f", filters])
     end
 
     exec(Process.quote(args)).chomp.split("\n").map do |pane|

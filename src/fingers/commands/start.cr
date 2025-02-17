@@ -167,7 +167,7 @@ module Fingers::Commands
       end
 
       @pane_id = tmux.exec("display-message -t #{pane_target_format} -p '\#{pane_id}'").chomp
-      active_pane = tmux.list_panes("{active}").first
+      active_pane = tmux.list_panes("\#{pane_active}").first
       @active_pane_id = active_pane.pane_id unless active_pane.nil?
     end
 
