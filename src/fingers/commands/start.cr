@@ -40,9 +40,11 @@ module Fingers::Commands
 
     def setup : Nil
       @name = "start"
-      add_argument "pane_id", required: true
+      add_argument "pane_id",
+                 description: "pane id (also accepts tmux target-pane tokens specified in tmux man pages)",
+                 required: true
       add_option "mode",
-                 description: "jump or not",
+                 description: "can be \"jump\" or \"default\"",
                  type: :single,
                  default: "default"
 

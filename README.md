@@ -291,10 +291,10 @@ Usage:
         tmux-fingers start <arguments> [options]
 
 Arguments:
-        pane_id     (required)
+        pane_id    pane id (also accepts tmux target-pane tokens specified in tmux man pages) (required)
 
 Options:
-        --mode              jump or not (default: default)
+        --mode              can be "jump" or "default" (default: default)
         --patterns          comma separated list of pattern names
         --main-action       command to which the output will be piped
         --ctrl-action       command to which the output will be piped when holding CTRL key
@@ -348,6 +348,22 @@ You can use tmux-fingers with any arbitrary command.
 ```
 # edit file using nvim in a new tmux window with prefix + e
 bind e run -b "#{@fingers-cli} start #{pane_id} --patterns path --main-action 'xargs tmux new-window nvim'"
+```
+
+## Target adjacent panes
+
+You can use tmux target-pane tokens to target adjacent panes. This
+configuration uses vim-style <kbd>ALT</kbd>+<kbd>hjkl</kbd> keys to
+directionally adjacent panes.
+
+Also uses <kbd>ALT</kbd>+<kbd>o</kbd> to target the last pane.
+
+```
+bind -n M-h run -b "#{@fingers-cli} start {left-of}"
+bind -n M-j run -b "#{@fingers-cli} start {down-of}"
+bind -n M-k run -b "#{@fingers-cli} start {up-of}"
+bind -n M-l run -b "#{@fingers-cli} start {right-of}"
+bind -n M-o run -b "#{@fingers-cli} start {last}"
 ```
 
 # Acknowledgements and inspiration
