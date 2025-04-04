@@ -1,3 +1,8 @@
+## 2.4.0 - 04 Apr 2025
+
+* Add support to tmux target-pane tokens, which allows to target other panes
+  rather than the active one like: adjacent panes, previous pane, etc... ( Fixes #138 )
+
 ## 2.3.3 - 06 Feb 2025
 
 * Fix :paste: action again, this time for real. Working in copy mode and non-copy mode. ( Fixes #137 )
