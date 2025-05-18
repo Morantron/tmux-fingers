@@ -167,7 +167,7 @@ module Fingers::Commands
         @active_pane = target_pane
       else
         @pane_id = tmux.exec("display-message -t #{pane_target_format} -p '\#{pane_id}'").chomp
-        @active_pane = tmux.list_panes("\#{pane_active}").first
+        @active_pane = tmux.list_panes("\#{pane_active}", target_pane.window_id).first
       end
     end
 

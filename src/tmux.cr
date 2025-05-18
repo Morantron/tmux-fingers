@@ -134,8 +134,14 @@ class Tmux
     @version = Tmux.tmux_version_to_semver(version_string)
   end
 
-  def list_panes(filters = "") : Array(Pane)
-    args = ["list-panes", "-a", "-F", PANE_FORMAT]
+  def list_panes(filters = "", target = nil) : Array(Pane)
+    args = ["list-panes", "-F", PANE_FORMAT]
+
+    if target.nil?
+      args << "-a"
+    else
+      args.concat(["-t", target])
+    end
 
     if !filters.empty?
       args.concat(["-f", filters])
