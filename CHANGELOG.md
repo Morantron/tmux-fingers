@@ -1,3 +1,7 @@
+## 2.4.1 - 18 May 2025
+
+* Fix active pane restore when passing a format as target.
+
 ## 2.4.0 - 04 Apr 2025
 
 * Add support to tmux target-pane tokens, which allows to target other panes
