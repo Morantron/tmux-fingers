@@ -186,7 +186,7 @@ Same as [@fingers-main-action](#fingers-main-action) but only called when match 
 
 ## @fingers-hint-style
 
-`default: "fg=green,bold`
+`default: "fg=green,bold"`
 
 With this option you can define the styles for the letter hints.
 
