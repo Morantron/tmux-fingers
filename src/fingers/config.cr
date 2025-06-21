@@ -14,6 +14,7 @@ module Fingers
     property ctrl_action : String
     property alt_action : String
     property shift_action : String
+    property copy_on_paste : Bool
     property hint_position : String
     property hint_style : String
     property selected_hint_style : String
@@ -73,6 +74,7 @@ module Fingers
       @ctrl_action = ":open:",
       @alt_action = "",
       @shift_action = ":paste:",
+      @copy_on_paste = true,
       @hint_position = "left",
       @hint_style = FORMAT_PRINTER.print("fg=green,bold"),
       @highlight_style = FORMAT_PRINTER.print("fg=yellow"),

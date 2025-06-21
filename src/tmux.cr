@@ -228,10 +228,10 @@ class Tmux
     exec(["show", "-gqv", name].join(' ')).chomp
   end
 
-  def set_buffer(value)
+  def set_buffer(value, copy_on_paste)
     return unless value
 
-    if @version >= Tmux.tmux_version_to_semver("3.2")
+    if @version >= Tmux.tmux_version_to_semver("3.2") && copy_on_paste
       args = ["load-buffer", "-w", "-"]
     else
       args = ["load-buffer", "-"]

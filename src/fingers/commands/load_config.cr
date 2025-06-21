@@ -56,6 +56,8 @@ class Fingers::Commands::LoadConfig < Cling::Command
         config.alt_action = value
       when "shift_action"
         config.shift_action = value
+      when "copy_on_paste"
+        config.copy_on_paste = to_bool(value)
       when "benchmark_mode"
         config.benchmark_mode = value
       when "hint_position"
