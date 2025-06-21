@@ -37,6 +37,7 @@ module Fingers::Commands
     @ctrl_action : String | Nil
     @shift_action : String | Nil
     @alt_action : String | Nil
+    @copy_on_paste : Bool = true
 
     def setup : Nil
       @name = "start"
@@ -68,6 +69,11 @@ module Fingers::Commands
                  description: "command to which the output will be pipedwhen holding SHIFT key",
                  type: :single
 
+      add_option "copy-on-paste",
+                 description: "whether the :paste: command should copy to the system clipboard",
+                 default: true,
+                 type: :single
+
       add_option 'h', "help", description: "prints help"
     end
 
@@ -94,6 +100,7 @@ module Fingers::Commands
       @ctrl_action = options.get?("ctrl-action").try(&.as_s)
       @alt_action = options.get?("alt-action").try(&.as_s)
       @shift_action = options.get?("shift-action").try(&.as_s)
+      @copy_on_paste = options.get("copy-on-paste").try(&.as_bool)
 
       track_tmux_state
 
@@ -213,6 +220,7 @@ module Fingers::Commands
         ctrl_action: @ctrl_action,
         alt_action: @alt_action,
         shift_action: @shift_action,
+        copy_on_paste: @copy_on_paste,
       ).run
 
       tmux.display_message("Copied: #{state.result}", 1000) if should_notify?
