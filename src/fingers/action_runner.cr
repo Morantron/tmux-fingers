@@ -19,7 +19,7 @@ module Fingers
     end
 
     def run
-      tmux.set_buffer(match)
+      tmux.set_buffer(match, Fingers.config.copy_on_paste)
 
       return if final_shell_command.nil? || final_shell_command.not_nil!.empty?
 
