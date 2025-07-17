@@ -1,3 +1,7 @@
+## 2.5.0 - 17 Jul 2025
+
+* Added new @fingers-use-system-clipboard option ( thanks @purajit ! )
+
 ## 2.4.1 - 18 May 2025
 
 * Fix active pane restore when passing a format as target.
