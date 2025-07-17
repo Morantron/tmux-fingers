@@ -94,6 +94,7 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 * [@fingers-keyboard-layout](#fingers-keyboard-layout)
 * [@fingers-show-copied-notification](#fingers-show-copied-notification)
 * [@fingers-enabled-builtin-patterns](#fingers-enabled-builtin-patterns)
+* [@fingers-use-system-clipboard](#fingers-use-system-clipboard)
 
 Recipes:
 
@@ -304,6 +305,13 @@ Options:
 ```
 
 Check some examples in the [Recipes](#Recipes) section below.
+
+## @fingers-use-system-clipboard
+
+`default: 1`
+
+Whether to use the system clipboard when copying matches. If set to `0`,
+tmux-fingers will only copy matches to the tmux buffer.
 
 # Recipes
 
