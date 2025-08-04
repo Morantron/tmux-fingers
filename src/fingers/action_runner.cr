@@ -31,7 +31,7 @@ module Fingers
         input: :pipe,
         output: :pipe,
         error: File.open(::Fingers::Dirs::ROOT / "action-stderr", "a"),
-        chdir: original_pane.pane_current_path,
+        chdir: original_pane.pane_current_path.presence,
         env: action_env
       )
 
