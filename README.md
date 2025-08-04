@@ -100,6 +100,8 @@ Recipes:
 
 * [Start tmux-fingers without prefix](#start-tmux-fingers-without-prefix)
 * [Using only specific patterns](#using-only-specific-patterns)
+* [Using arbitrary commands](#using-arbitrary-commands)
+* [Target adjacent panes](#target-adjacent-panes)
 
 ## @fingers-key
 
