@@ -35,9 +35,6 @@ def build_tmux_format(hash)
   "{#{fields.join(",")}}"
 end
 
-# TODO maybe use system everywhere?
-
-# rubocop:disable Metrics/ClassLength
 class Tmux
   class Shell
     def initialize
