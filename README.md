@@ -42,7 +42,7 @@ While in **[fingers]** mode, you can use the following shortcuts:
 
 Add the following to your list of TPM plugins in `.tmux.conf`:
 
-```
+```tmux
 set -g @plugin 'Morantron/tmux-fingers'
 ```
 
@@ -62,7 +62,7 @@ $ git clone https://github.com/Morantron/tmux-fingers ~/.tmux/plugins/tmux-finge
 
 Source it in your `.tmux.conf`:
 
-```
+```tmux
 run-shell ~/.tmux/plugins/tmux-fingers/tmux-fingers.tmux
 ```
 
@@ -111,7 +111,7 @@ Customize how to enter fingers mode. Always preceded by prefix: `prefix + @finge
 
 For example:
 
-```
+```tmux
 set -g @fingers-key F
 ```
 
@@ -127,7 +127,7 @@ In jump mode, the cursor will be placed in the position of the match after the h
 
 You can also add additional patterns if you want more stuff to be highlighted:
 
-```
+```tmux
 # You can define custom patterns like this
 set -g @fingers-pattern-0 'git rebase --(abort|continue)'
 
@@ -156,7 +156,7 @@ By default **tmux-fingers** will copy matches in tmux and system clipboard.
 
 If you still want to set your own custom command you can do so like this:
 
-```
+```tmux
 set -g @fingers-main-action '<your command here>'
 ```
 This command will also receive the following:
@@ -321,7 +321,7 @@ tmux-fingers will only copy matches to the tmux buffer.
 
 You can start tmux-fingers without having to press tmux prefix by adding bindings like this:
 
-```
+```tmux
 # tmux.conf
 
 # Start tmux fingers by pressing Alt+F
@@ -336,7 +336,7 @@ bind -n M-j run -b "#{@fingers-cli} start #{pane_id} --mode jump"
 
 You can start tmux-fingers with an specific set of built-in or custom patterns.
 
-```
+```tmux
 # match urls with prefix + u
 bind u run -b "#{@fingers-cli} start #{pane_id} --patterns url"
 
@@ -355,7 +355,7 @@ bind y run -b "#{@fingers-cli} start #{pane_id} --patterns yolo"
 
 You can use tmux-fingers with any arbitrary command.
 
-```
+```tmux
 # edit file using nvim in a new tmux window with prefix + e
 bind e run -b "#{@fingers-cli} start #{pane_id} --patterns path --main-action 'xargs tmux new-window nvim'"
 ```
@@ -368,7 +368,7 @@ directionally adjacent panes.
 
 Also uses <kbd>ALT</kbd>+<kbd>o</kbd> to target the last pane.
 
-```
+```tmux
 bind -n M-h run -b "#{@fingers-cli} start {left-of}"
 bind -n M-j run -b "#{@fingers-cli} start {down-of}"
 bind -n M-k run -b "#{@fingers-cli} start {up-of}"
