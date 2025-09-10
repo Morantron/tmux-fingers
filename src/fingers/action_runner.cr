@@ -57,6 +57,8 @@ module Fingers
         open
       when ":paste:"
         paste
+      when ":edit:"
+        edit
       when nil
         # do nothing
       else
@@ -74,6 +76,14 @@ module Fingers
       return unless system_open_command
 
       system_open_command
+    end
+
+    def edit
+      "tmux display-popup -w 80% -h 80% -E \"#{editor} #{expanded_match}\""
+    end
+
+    def editor
+      "nvim"
     end
 
     def jump
@@ -162,10 +172,18 @@ module Fingers
     def expanded_match
       return match unless should_expand_match?
 
-      Path[match].expand(base: original_pane.pane_current_path, home: Path.home)
+      Path[normalize_path(match)].expand(base: original_pane.pane_current_path, home: Path.home)
+    end
+
+    def normalize_path(path)
+      return path if path.starts_with?("/")
+      return path if path.starts_with?(".")
+
+      "./#{path}"
     end
 
     private def should_expand_match?
+      return true if action == ":edit:"
       action == ":open:" && match.starts_with?("~")
     end
   end
