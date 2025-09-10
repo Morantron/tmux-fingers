@@ -15,6 +15,7 @@ module Fingers
       @ctrl_action : String | Nil,
       @alt_action : String | Nil,
       @shift_action : String | Nil,
+      @action_in_state : String | Nil,
     )
     end
 
@@ -39,7 +40,7 @@ module Fingers
       cmd.input.flush
     end
 
-    private getter :match, :modifier, :hint, :original_pane, :offset, :mode, :main_action, :ctrl_action, :alt_action, :shift_action
+    private getter :match, :modifier, :hint, :original_pane, :offset, :mode, :main_action, :ctrl_action, :alt_action, :shift_action, :action_in_state
 
     def final_shell_command
       return jump if mode == "jump"
@@ -103,6 +104,8 @@ module Fingers
     end
 
     private property action : String | Nil do
+      return action_in_state if action_in_state
+
       case modifier
       when "main"
         main_action || Fingers.config.main_action
@@ -165,6 +168,5 @@ module Fingers
     private def should_expand_match?
       action == ":open:" && match.starts_with?("~")
     end
-
   end
 end

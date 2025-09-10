@@ -213,6 +213,7 @@ module Fingers::Commands
         ctrl_action: @ctrl_action,
         alt_action: @alt_action,
         shift_action: @shift_action,
+        action_in_state: state.action,
       ).run
 
       tmux.display_message("Copied: #{state.result}", 1000) if should_notify?
@@ -284,7 +285,7 @@ module Fingers::Commands
         hinter: hinter,
         state: state,
         output: pane_printer,
-        original_pane: target_pane,
+        fingers_window: fingers_window,
         tmux: tmux,
         mode: mode,
       )

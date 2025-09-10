@@ -7,10 +7,11 @@ require "../../tmux"
 
 class Fingers::Commands::LoadConfig < Cling::Command
   @fingers_options_names : Array(String) | Nil
+  @disallowed_chars : Array(String) = DEFAULT_DISALLOWED_CHARS.clone
 
   property config : Fingers::Config = Fingers::Config.new
 
-  DISALLOWED_CHARS = /[cimqn]/
+  DEFAULT_DISALLOWED_CHARS = "cimqn".split("")
 
   PRIVATE_OPTIONS = [
     "skip_wizard",
@@ -88,7 +89,7 @@ class Fingers::Commands::LoadConfig < Cling::Command
     add_builtin_patterns
 
     config.alphabet = ::Fingers::Config::ALPHABET_MAP[Fingers.config.keyboard_layout].split("").reject do |char|
-      char.match(DISALLOWED_CHARS)
+      @disallowed_chars.includes?(char)
     end
 
     config.save
@@ -130,15 +131,6 @@ class Fingers::Commands::LoadConfig < Cling::Command
   end
 
   def setup_fingers_mode_bindings
-    ("a".."z").to_a.each do |char|
-      next if char.match(DISALLOWED_CHARS)
-
-      fingers_mode_bind(char, "hint:#{char}:main")
-      fingers_mode_bind(char.upcase, "hint:#{char}:shift")
-      fingers_mode_bind("C-#{char}", "hint:#{char}:ctrl")
-      fingers_mode_bind("M-#{char}", "hint:#{char}:alt")
-    end
-
     fingers_mode_bind("Space", "fzf")
     fingers_mode_bind("C-c", "exit")
     fingers_mode_bind("q", "exit")
@@ -148,6 +140,21 @@ class Fingers::Commands::LoadConfig < Cling::Command
 
     fingers_mode_bind("Enter", "noop")
     fingers_mode_bind("Tab", "toggle-multi-mode")
+
+    fingers_mode_bind("e", "set-action:edit")
+    fingers_mode_bind("o", "set-action:open")
+    fingers_mode_bind("p", "set-action:paste")
+
+    ("a".."z").to_a.each do |char|
+      should_skip_hint_bind = @disallowed_chars.includes?(char)
+
+      next if should_skip_hint_bind
+
+      fingers_mode_bind(char, "hint:#{char}:main")
+      fingers_mode_bind(char.upcase, "hint:#{char}:shift")
+      fingers_mode_bind("C-#{char}", "hint:#{char}:ctrl")
+      fingers_mode_bind("M-#{char}", "hint:#{char}:alt")
+    end
 
     fingers_mode_bind("Any", "noop")
   end
@@ -222,6 +229,10 @@ class Fingers::Commands::LoadConfig < Cling::Command
 
   def fingers_mode_bind(key, command)
     `tmux bind-key -Tfingers "#{key}" run-shell -b "#{cli} send-input #{command}"`
+
+    key_without_modifier = key.split("-").last
+
+    @disallowed_chars << key_without_modifier if key_without_modifier.match(/^[a-z]$/)
   end
 
   def cli

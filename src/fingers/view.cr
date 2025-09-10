@@ -11,14 +11,14 @@ module Fingers
     @hinter : Hinter
     @state : State
     @output : Printer
-    @original_pane : Tmux::Pane
+    @fingers_window : Tmux::Window
     @tmux : Tmux
     @mode : String
 
     def initialize(
       @hinter,
       @output,
-      @original_pane,
+      @fingers_window,
       @state,
       @tmux,
       @mode,
@@ -46,6 +46,8 @@ module Fingers
         process_hint(char, modifier)
       when "exit"
         request_exit!
+      when "set-action"
+        process_set_action(args[0].not_nil!)
       when "toggle-help"
       when "toggle-multi-mode"
         process_multimode
@@ -75,8 +77,15 @@ module Fingers
       end
     end
 
+    private def process_set_action(action : String)
+      tmux.rename_window(fingers_window.window_id, "[fingers:#{action}]")
+      state.action = ":#{action}:"
+    end
+
     private def process_multimode
       return if mode == "jump"
+
+      tmux.rename_window(fingers_window.window_id, "[fingers:multi]")
 
       prev_state = state.multi_mode
       state.multi_mode = !state.multi_mode
@@ -88,7 +97,7 @@ module Fingers
       end
     end
 
-    private getter :output, :hinter, :original_pane, :state, :tmux, :mode
+    private getter :output, :hinter, :fingers_window, :state, :tmux, :mode
 
     private def handle_match(match)
       if state.multi_mode

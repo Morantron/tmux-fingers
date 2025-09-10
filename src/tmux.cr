@@ -175,6 +175,10 @@ class Tmux
     Window.from_json(output)
   end
 
+  def rename_window(window_id, name)
+    exec(Process.quote(["rename-window", "-t", window_id, name]))
+  end
+
   def swap_panes(src_id, dst_id)
     args = ["swap-pane", "-d", "-s", src_id, "-t", dst_id]
 
