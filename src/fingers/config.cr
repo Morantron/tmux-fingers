@@ -24,6 +24,7 @@ module Fingers
     property tmux_version : String
     property show_copied_notification : String
     property enabled_builtin_patterns : String
+    property editor : String
 
     FORMAT_PRINTER = TmuxStylePrinter.new
 
@@ -84,7 +85,8 @@ module Fingers
       @tmux_version = "3.1",
       @show_copied_notification = "0",
       @enabled_builtin_patterns = "all",
-      @benchmark_mode = "0"
+      @benchmark_mode = "0",
+      @editor = ""
     )
     end
 

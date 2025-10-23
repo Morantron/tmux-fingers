@@ -4,6 +4,8 @@ module Fingers
   class ActionRunner
     @final_shell_command : String | Nil
 
+    EDITORS = %w(nvim vim vi emacs nano)
+
     def initialize(
       @modifier : String,
       @match : String,
@@ -79,11 +81,20 @@ module Fingers
     end
 
     def edit
+      if editor.empty? || !exec_exists?(editor)
+        tmux.display_message("[tmux-fingers] Could not find editor#{editor.presence && ": #{editor}"}", 3000)
+        return
+      end
+
       "tmux display-popup -w 80% -h 80% -E \"#{editor} #{expanded_match}\""
     end
 
     def editor
-      "nvim"
+      return Fingers.config.editor if Fingers.config.editor.presence
+
+      EDITORS.find do |editor|
+        Process.find_executable(editor)
+      end || ""
     end
 
     def jump
@@ -131,37 +142,37 @@ module Fingers
     def system_copy_command
       return nil unless Fingers.config.use_system_clipboard
 
-      @system_copy_command ||= if program_exists?("pbcopy")
-                                 if program_exists?("reattach-to-user-namespace")
+      @system_copy_command ||= if exec_exists?("pbcopy")
+                                 if exec_exists?("reattach-to-user-namespace")
                                    "reattach-to-user-namespace"
                                  else
                                    "pbcopy"
                                  end
-                               elsif program_exists?("clip.exe")
+                               elsif exec_exists?("clip.exe")
                                  "cat | clip.exe"
-                               elsif program_exists?("wl-copy")
+                               elsif exec_exists?("wl-copy")
                                  "wl-copy"
-                               elsif program_exists?("xclip")
+                               elsif exec_exists?("xclip")
                                  "xclip -selection clipboard"
-                               elsif program_exists?("xsel")
+                               elsif exec_exists?("xsel")
                                  "xsel -i --clipboard"
-                               elsif program_exists?("putclip")
+                               elsif exec_exists?("putclip")
                                  "putclip"
                                end
     end
 
     def system_open_command
-      @system_open_command ||= if program_exists?("cygstart")
+      @system_open_command ||= if exec_exists?("cygstart")
                                  "xargs cygstart"
-                               elsif program_exists?("xdg-open")
+                               elsif exec_exists?("xdg-open")
                                  "xargs xdg-open"
-                               elsif program_exists?("open")
+                               elsif exec_exists?("open")
                                  "xargs open"
                                end
     end
 
-    def program_exists?(program)
-      Process.find_executable(program)
+    def exec_exists?(path : String)
+      Process.find_executable(path)
     end
 
     def tmux

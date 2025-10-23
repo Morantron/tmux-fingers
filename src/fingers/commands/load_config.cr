@@ -77,6 +77,8 @@ class Fingers::Commands::LoadConfig < Cling::Command
         config.show_copied_notification = value
       when "enabled_builtin_patterns"
         config.enabled_builtin_patterns = value
+      when "editor"
+        config.editor = value
       end
 
       if option.match(/^pattern/) && !value.empty?
