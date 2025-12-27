@@ -31,5 +31,13 @@ if [ "$SKIP_WIZARD" = "0" ] && [ "$CURRENT_FINGERS_VERSION" != "$CURRENT_GIT_VER
   fi
 fi
 
-tmux run "$FINGERS_BINARY load-config"
+if [[ "$TERM" == "dumb" ]]; then
+  # force term value to get proper colors in systemd and tmux 3.6a
+  # https://github.com/Morantron/tmux-fingers/issues/143
+  FINGERS_TERM="tmux-256color"
+else
+  FINGERS_TERM="$TERM"
+fi
+
+tmux run "TERM=$FINGERS_TERM $FINGERS_BINARY load-config"
 exit $?
