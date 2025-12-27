@@ -15,6 +15,7 @@ class Fingers::Commands::Info < Cling::Command
       ["log-path", "#{Fingers::Dirs::LOG_PATH}"],
       ["installation-method", "#{WIZARD_INSTALLATION_METHOD || "manual"}"],
       ["tmux-version", `tmux -V`.chomp],
+      ["TERM", ENV["TERM"] || "not set"],
       ["crystal-version", Crystal::VERSION]
     ]
 
