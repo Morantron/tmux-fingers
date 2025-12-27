@@ -95,6 +95,7 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 * [@fingers-show-copied-notification](#fingers-show-copied-notification)
 * [@fingers-enabled-builtin-patterns](#fingers-enabled-builtin-patterns)
 * [@fingers-use-system-clipboard](#fingers-use-system-clipboard)
+* [@fingers-enable-bindings](#fingers-enable-bindings)
 
 Recipes:
 
@@ -283,6 +284,23 @@ A list of comma separated pattern names. Built-in patterns are the following:
 | git-status-branch | will match branch name in the output of git status        | `Your branch is up to date withname-of-branch` |
 | diff              | will match paths in diff output                           | `+++ a/path/to/file`                           |
 
+## @fingers-use-system-clipboard
+
+`default: 1`
+
+Whether to use the system clipboard when copying matches. If set to `0`,
+tmux-fingers will only copy matches to the tmux buffer.
+
+## @fingers-enable-bindings
+
+`default: 1`
+
+By default, tmux-fingers will bind to `prefix` + `@fingers-key` and `prefix` +
+`@fingers-jump-key`. You can opt-out of these bindings in case they clash with
+other parts of your configuration.
+
+Check [recipes](#Recipes) for alternative ways to set up bindings.
+
 ## @fingers-cli
 
 You can set up key bindings directly to invoke tmux-fingers by using a special global option `@fingers-cli` exposed by the plugin.
@@ -308,12 +326,6 @@ Options:
 
 Check some examples in the [Recipes](#Recipes) section below.
 
-## @fingers-use-system-clipboard
-
-`default: 1`
-
-Whether to use the system clipboard when copying matches. If set to `0`,
-tmux-fingers will only copy matches to the tmux buffer.
 
 # Recipes
 

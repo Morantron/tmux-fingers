@@ -76,6 +76,8 @@ class Fingers::Commands::LoadConfig < Cling::Command
         config.show_copied_notification = value
       when "enabled_builtin_patterns"
         config.enabled_builtin_patterns = value
+      when "enable_bindings"
+        config.enable_bindings = to_bool(value)
       end
 
       if option.match(/^pattern/) && !value.empty?
@@ -123,10 +125,14 @@ class Fingers::Commands::LoadConfig < Cling::Command
   end
 
   def setup_bindings
-    `tmux bind-key #{Fingers.config.key} run-shell -b "#{cli} start "\#{pane_id}" >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
-    `tmux bind-key #{Fingers.config.jump_key} run-shell -b "#{cli} start --mode jump "\#{pane_id}" >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
+    setup_root_bindings if Fingers.config.enable_bindings
     setup_fingers_mode_bindings
     `tmux set-option -g @fingers-cli #{cli}`
+  end
+
+  def setup_root_bindings
+    `tmux bind-key #{Fingers.config.key} run-shell -b "#{cli} start "\#{pane_id}" >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
+    `tmux bind-key #{Fingers.config.jump_key} run-shell -b "#{cli} start --mode jump "\#{pane_id}" >>#{Fingers::Dirs::LOG_PATH} 2>&1"`
   end
 
   def setup_fingers_mode_bindings
