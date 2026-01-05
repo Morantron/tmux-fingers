@@ -34,7 +34,7 @@ fi
 if [[ "$TERM" == "dumb" ]]; then
   # force term value to get proper colors in systemd and tmux 3.6a
   # https://github.com/Morantron/tmux-fingers/issues/143
-  FINGERS_TERM="tmux-256color"
+  FINGERS_TERM=$(tmux show-option -gqv default-terminal)
 else
   FINGERS_TERM="$TERM"
 fi
