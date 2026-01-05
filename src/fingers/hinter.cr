@@ -115,6 +115,13 @@ module Fingers
       }
 
       hint = hint_for_text(captured_text)
+
+      # hint is longer than highlighted text, put it back in hint stack
+      if hint.size > captured_text.size
+        hints.push(hint)
+        return text
+      end
+
       build_target(captured_text, hint, absolute_offset)
 
       if !state.input.empty? && !hint.starts_with?(state.input)
