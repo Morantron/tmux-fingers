@@ -1,3 +1,9 @@
+## 2.6.0 - 05 Jan 2026
+
+* Added new @fingers-enable-bindings option ( Fixes #149 )
+* Fixed colors in tmux 3.6a
+* Fixed case where hint is longer than text to highlight ( Fixes #139 and #154 )
+
 ## 2.5.1 - 04 Aug 2025
 
 * Use pane_current_path with presence when chdir ( thanks @na0x2c6 ! )
