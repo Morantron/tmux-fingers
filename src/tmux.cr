@@ -244,7 +244,7 @@ class Tmux
     )
 
     cmd.input.print(value)
-    cmd.input.flush
+    cmd.input.close
 
     cmd.wait
 
