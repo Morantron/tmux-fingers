@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 if [[ -n "$CI_TMUX_VERSION" ]]; then
   VERSIONS=("$CI_TMUX_VERSION")
@@ -7,7 +8,6 @@ else
 fi
 
 mkdir -p /opt
-chmod a+w /opt
 
 pushd /tmp
   for version in "${VERSIONS[@]}";
