@@ -1,3 +1,10 @@
+## 2.6.1 - 27 Jan 2026
+
+* Fix: close stdin before waiting for load-buffer command ( Fixes #157 )
+* handle tab characters properly by prefilling line ( Fixes #155 and #140 )
+* add SHELL variable to info command, and properly handle unset env vars
+* misc dev improvements
+
 ## 2.6.0 - 05 Jan 2026
 
 * Added new @fingers-enable-bindings option ( Fixes #149 )
