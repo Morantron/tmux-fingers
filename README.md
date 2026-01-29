@@ -52,6 +52,24 @@ Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin. The first t
 - Install through [brew](https://brew.sh). _Mac OS only_.
 - Download standalone binary. _Linux x86 only_.
 
+## Using AUR (Arch Linux)
+
+Install the package from the
+[AUR](https://aur.archlinux.org/packages/tmux-fingers) with your favorite AUR
+helper, for example with `yay`:
+
+```
+yay -S tmux-fingers
+```
+
+
+Then add the following to your `.tmux.conf`:
+
+```tmux
+run-shell /usr/share/tmux/plugins/tmux-fingers/tmux-fingers.tmux
+```
+
+
 ## Manual
 
 Clone the repo:
