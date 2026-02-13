@@ -78,8 +78,11 @@ module Fingers
 
     def process_line(line, line_index, ending)
       result = line.gsub(pattern) { |_m| replace($~, line_index) }
-      padding = " " * width
-      output.print(Fingers.config.backdrop_style + padding + "\r" + result + ending)
+      result = Fingers.config.backdrop_style + result
+      double_width_correction = ((line.bytesize - line.size) / 3).round.to_i
+      padding_amount = (width - line.size - double_width_correction)
+      padding = padding_amount > 0 ? " " * padding_amount : ""
+      output.print(result + padding + ending)
     end
 
     def pattern : Regex
