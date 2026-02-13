@@ -1,0 +1,91 @@
+name: Tests
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [develop]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create /app symlink
+        run: sudo ln -s $GITHUB_WORKSPACE /app
+
+      - name: Install dependencies for tmux and benchmarks
+        run: sudo apt-get update && sudo apt-get install -y libevent-dev libncurses-dev build-essential bison pkg-config hyperfine
+
+      - name: Cache tmux installations
+        uses: actions/cache@v4
+        with:
+          path: /opt/tmux-*
+          key: tmux-versions-${{ hashFiles('spec/install-tmux-versions.sh') }}
+
+      - name: Install tmux versions
+        run: sudo bash spec/install-tmux-versions.sh
+
+      - name: Symlink use-tmux.sh
+        run: sudo ln -s $GITHUB_WORKSPACE/spec/use-tmux.sh /opt/use-tmux.sh
+
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: 1.14
+
+      - name: Install dependencies
+        run: shards install
+
+      - name: Run tests
+        run: crystal spec
+
+  benchmaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create /app symlink
+        run: sudo ln -s $GITHUB_WORKSPACE /app
+
+      - name: Install dependencies for tmux and benchmarks
+        run: sudo apt-get update && sudo apt-get install -y libevent-dev libncurses-dev build-essential bison pkg-config hyperfine
+
+      - name: Cache tmux installations
+        uses: actions/cache@v4
+        with:
+          path: /opt/tmux-*
+          key: tmux-versions-${{ hashFiles('spec/install-tmux-versions.sh') }}
+
+      - name: Install tmux versions
+        run: sudo bash spec/install-tmux-versions.sh
+
+      - name: Symlink use-tmux.sh
+        run: sudo ln -s $GITHUB_WORKSPACE/spec/use-tmux.sh /opt/use-tmux.sh
+
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: 1.14
+
+      - name: Install dependencies
+        run: shards install
+
+      - name: Fetch master branch
+        run: git fetch origin master:master && git fetch origin develop:develop
+
+      - name: Setup tmux version for benchmark
+        run: |
+          sudo /opt/use-tmux.sh 3.3a
+          which tmux
+          tmux -V
+
+      - name: Run benchmark
+        run: crystal run dev/benchmark.cr -- ${GITHUB_SHA} master develop
+        env:
+          PATH: /usr/local/bin:/usr/bin:${{ env.PATH }}
+          BENCHMARK_RUNS: 250

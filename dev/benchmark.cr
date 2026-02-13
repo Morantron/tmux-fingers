@@ -1,4 +1,5 @@
 require "json"
+require "tablo"
 
 def fix_git_shit
   `git config --global --add safe.directory /app`
@@ -6,11 +7,12 @@ end
 
 def cleanup
   `tmux kill-server`
-  `rm -rf /root/.local/state/tmux-fingers`
+  `rm -rf ~/.local/state/tmux-fingers`
 end
 
 def run_benchmark
-  `/opt/use-tmux.sh 3.3a`
+  runs = ENV["BENCHMARK_RUNS"]? || "100"
+
   `shards build --production`
 
   puts "running: tmux -f #{Dir.current}/spec/conf/benchmark.conf new-session -d"
@@ -21,11 +23,11 @@ def run_benchmark
 
   sleep 5
 
-  puts "Running benchmarks ..."
+  puts "Running benchmarks with #{runs} runs..."
 
   output_file = File.tempfile("benchmark")
 
-  `tmux new-window 'hyperfine --prepare "bash kill-windows.sh" --warmup 5 --runs 100 "bin/tmux-fingers start %0" --export-json #{output_file.path}'`
+  `tmux new-window 'hyperfine --prepare "bash kill-windows.sh" --warmup 5 --runs #{runs} "bin/tmux-fingers start %0" --export-json #{output_file.path}'`
 
   while File.size(output_file.path) == 0
     puts "Waiting for benchmark results"
@@ -72,10 +74,27 @@ versions.each do |version|
   results << run_benchmark
 end
 
-versions.each_with_index do |version, index|
+data = versions.map_with_index do |version, index|
   result = results[index]?
-
   next unless result
 
-  puts "#{version}: #{result["results"][0]["mean"]}s ± #{result["results"][0]["stddev"]}s"
+  [
+    version,
+    result["results"][0]["mean"].as_f,
+    result["results"][0]["stddev"].as_f,
+    result["results"][0]["min"].as_f,
+    result["results"][0]["max"].as_f,
+  ]
+end.compact
+
+time_format = "%.6fs"
+
+table = Tablo::Table.new(data, wrap_body_cells_to: nil) do |t|
+  t.add_column("Version", width: 40) { |row| row[0] }
+  t.add_column("Mean", width: 14) { |row| time_format % row[1] }
+  t.add_column("Std Dev", width: 14) { |row| time_format % row[2] }
+  t.add_column("Min", width: 14) { |row| time_format % row[3] }
+  t.add_column("Max", width: 14) { |row| time_format % row[4] }
 end
+
+puts table
