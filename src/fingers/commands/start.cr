@@ -232,7 +232,7 @@ module Fingers::Commands
     private def needs_resize?
       pane_width = target_pane.pane_width.to_i
       pane_contents.any? do |line|
-        line.bytesize > line.size || line.size > pane_width || line.includes?("\t")
+        line.bytesize > line.size || line.size > pane_width
       end
     end
 
