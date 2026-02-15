@@ -77,10 +77,15 @@ module Fingers
       :target_by_text
 
     def process_line(line, line_index, ending)
+      tab_positions = tab_positions_for(line)
       result = line.gsub(pattern) { |_m| replace($~, line_index) }
+      initial_length = result.size
+      result = expand_tabs(result, tab_positions)
+      tab_correction = result.size - initial_length
+
       result = Fingers.config.backdrop_style + result
       double_width_correction = ((line.bytesize - line.size) / 3).round.to_i
-      padding_amount = (width - line.size - double_width_correction)
+      padding_amount = (width - line.size - double_width_correction - tab_correction)
       padding = padding_amount > 0 ? " " * padding_amount : ""
       output.print(result + padding + ending)
     end
@@ -225,6 +230,32 @@ module Fingers
       end
 
       result
+    end
+
+    def tab_positions_for(line)
+      positions = [] of Int32
+      offset = 0
+
+      loop do
+        index = line.index("\t", offset)
+
+        break unless index
+        positions << index
+        offset = index + 1
+      end
+
+      positions
+    end
+
+    def expand_tabs(line, tab_positions)
+      correction = 0
+      line.gsub(/\t/) do |_|
+        tab_position = tab_positions.shift?
+        next "\t" unless tab_position
+        spaces = 8 - ((tab_position + correction) % 8)
+        correction += spaces - 1
+        " " * spaces
+      end
     end
 
     private property lines : Array(String)
