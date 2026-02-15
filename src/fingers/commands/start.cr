@@ -172,17 +172,24 @@ module Fingers::Commands
     end
 
     private def show_hints
-      # Attention! It is very important to resize the window at this point to
-      # match the dimensions of the target pane. Otherwise weird linejumping
-      # will occur when we have wrapped lines.
+      # It is very important to resize the window at this point to match the
+      # dimensions of the target pane. Otherwise weird linejumping will occur
+      # when we have wrapped lines.
       tmux.resize_window(
         fingers_window.window_id,
         target_pane.pane_width,
         target_pane.pane_height,
       ) if needs_resize?
 
-      view.render
-      tmux.swap_panes(fingers_window.pane_id, target_pane.pane_id)
+      # Swapping panes with -Z flag causes some issues with rendering panes
+      # with tabs or double width characters
+      if target_pane.window_zoomed_flag
+        tmux.swap_panes(fingers_window.pane_id, target_pane.pane_id)
+        view.render
+      else
+        view.render
+        tmux.swap_panes(fingers_window.pane_id, target_pane.pane_id)
+      end
     end
 
     private def handle_input
