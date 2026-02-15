@@ -1,3 +1,8 @@
+## 2.6.2 - 15 Feb 2026
+
+* Fix line jumping and backdrop-style rendering issues related with tabs,
+  double width characters, and zoomed panes.
+
 ## 2.6.1 - 27 Jan 2026
 
 * Fix: close stdin before waiting for load-buffer command ( Fixes #157 )
