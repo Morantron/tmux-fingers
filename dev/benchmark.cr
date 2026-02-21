@@ -13,7 +13,7 @@ end
 def run_benchmark
   runs = ENV["BENCHMARK_RUNS"]? || "100"
 
-  `shards build --production`
+  `FINGERS_LOG_PATH=fingers.log shards build --production`
 
   puts "running: tmux -f #{Dir.current}/spec/conf/benchmark.conf new-session -d"
   `tmux -f #{Dir.current}/spec/conf/benchmark.conf new-session -d`

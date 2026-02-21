@@ -152,7 +152,7 @@ module Fingers
     end
 
     def tmux
-      Tmux.new(Fingers.config.tmux_version)
+      Tmux.new("3.3a")
     end
 
     # This takes care of some path expansion weirdness when opening paths that start with ~ in MacOS
