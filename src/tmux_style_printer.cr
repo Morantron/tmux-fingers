@@ -3,10 +3,6 @@ class TmuxStylePrinter
   class InvalidFormat < Exception
   end
 
-  abstract class Shell
-    abstract def exec(cmd)
-  end
-
   STYLE_SEPARATOR = /[ ,]+/
 
   COLOR_MAP = {
@@ -20,32 +16,25 @@ class TmuxStylePrinter
     white:   7,
   }
 
-  LAYER_MAP = {
-    bg: "setab",
-    fg: "setaf",
+  LAYER_CODE = {
+    "bg" => 48,
+    "fg" => 38,
   }
 
   STYLE_MAP = {
-    bright:     "bold",
-    bold:       "bold",
-    dim:        "dim",
-    underscore: "smul",
-    reverse:    "rev",
-    italics:    "sitm",
+    "bright"     => "\e[1m",
+    "bold"       => "\e[1m",
+    "dim"        => "\e[2m",
+    "underscore" => "\e[4m",
+    "reverse"    => "\e[7m",
+    "italics"    => "\e[3m",
   }
 
-  class ShellExec < Shell
-    def exec(cmd)
-      `#{cmd}`.chomp
-    end
-  end
+  RESET = "\e[0m"
 
-  @shell : Shell
   @applied_styles : Hash(String, String)
-  @reset_sequence : String | Nil
 
-  def initialize(shell = ShellExec.new)
-    @shell = shell
+  def initialize
     @applied_styles = {} of String => String
   end
 
@@ -58,7 +47,7 @@ class TmuxStylePrinter
       output += parse_style_definition(style)
     end
 
-    output += reset_sequence if reset_styles_after && !@applied_styles.empty?
+    output += RESET if reset_styles_after && !@applied_styles.empty?
 
     output
   end
@@ -89,7 +78,7 @@ class TmuxStylePrinter
 
     raise InvalidFormat.new("Invalid color definition: #{style}") if color_to_apply.nil?
 
-    result = shell.exec("tput #{LAYER_MAP[layer]} #{color_to_apply}")
+    result = "\e[#{LAYER_CODE[layer]};5;#{color_to_apply}m"
 
     @applied_styles[layer] = result
 
@@ -108,7 +97,7 @@ class TmuxStylePrinter
 
     raise InvalidFormat.new("Invalid style definition: #{style}") if style_to_apply.nil?
 
-    result = style == "dim" ? "\033[2m" : shell.exec("tput #{STYLE_MAP[style]}")
+    result = style_to_apply
 
     if should_remove_style
       @applied_styles.delete(style)
@@ -121,14 +110,6 @@ class TmuxStylePrinter
   end
 
   private def reset_to_applied_styles!
-    [reset_sequence, @applied_styles.values].join
-  end
-
-  private def reset_sequence
-    @reset_sequence ||= shell.exec("tput sgr0").chomp
-  end
-
-  private def shell
-    @shell
+    [RESET, @applied_styles.values].join
   end
 end
