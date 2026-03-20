@@ -48,7 +48,7 @@ set -g @plugin 'Morantron/tmux-fingers'
 
 Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin. The first time you run it you'll be presented with a wizard to complete the installation. Depending on the platform, the wizard will offer the following installation methods:
 
-- Building from source (requires [crystal](https://crystal-lang.org/install/)). _Available in all platforms_
+- Building from source (requires [crystal](https://crystal-lang.org/install/) and its package manager [shards](https://crystal-lang.org/reference/latest/man/shards/index.html)). _Available in all platforms_
 - Install through [brew](https://brew.sh). _Mac OS only_.
 - Download standalone binary. _Linux x86 only_.
 

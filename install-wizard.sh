@@ -31,11 +31,20 @@ trap finish EXIT
 function install_from_source() {
   echo "Installing from source..."
 
-  # check if shards is installed
-  if ! command -v shards >/dev/null 2>&1; then
+  # check if crystal is installed
+  if ! command -v crystal >/dev/null 2>&1; then
     echo "crystal is not installed. Please install it first."
     echo ""
     echo "  https://crystal-lang.org/install/"
+    echo ""
+    exit 1
+  fi
+
+  # check if shards is installed
+  if ! command -v shards >/dev/null 2>&1; then
+    echo "shards is not installed. Please install it first."
+    echo ""
+    echo "  https://crystal-lang.org/reference/latest/man/shards/index.html"
     echo ""
     exit 1
   fi
