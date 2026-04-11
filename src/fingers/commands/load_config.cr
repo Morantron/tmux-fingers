@@ -46,9 +46,6 @@ class Fingers::Commands::LoadConfig < Cling::Command
     config.save
 
     Fingers.reset_config
-  rescue e : TmuxStylePrinter::InvalidFormat
-    puts "[tmux-fingers] #{e.message}"
-    exit(1)
   end
 
   def add_builtin_patterns
