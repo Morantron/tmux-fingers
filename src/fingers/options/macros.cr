@@ -85,6 +85,15 @@ macro define_key_option(name, default)
   end
 end
 
+macro define_string_option(name, default)
+  module Fingers::Options
+    class {{name.camelcase.id}} < Base
+      DEFAULT = {{ default }}
+      alias Type = String
+    end
+  end
+end
+
 macro define_action_option(name, default)
   module Fingers::Options
     class {{"#{name}_action".gsub(/^:/, "").camelcase.id}} < Base

@@ -26,6 +26,8 @@ define_style_option :selected_hint, Tmux.style_printer.print("fg=blue,bold")
 define_style_option :selected_highlight, Tmux.style_printer.print("fg=blue")
 define_style_option :backdrop, ""
 
+define_string_option :tmux_version, ""
+
 define_fingers_macros
 
 module Fingers::Options

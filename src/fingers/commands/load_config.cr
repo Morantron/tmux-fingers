@@ -41,6 +41,8 @@ class Fingers::Commands::LoadConfig < Cling::Command
 
     add_builtin_patterns
 
+    config.tmux_version = tmux_version
+
     config.save
 
     Fingers.reset_config
@@ -153,6 +155,10 @@ class Fingers::Commands::LoadConfig < Cling::Command
   end
 
   def tmux
-    Tmux.new(`tmux -V`.chomp.split(" ").last)
+    Tmux.new(tmux_version)
+  end
+
+  def tmux_version
+    `tmux -V`.chomp.split(" ").last
   end
 end
