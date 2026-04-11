@@ -7,8 +7,6 @@ def running_in_specs? : Bool
   {{ @type.has_constant?("Spec") }}
 end
 
-
-
 module Fingers
   VERSION = {{ %(#{`shards version`.chomp}) }}
 
