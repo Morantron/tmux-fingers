@@ -30,8 +30,6 @@ class TmuxStylePrinter
     "italics"    => "\e[3m",
   }
 
-  RESET = "\e[0m"
-
   @applied_styles : Hash(String, String)
 
   def initialize
@@ -47,7 +45,7 @@ class TmuxStylePrinter
       output += parse_style_definition(style)
     end
 
-    output += RESET if reset_styles_after && !@applied_styles.empty?
+    output += Fingers::ANSI_RESET if reset_styles_after && !@applied_styles.empty?
 
     output
   end
@@ -110,6 +108,6 @@ class TmuxStylePrinter
   end
 
   private def reset_to_applied_styles!
-    [RESET, @applied_styles.values].join
+    [Fingers::ANSI_RESET, @applied_styles.values].join
   end
 end

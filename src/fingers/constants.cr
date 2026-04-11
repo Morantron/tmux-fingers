@@ -43,4 +43,6 @@ module Fingers
   OPEN_ACTION = ":open:"
 
   ACTIONS = [COPY_ACTION, PASTE_ACTION, OPEN_ACTION]
+
+  ANSI_RESET = "\e[0m"
 end

@@ -10,7 +10,7 @@ module Fingers
       selected_highlight_style : String = Fingers.config.selected_highlight_style,
       backdrop_style : String = Fingers.config.backdrop_style,
       hint_position : String = Fingers.config.hint_position,
-      reset_sequence : String = "\e[0m"
+      reset_sequence : String = Fingers::ANSI_RESET
     )
       @hint_style = hint_style
       @highlight_style = highlight_style
@@ -54,9 +54,9 @@ module Fingers
       highlight_pair = (selected ? selected_highlight_style : highlight_style) + chopped_highlight
 
       if hint_position == "right"
-        highlight_pair + reset_sequence + hint_pair + reset_sequence
+        reset_sequence + highlight_pair + reset_sequence + hint_pair + reset_sequence
       else
-        hint_pair + reset_sequence + highlight_pair + reset_sequence
+        reset_sequence + hint_pair + reset_sequence + highlight_pair + reset_sequence
       end
     end
 
