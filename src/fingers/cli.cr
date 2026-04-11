@@ -1,5 +1,5 @@
-require "./commands/*"
 require "cling"
+require "./commands/*"
 
 module Fingers
   class MainCommand < Cling::Command

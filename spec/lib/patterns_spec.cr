@@ -3,7 +3,7 @@ require "../../src/fingers/config"
 require "string_scanner"
 
 def matches_for(pattern_name, input)
-  pattern = Regex.new(::Fingers::Config::BUILTIN_PATTERNS[pattern_name])
+  pattern = Regex.new(::Fingers::BUILTIN_PATTERNS[pattern_name])
   input.scan(pattern).map { |m| m["match"]? || m[0] }
 end
 

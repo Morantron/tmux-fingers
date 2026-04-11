@@ -99,7 +99,7 @@ module Fingers::Commands
 
       show_hints
 
-      if Fingers.config.benchmark_mode == "1"
+      if Fingers.config.benchmark_mode
         exit(0)
       end
 
@@ -300,7 +300,7 @@ module Fingers::Commands
     end
 
     private getter tmux : Tmux do
-      Tmux.new(Fingers.config.tmux_version)
+      Tmux.new("3.3a")
     end
 
     private def should_notify?
