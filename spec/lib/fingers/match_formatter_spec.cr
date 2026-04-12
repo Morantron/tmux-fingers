@@ -31,14 +31,14 @@ describe Fingers::MatchFormatter do
     context "is set to left" do
       it "places the hint on the left side" do
         result = setup(hint_position: "left")
-        result.should eq("#[reset]#[fg=yellow,bold]a#[reset]#[fg=yellow]olo#[reset]#[bg=black,fg=white]")
+        result.should eq("#[reset]#[reset]#[fg=yellow,bold]a#[reset]#[fg=yellow]olo#[reset]#[bg=black,fg=white]")
       end
     end
 
     context "is set to right" do
       it "places the hint on the right side" do
         result = setup(hint_position: "right")
-        result.should eq("#[reset]#[fg=yellow]yol#[reset]#[fg=yellow,bold]a#[reset]#[bg=black,fg=white]")
+        result.should eq("#[reset]#[reset]#[fg=yellow]yol#[reset]#[fg=yellow,bold]a#[reset]#[bg=black,fg=white]")
       end
     end
   end
@@ -46,14 +46,14 @@ describe Fingers::MatchFormatter do
   context "when a hint is selected" do
     it "selects the correct format" do
       result = setup(selected: true)
-      result.should eq("#[reset]#[fg=green,bold]a#[reset]#[fg=green]olo#[reset]#[bg=black,fg=white]")
+      result.should eq("#[reset]#[reset]#[fg=green,bold]a#[reset]#[fg=green]olo#[reset]#[bg=black,fg=white]")
     end
   end
 
   context "when offset is provided" do
     it "only highlights at specified offset" do
       result = setup(offset: {1, 5}, highlight: "yoloyoloyolo", hint: "a")
-      result.should eq("#[reset]#[bg=black,fg=white]y#[fg=yellow,bold]a#[reset]#[fg=yellow]loyo#[reset]#[bg=black,fg=white]loyolo#[bg=black,fg=white]")
+      result.should eq("#[reset]#[bg=black,fg=white]y#[reset]#[fg=yellow,bold]a#[reset]#[fg=yellow]loyo#[reset]#[bg=black,fg=white]loyolo#[bg=black,fg=white]")
     end
   end
 end
