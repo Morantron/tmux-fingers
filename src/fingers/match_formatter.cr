@@ -30,7 +30,7 @@ module Fingers
     private getter :hint_style, :highlight_style, :selected_hint_style, :selected_highlight_style, :hint_position, :reset_sequence, :backdrop_style
 
     private def before_offset(offset, highlight)
-      return "" if offset.nil?
+      return "" if offset.nil? || offset[0] == 0
       start, _ = offset
       backdrop_style + highlight[0..(start - 1)]
     end
