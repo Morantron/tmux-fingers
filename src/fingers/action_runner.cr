@@ -125,7 +125,7 @@ module Fingers
                                    "pbcopy"
                                  end
                                elsif program_exists?("clip.exe")
-                                 "cat | clip.exe"
+                                 "clip.exe"
                                elsif program_exists?("wl-copy")
                                  "wl-copy"
                                elsif program_exists?("xclip")
