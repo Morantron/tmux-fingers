@@ -223,6 +223,10 @@ module Fingers::Commands
       ).run
 
       tmux.display_message("Copied: #{state.result}", 1000) if should_notify?
+    rescue e
+      Log.error { "Error processing result: #{e.message}" }
+
+      tmux.display_message("#[bg=red,fg=white,bold][tmux-fingers]#[bg=red,fg=black,nobold] #{e.message}".ljust(target_pane.pane_width * 2, ' '), 3000)
     end
 
     private def select_active_pane
