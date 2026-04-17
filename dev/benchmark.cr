@@ -48,12 +48,12 @@ def replace_string_in_file(file_path : String, search_string : String, replace_s
 end
 
 def clone_repo_and_cd(version)
+  fix_git_shit
+
   repo_path = "/tmp/tmux-fingers-#{version}"
   `git clone /app #{repo_path}`
 
   Dir.cd(repo_path)
-
-  fix_git_shit
 
   `git checkout #{version}`
 
