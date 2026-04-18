@@ -1,6 +1,9 @@
 name: Deployment
 
 on:
+  push:
+    branches:
+      - linux-arm64-binary
   release:
     types:
       - created
@@ -18,15 +21,15 @@ jobs:
       run: shards build --production --release --static --no-debug
       env:
         WIZARD_INSTALLATION_METHOD: download-binary
-    - name: Upload
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./bin/tmux-fingers
-        asset_name: tmux-fingers-${{ github.event.release.tag_name }}-linux-x86_64
-        asset_content_type: binary/octet-stream
+    #- name: Upload
+      #uses: actions/upload-release-asset@v1.0.1
+      #env:
+        #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #with:
+        #upload_url: ${{ github.event.release.upload_url }}
+        #asset_path: ./bin/tmux-fingers
+        #asset_name: tmux-fingers-${{ github.event.release.tag_name }}-linux-x86_64
+        #asset_content_type: binary/octet-stream
   dist_linux_arm64:
     runs-on: ubuntu-24.04-arm
     container:
@@ -39,15 +42,15 @@ jobs:
       run: shards build --production --release --static --no-debug
       env:
         WIZARD_INSTALLATION_METHOD: download-binary
-    - name: Upload
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./bin/tmux-fingers
-        asset_name: tmux-fingers-${{ github.event.release.tag_name }}-linux-arm64
-        asset_content_type: binary/octet-stream
+    #- name: Upload
+      #uses: actions/upload-release-asset@v1.0.1
+      #env:
+        #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #with:
+        #upload_url: ${{ github.event.release.upload_url }}
+        #asset_path: ./bin/tmux-fingers
+        #asset_name: tmux-fingers-${{ github.event.release.tag_name }}-linux-arm64
+        #asset_content_type: binary/octet-stream
   dist_macos_arm64:
     runs-on: macos-latest
     steps:
@@ -69,22 +72,22 @@ jobs:
           --link-flags="-L $(pwd)/bin $(pwd)/bin/libgc.a $(pwd)/bin/libpcre2-8.a"
       env:
         WIZARD_INSTALLATION_METHOD: download-binary
-    - name: Upload
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./bin/tmux-fingers
-        asset_name: tmux-fingers-${{ github.event.release.tag_name }}-macos-arm64
-        asset_content_type: binary/octet-stream
-  dist_homebrew:
-    name: Bump Homebrew formula
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: mislav/bump-homebrew-formula-action@v2
-        with:
-          formula-name: tmux-fingers
-          homebrew-tap: morantron/homebrew-tmux-fingers
-        env:
-          COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+    #- name: Upload
+      #uses: actions/upload-release-asset@v1.0.1
+      #env:
+        #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #with:
+        #upload_url: ${{ github.event.release.upload_url }}
+        #asset_path: ./bin/tmux-fingers
+        #asset_name: tmux-fingers-${{ github.event.release.tag_name }}-macos-arm64
+        #asset_content_type: binary/octet-stream
+  #dist_homebrew:
+    #name: Bump Homebrew formula
+    #runs-on: ubuntu-24.04
+    #steps:
+      #- uses: mislav/bump-homebrew-formula-action@v2
+        #with:
+          #formula-name: tmux-fingers
+          #homebrew-tap: morantron/homebrew-tmux-fingers
+        #env:
+          #COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
