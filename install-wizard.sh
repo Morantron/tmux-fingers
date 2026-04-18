@@ -63,6 +63,8 @@ function asset_suffix() {
 
   if [[ "$PLATFORM" == "Linux" && "$arch" == "x86_64" ]]; then
     echo "linux-x86_64"
+  elif [[ "$PLATFORM" == "Linux" && "$arch" == "aarch64" ]]; then
+    echo "linux-arm64"
   elif [[ "$PLATFORM" == "Darwin" && "$arch" == "arm64" ]]; then
     echo "macos-arm64"
   fi
