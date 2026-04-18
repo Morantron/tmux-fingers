@@ -7,7 +7,7 @@ on:
 
 jobs:
   dist_linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container:
       image: crystallang/crystal:1.19-alpine
     steps:
@@ -59,7 +59,7 @@ jobs:
         asset_content_type: binary/octet-stream
   dist_homebrew:
     name: Bump Homebrew formula
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: mislav/bump-homebrew-formula-action@v2
         with:
