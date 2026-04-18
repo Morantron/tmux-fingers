@@ -33,11 +33,9 @@ jobs:
   dist_linux_arm64:
     runs-on: ubuntu-24.04-arm
     container:
-      image: crystallang/crystal:1.19-alpine
+      image: crystallang/crystal:1.19
     steps:
     - uses: actions/checkout@v3
-    - name: Update Libs
-      run: apk add --update --upgrade --no-cache --force-overwrite libxml2-dev yaml-dev yaml-static
     - name: Build
       run: shards build --production --release --static --no-debug
       env:
