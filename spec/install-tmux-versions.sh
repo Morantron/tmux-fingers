@@ -22,6 +22,7 @@ pushd /tmp
     pushd "/opt/tmux-${version}"
       ./configure
       make
+      chmod -R a+r /opt/tmux-${version}
     popd
   done
 popd
