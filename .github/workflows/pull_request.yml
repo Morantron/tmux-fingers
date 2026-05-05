@@ -74,8 +74,11 @@ jobs:
       - name: Install dependencies
         run: shards install
 
-      - name: Fetch master branch
-        run: git fetch origin master:master && git fetch origin develop:develop
+      - name: Fetch main branches
+        run: |
+          git fetch origin master develop
+          git branch -f master origin/master 2>/dev/null || true
+          git branch -f develop origin/develop 2>/dev/null || true
 
       - name: Setup tmux version for benchmark
         run: |
