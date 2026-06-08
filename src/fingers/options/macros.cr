@@ -76,6 +76,20 @@ macro define_enum_option(name, possible_values, default)
   end
 end
 
+macro define_multi_enum_option(name, possible_values, default)
+  module Fingers::Options
+    class {{name.camelcase.id}} < Base
+      include ::Fingers::Options::Parsers::MultiEnumParser
+      DEFAULT = {{ default }}
+      alias Type = String
+
+      def possible_values
+        {{ possible_values }}
+      end
+    end
+  end
+end
+
 macro define_key_option(name, default)
   module Fingers::Options
     class {{name.camelcase.id}} < Base
