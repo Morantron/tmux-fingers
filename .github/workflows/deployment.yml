@@ -9,7 +9,7 @@ jobs:
   dist_linux:
     runs-on: ubuntu-latest
     container:
-      image: crystallang/crystal:1.14-alpine
+      image: crystallang/crystal:1.19-alpine
     steps:
     - uses: actions/checkout@v3
     - name: Update Libs
@@ -26,6 +26,36 @@ jobs:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./bin/tmux-fingers
         asset_name: tmux-fingers-${{ github.event.release.tag_name }}-linux-x86_64
+        asset_content_type: binary/octet-stream
+  dist_macos_arm64:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Crystal
+      uses: crystal-lang/install-crystal@v1
+      with:
+        crystal: "1.19"
+    - name: Install static lib dependencies
+      run: brew install bdw-gc pcre2
+    - name: Prepare static libs
+      run: |
+        mkdir -p bin
+        ln -sf $(brew --prefix bdw-gc)/lib/libgc.a bin/libgc.a
+        ln -sf $(brew --prefix pcre2)/lib/libpcre2-8.a bin/libpcre2-8.a
+    - name: Build
+      run: |
+        shards build --production --release --no-debug \
+          --link-flags="-L $(pwd)/bin $(pwd)/bin/libgc.a $(pwd)/bin/libpcre2-8.a"
+      env:
+        WIZARD_INSTALLATION_METHOD: download-binary
+    - name: Upload
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./bin/tmux-fingers
+        asset_name: tmux-fingers-${{ github.event.release.tag_name }}-macos-arm64
         asset_content_type: binary/octet-stream
   dist_homebrew:
     name: Bump Homebrew formula

@@ -1,8 +1,13 @@
 require "file_utils"
 require "xdg_base_directory"
 
+def running_in_specs? : Bool
+  {{ @type.has_constant?("Spec") }}
+end
+
 module Fingers::Dirs
-  TMUX_PID = (ENV.fetch("TMUX", ",0000")).split(",")[1]
+  # When running in specs use current PID, to avoid using existing cached data
+  TMUX_PID = running_in_specs? ? Process.pid : (ENV.fetch("TMUX", ",0000")).split(",")[1]
   XDG = XdgBaseDirectory.app_directories("tmux-fingers")
 
   TMP = Path[File.dirname(File.tempname)]

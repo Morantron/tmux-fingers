@@ -3,17 +3,17 @@ require "file_utils"
 require "./base"
 require "../dirs"
 require "../config"
+require "../options"
+require "../options/*"
 require "../../tmux"
+require "colorize"
 
 class Fingers::Commands::LoadConfig < Cling::Command
   @fingers_options_names : Array(String) | Nil
 
   property config : Fingers::Config = Fingers::Config.new
 
-  DISALLOWED_CHARS = /[cimqn]/
-
   PRIVATE_OPTIONS = [
-    "skip_wizard",
     "cli"
   ]
 
@@ -33,93 +33,32 @@ class Fingers::Commands::LoadConfig < Cling::Command
   def parse_tmux_conf
     options = shell_safe_options
 
-    user_defined_patterns = [] of Tuple(String, String)
-
     Fingers.reset_config
 
-    config.tmux_version = `tmux -V`.chomp.split(" ").last
-
     options.each do |option, value|
-      # TODO generate an enum somehow and use an exhaustive case
-      case option
-      when "key"
-        config.key = value
-      when "jump_key"
-        config.jump_key = value
-      when "keyboard_layout"
-        config.keyboard_layout = value
-      when "main_action"
-        config.main_action = value
-      when "ctrl_action"
-        config.ctrl_action = value
-      when "alt_action"
-        config.alt_action = value
-      when "shift_action"
-        config.shift_action = value
-      when "use_system_clipboard"
-        config.use_system_clipboard = to_bool(value)
-      when "benchmark_mode"
-        config.benchmark_mode = value
-      when "hint_position"
-        config.hint_position = value
-      when "hint_style"
-        config.hint_style = tmux.parse_style(value)
-      when "selected_hint_style"
-        config.selected_hint_style = tmux.parse_style(value)
-      when "highlight_style"
-        config.highlight_style = tmux.parse_style(value)
-      when "backdrop_style"
-        config.backdrop_style = tmux.parse_style(value)
-      when "selected_highlight_style"
-        config.selected_highlight_style = tmux.parse_style(value)
-      when "show_copied_notification"
-        config.show_copied_notification = value
-      when "enabled_builtin_patterns"
-        config.enabled_builtin_patterns = value
-      when "enable_bindings"
-        config.enable_bindings = to_bool(value)
-      end
-
-      if option.match(/^pattern/) && !value.empty?
-        check_pattern!(value)
-        user_defined_patterns.push({ option.gsub(/^pattern_/, ""), value })
-      end
+      Fingers::Options.parse(option, value, config)
     end
 
-    add_user_defined_patterns(user_defined_patterns)
     add_builtin_patterns
 
-    config.alphabet = ::Fingers::Config::ALPHABET_MAP[Fingers.config.keyboard_layout].split("").reject do |char|
-      char.match(DISALLOWED_CHARS)
-    end
+    config.tmux_version = tmux_version
 
     config.save
 
     Fingers.reset_config
-  rescue e : TmuxStylePrinter::InvalidFormat
-    puts "[tmux-fingers] #{e.message}"
-    exit(1)
-  end
-
-  def add_user_defined_patterns(patterns : Array(Tuple(String, String)))
-    patterns.each do |p|
-      name, pattern = p
-
-      config.patterns[name] = pattern
-    end
   end
 
   def add_builtin_patterns
     pattern_names = [] of String
 
     if config.enabled_builtin_patterns == "all"
-      pattern_names = ::Fingers::Config::BUILTIN_PATTERNS.keys
+      pattern_names = ::Fingers::BUILTIN_PATTERNS.keys
     else
       pattern_names = config.enabled_builtin_patterns.split(",")
     end
 
     pattern_names.each do |name|
-      pattern = Fingers::Config::BUILTIN_PATTERNS[name]?
+      pattern = Fingers::BUILTIN_PATTERNS[name]?
       config.patterns[name.to_s] = pattern if pattern
     end
   end
@@ -158,30 +97,17 @@ class Fingers::Commands::LoadConfig < Cling::Command
     fingers_mode_bind("Any", "noop")
   end
 
-  def enabled_default_patterns
-    ::Fingers::Config::BUILTIN_PATTERNS.values
-  end
-
-  def to_bool(input)
-    input == "1"
-  end
-
   def shell_safe_options
     options = {} of String => String
 
-    fingers_options_names.each do |option|
-      option_method = option_to_method(option)
+    fingers_options_names.each do |tmux_option|
+      option = from_tmux_option(tmux_option)
+      next if PRIVATE_OPTIONS.includes?(option)
 
-      options[option_method] = `tmux show-option -gv #{option}`.chomp
+      options[option] = `tmux show-option -gv #{tmux_option}`.chomp
     end
 
     options
-  end
-
-  def valid_option?(option)
-    option_method = option_to_method(option)
-
-    config.members.includes?(option_method) || option_method.match(/^pattern_+/) || PRIVATE_OPTIONS.includes?(option_method)
   end
 
   def fingers_options_names
@@ -191,39 +117,30 @@ class Fingers::Commands::LoadConfig < Cling::Command
                                  .reject { |option| option.empty? }
   end
 
-  def unset_tmux_option!(option)
-    `tmux set-option -ug #{option}`
-  end
+  def validate_options!
+    options = shell_safe_options
 
-  def check_pattern!(pattern)
-    begin
-      Regex.new(pattern)
-    rescue e: ArgumentError
-      puts "[tmux-fingers] Invalid pattern: #{pattern}"
-      puts "[tmux-fingers] #{e.message}"
+    errors = [] of String
+
+    options.each do |option, value|
+      is_valid, message = Fingers::Options.valid?(option, value)
+
+      errors << "#{to_tmux_option(option).colorize.bold}: #{message}" unless is_valid
+    end
+
+    unless errors.empty?
+      puts "[tmux-fingers] Configuration errors:".colorize(:red)
+      errors.each { |error| puts "  - #{error}" }
       exit(1)
     end
   end
 
-  def validate_options!
-    errors = [] of String
-
-    fingers_options_names.each do |option|
-      unless valid_option?(option)
-        errors << "'#{option}' is not a valid option"
-        unset_tmux_option!(option)
-      end
-    end
-
-    return if errors.empty?
-
-    puts "[tmux-fingers] Errors found in tmux.conf:"
-    errors.each { |error| puts "  - #{error}" }
-    exit(1)
+  def from_tmux_option(value)
+    value.gsub(/^@fingers-/, "").tr("-", "_")
   end
 
-  def option_to_method(option)
-    option.gsub(/^@fingers-/, "").tr("-", "_")
+  def to_tmux_option(value)
+    "@fingers-#{value.to_s.tr("_", "-")}"
   end
 
   def fingers_mode_bind(key, command)
@@ -235,6 +152,10 @@ class Fingers::Commands::LoadConfig < Cling::Command
   end
 
   def tmux
-    Tmux.new(`tmux -V`.chomp.split(" ").last)
+    Tmux.new(tmux_version)
+  end
+
+  def tmux_version
+    `tmux -V`.chomp.split(" ").last
   end
 end

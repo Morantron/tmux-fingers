@@ -108,6 +108,10 @@ class Tmux
   @panes : Array(Pane) | Nil
   @version : SemanticVersion
 
+  def self.style_printer
+    @@style_printer ||= TmuxStylePrinter.new
+  end
+
   def self.tmux_version_to_semver(version_string)
     match = version_string.match(/(?<major>[1-9]+[0-9]*)\.(?<minor>[0-9]+)(?<patch_letter>[a-z]+)?/)
 

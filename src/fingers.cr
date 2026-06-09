@@ -1,4 +1,6 @@
 require "./fingers/logger"
+require "./fingers/constants"
+require "./fingers/options"
 require "./fingers/cli"
 
 def running_in_specs? : Bool
