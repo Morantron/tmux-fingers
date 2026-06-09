@@ -13,7 +13,7 @@ define_bool_option :skip_wizard, false
 
 define_enum_option :hint_position, %w(left right), "left"
 define_enum_option :keyboard_layout, Fingers::ALPHABET_MAP.keys, "qwerty"
-define_enum_option :enabled_builtin_patterns, ["all", *Fingers::BUILTIN_PATTERNS.keys], "all"
+define_multi_enum_option :enabled_builtin_patterns, ["all", *Fingers::BUILTIN_PATTERNS.keys], "all"
 
 define_action_option :main, ":copy:"
 define_action_option :ctrl, ":open:"

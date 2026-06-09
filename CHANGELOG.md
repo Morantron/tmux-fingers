@@ -1,6 +1,6 @@
 ## 2.7.0 - 31 May 2026
 
-* improved performance
+* improved performance: ~30% faster
 * added macOS arm64 binary to the release/download pipeline
 * added kubernetes-pod builtin pattern for pod names
 * fixed clipboard integration in WSL
