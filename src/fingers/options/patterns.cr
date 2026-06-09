@@ -7,7 +7,7 @@ module Fingers::Options
 
     def parse(raw_value : String, option_name : String)
       val = {} of String => String
-      val[option_name.gsub(/^pattern-/, "")] = raw_value
+      val[option_name.gsub(/^pattern[-_]/, "")] = raw_value
       val
     end
 

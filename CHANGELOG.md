@@ -1,3 +1,9 @@
+## 2.7.1 - 09 Jun 2026
+
+* fix parsing of @fingers-enabled-builtin-patterns ( Fixes #176 )
+* update install-wizard and readme to show that shards is required
+* relax parsing of --patterns flag in cli
+
 ## 2.7.0 - 31 May 2026
 
 * improved performance: ~30% faster
