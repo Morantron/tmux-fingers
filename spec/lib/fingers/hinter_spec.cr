@@ -110,6 +110,47 @@ Changes not staged for commit:
     hinter.run
   end
 
+  it "pads double-width (CJK) lines to the pane width without overflow" do
+    width = 20
+    output = TextOutput.new
+    patterns = Fingers::BUILTIN_PATTERNS.values.to_a
+    alphabet = "asdf".split("")
+
+    # 5 fullwidth katakana = 10 display columns; expect 10 trailing pad spaces
+    # so the rendered line is exactly `width` columns and never wraps.
+    input = ["アイウエオ"]
+
+    hinter = Fingers::Hinter.new(
+      input: input,
+      width: width,
+      patterns: patterns,
+      state: ::Fingers::State.new,
+      alphabet: alphabet,
+      output: output,
+    )
+
+    hinter.run
+
+    trailing_spaces = output.contents.size - output.contents.rstrip(' ').size
+    trailing_spaces.should eq(width - 10)
+  end
+
+  it "counts wide characters exactly via double_width_correction_for" do
+    output = TextOutput.new
+    hinter = Fingers::Hinter.new(
+      input: [""] of String,
+      width: 100,
+      patterns: Fingers::BUILTIN_PATTERNS.values.to_a,
+      state: ::Fingers::State.new,
+      alphabet: "asdf".split(""),
+      output: output,
+    )
+
+    hinter.double_width_correction_for("最終形:").should eq(3) # 3 CJK, 1 ASCII colon
+    hinter.double_width_correction_for("hello world").should eq(0)
+    hinter.double_width_correction_for("🦀 rust").should eq(1) # emoji stays wide
+  end
+
   it "can rerender when not reusing hints" do
     width = 100
     output = TextOutput.new

@@ -84,10 +84,51 @@ module Fingers
       tab_correction = result.size - initial_length
 
       result = Fingers.config.backdrop_style + result
-      double_width_correction = ((line.bytesize - line.size) / 3).round.to_i
+      double_width_correction = double_width_correction_for(line)
       padding_amount = (width - line.size - double_width_correction - tab_correction)
       padding = padding_amount > 0 ? " " * padding_amount : ""
       output.print(result + padding + ending)
+    end
+
+    # Each double-width (East Asian Wide/Fullwidth, or emoji) character occupies
+    # two terminal columns but counts as a single character in `line.size`, so it
+    # needs +1 of padding correction. Counting wide characters directly is exact;
+    # the previous `(bytesize - size) / 3` heuristic was tuned for 4-byte emoji
+    # and under-counted 3-byte CJK characters, which over-padded the line, pushed
+    # it past the pane width, and made every CJK line wrap — leaving a blank row
+    # beneath it in the overlay.
+    def double_width_correction_for(line)
+      line.each_char.count { |char| wide_char?(char) }
+    end
+
+    # True when `char` is rendered two columns wide by the terminal. Ranges follow
+    # the Unicode East Asian Width "Wide"/"Fullwidth" properties plus the common
+    # emoji blocks. Ambiguous-width symbols (e.g. box-drawing, powerline glyphs)
+    # are intentionally excluded: terminals render them one column wide.
+    def wide_char?(char : Char) : Bool
+      cp = char.ord
+      (0x1100 <= cp <= 0x115F) ||   # Hangul Jamo
+        (0x2329 <= cp <= 0x232A) || # angle brackets 〈 〉
+        (0x2E80 <= cp <= 0x303E) || # CJK radicals, Kangxi, CJK symbols
+        (0x3041 <= cp <= 0x33FF) || # Hiragana, Katakana, CJK symbols & punctuation
+        (0x3400 <= cp <= 0x4DBF) || # CJK Unified Ideographs Ext A
+        (0x4E00 <= cp <= 0x9FFF) || # CJK Unified Ideographs
+        (0xA000 <= cp <= 0xA4CF) || # Yi Syllables
+        (0xA960 <= cp <= 0xA97F) || # Hangul Jamo Ext A
+        (0xAC00 <= cp <= 0xD7A3) || # Hangul Syllables
+        (0xF900 <= cp <= 0xFAFF) || # CJK Compatibility Ideographs
+        (0xFE10 <= cp <= 0xFE19) || # Vertical forms
+        (0xFE30 <= cp <= 0xFE6F) || # CJK Compatibility Forms, Small Form Variants
+        (0xFF00 <= cp <= 0xFF60) || # Fullwidth Forms
+        (0xFFE0 <= cp <= 0xFFE6) || # Fullwidth signs
+        (0x1B000 <= cp <= 0x1B16F) || # Kana Supplement / Extended
+        (0x1F004 == cp) || (0x1F0CF == cp) || # Mahjong / playing-card joker
+        (0x1F18E == cp) || (0x1F191 <= cp <= 0x1F19A) ||
+        (0x1F200 <= cp <= 0x1F2FF) || # Enclosed CJK letters/months
+        (0x1F300 <= cp <= 0x1F64F) || # Misc symbols & pictographs, emoticons
+        (0x1F900 <= cp <= 0x1F9FF) || # Supplemental symbols & pictographs
+        (0x1FA00 <= cp <= 0x1FAFF) || # Symbols & pictographs Ext A
+        (0x20000 <= cp <= 0x3FFFD)    # CJK Unified Ideographs Ext B and beyond
     end
 
     def pattern : Regex
