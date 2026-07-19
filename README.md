@@ -52,6 +52,20 @@ Hit <kbd>prefix</kbd> + <kbd>I</kbd> to fetch and source the plugin. The first t
 - Install through [brew](https://brew.sh). _macOS only_.
 - Download standalone binary. _Linux x86_64 and macOS arm64 only_.
 
+## Homebrew
+
+Install the formula:
+
+```
+brew install tmux-fingers
+```
+
+Source it in your `.tmux.conf`:
+
+```tmux
+run-shell 'tmux-fingers load-config'
+```
+
 ## Manual
 
 Clone the repo:
