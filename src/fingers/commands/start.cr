@@ -1,6 +1,7 @@
 require "cling"
 require "./base"
 require "../hinter"
+require "../hyperlinks"
 require "../view"
 require "../state"
 require "../input_socket"
@@ -26,6 +27,10 @@ module Fingers::Commands
   end
 
   class Start < Cling::Command
+    # Hyperlinks are not a regex, so they cannot live in the pattern table.
+    # They are selected by this reserved name instead.
+    HYPERLINK_PATTERN_NAME = "hyperlink"
+
     @original_options : Hash(String, String) = {} of String => String
     @last_key_table : String = "root"
     @last_pane_id : String | Nil
@@ -33,6 +38,7 @@ module Fingers::Commands
     @pane_id : String = ""
     @active_pane : Tmux::Pane | Nil
     @patterns : Array(String) = [] of String
+    @hyperlinks : Bool = false
     @main_action : String | Nil
     @ctrl_action : String | Nil
     @shift_action : String | Nil
@@ -49,7 +55,7 @@ module Fingers::Commands
                  default: "default"
 
       add_option "patterns",
-                 description: "comma separated list of pattern names",
+                 description: "comma separated list of pattern names, plus \"#{HYPERLINK_PATTERN_NAME}\" to hint OSC 8 hyperlinks",
                  type: :single
 
       add_option "main-action",
@@ -88,6 +94,7 @@ module Fingers::Commands
         @patterns = patterns_from_options(options.get("patterns").as_s)
       else
         @patterns = Fingers.config.patterns.values
+        @hyperlinks = Fingers.config.hyperlinks
       end
 
       @main_action = options.get?("main-action").try(&.as_s)
@@ -111,9 +118,15 @@ module Fingers::Commands
     private def patterns_from_options(pattern_names_option : String)
       pattern_names = pattern_names_option.split(",")
 
+      # An explicit list takes full control, so hyperlinks are on only when
+      # asked for by name.
+      @hyperlinks = pattern_names.includes?(HYPERLINK_PATTERN_NAME)
+
       result = [] of String
 
       pattern_names.each do |pattern_name|
+        next if pattern_name == HYPERLINK_PATTERN_NAME
+
         pattern = Fingers.config.patterns[pattern_name]?
         if pattern
           result << pattern
@@ -285,11 +298,33 @@ module Fingers::Commands
         state: state,
         output: pane_printer,
         reuse_hints: mode != "jump",
+        hyperlinks: hyperlink_spans,
       )
     end
 
     private getter pane_contents : Array(String) do
-      tmux.capture_pane(target_pane, join: mode != "jump").split("\n")
+      captured_pane[0]
+    end
+
+    private getter hyperlink_spans : Array(Array(Fingers::HyperlinkSpan)) do
+      captured_pane[1]
+    end
+
+    # Capturing with -e and stripping it back down keeps the text and the
+    # hyperlink positions consistent by construction, which a second capture
+    # would not.
+    private getter captured_pane : Tuple(Array(String), Array(Array(Fingers::HyperlinkSpan))) do
+      raw = tmux.capture_pane(
+        target_pane,
+        join: mode != "jump",
+        escapes: @hyperlinks,
+      ).split("\n")
+
+      if @hyperlinks
+        Fingers::Hyperlinks.parse(raw)
+      else
+        {raw, [] of Array(Fingers::HyperlinkSpan)}
+      end
     end
 
     private getter view : View do

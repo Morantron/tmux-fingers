@@ -3,6 +3,19 @@ require "./types"
 
 module Fingers
   class MatchFormatter < Fingers::Formatter
+    # Styles hyperlinks, which are worth telling apart from pattern matches
+    # since the hint sits on anchor text that says nothing about the url behind
+    # it. Each style falls back to its regular counterpart when left unset, so
+    # customising only the regular one still styles both.
+    def self.for_hyperlinks(config = Fingers.config)
+      new(
+        hint_style: config.hyperlink_hint_style.presence || config.hint_style,
+        highlight_style: config.hyperlink_highlight_style.presence || config.highlight_style,
+        selected_hint_style: config.hyperlink_selected_hint_style.presence || config.selected_hint_style,
+        selected_highlight_style: config.hyperlink_selected_highlight_style.presence || config.selected_highlight_style,
+      )
+    end
+
     def initialize(
       hint_style : String = Fingers.config.hint_style,
       highlight_style : String = Fingers.config.highlight_style,

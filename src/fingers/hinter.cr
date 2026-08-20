@@ -1,5 +1,6 @@
 require "../huffman"
 require "./config"
+require "./hyperlinks"
 require "./match_formatter"
 require "./types"
 
@@ -14,13 +15,44 @@ module Fingers
   end
 
   class Hinter
+    EMPTY_HYPERLINKS = [] of HyperlinkSpan
+
+    # Something worth putting a hint on, wherever it came from.
+    #
+    # `text` is the range of the line that gets replaced, `captured_text` is what
+    # ends up being copied. They differ for hyperlinks, where the anchor is on
+    # screen but the url is what the user is after.
+    struct Candidate
+      property start : Int32
+      property text : String
+      property captured_text : String
+      property capture_offset : Tuple(Int32, Int32) | Nil
+      property? hyperlink : Bool
+
+      def initialize(@start, @text, @captured_text, @capture_offset, @hyperlink = false)
+      end
+
+      def size
+        text.size
+      end
+
+      # How much room the hint has to overlay. For a pattern with a `match`
+      # group that is the group, otherwise the whole replaced range.
+      def hint_capacity
+        offset = capture_offset
+        offset ? offset[1] : text.size
+      end
+    end
+
     @formatter : Formatter
+    @hyperlink_formatter : Formatter
     @patterns : Array(String)
     @alphabet : Array(String)
     @pattern : Regex | Nil
     @hints : Array(String) | Nil
     @n_matches : Int32 | Nil
     @reuse_hints : Bool
+    @hyperlinks : Array(Array(HyperlinkSpan))
 
     def initialize(
       input : Array(String),
@@ -31,7 +63,9 @@ module Fingers
       alphabet = Fingers.config.alphabet,
       huffman = Huffman.new,
       formatter = ::Fingers::MatchFormatter.new,
-      reuse_hints = false
+      hyperlink_formatter = ::Fingers::MatchFormatter.for_hyperlinks,
+      reuse_hints = false,
+      hyperlinks = [] of Array(HyperlinkSpan)
     )
       @lines = input
       @width = width
@@ -40,10 +74,12 @@ module Fingers
       @state = state
       @output = output
       @formatter = formatter
+      @hyperlink_formatter = hyperlink_formatter
       @huffman = huffman
       @patterns = patterns
       @alphabet = alphabet
       @reuse_hints = reuse_hints
+      @hyperlinks = hyperlinks
     end
 
     def run
@@ -68,6 +104,7 @@ module Fingers
       :width,
       :state,
       :formatter,
+      :hyperlink_formatter,
       :huffman,
       :output,
       :patterns,
@@ -78,7 +115,7 @@ module Fingers
 
     def process_line(line, line_index, ending)
       tab_positions = tab_positions_for(line)
-      result = line.gsub(pattern) { |_m| replace($~, line_index) }
+      result = rebuild_line(line, line_index)
       initial_length = result.size
       result = expand_tabs(result, tab_positions)
       tab_correction = result.size - initial_length
@@ -108,21 +145,107 @@ module Fingers
       @target_by_text.clear
     end
 
-    def replace(match, line_index)
-      text = match[0]
+    # Splices the formatted hints into the line. Candidates never overlap, so a
+    # single left to right pass is enough.
+    def rebuild_line(line, line_index)
+      candidates = candidates_for(line_index)
 
+      return line if candidates.empty?
+
+      result = String::Builder.new(line.bytesize)
+      cursor = 0
+
+      candidates.each do |candidate|
+        next if candidate.start < cursor
+
+        result << line[cursor...candidate.start]
+        result << replace(candidate, line_index)
+
+        cursor = candidate.start + candidate.size
+      end
+
+      result << line[cursor..]
+
+      result.to_s
+    end
+
+    def candidates_for(line_index) : Array(Candidate)
+      candidates_by_line[line_index]
+    end
+
+    # Candidates depend only on the captured lines, so they survive the
+    # rerendering that happens on every keystroke.
+    getter candidates_by_line : Array(Array(Candidate)) do
+      Array(Array(Candidate)).new(lines.size) { |index| collect_candidates(index) }
+    end
+
+    private def collect_candidates(line_index) : Array(Candidate)
+      line = lines[line_index]
+
+      hyperlinks = hyperlinks_for(line_index).compact_map do |span|
+        next if span.size <= 0
+
+        Candidate.new(
+          start: span.start,
+          text: line[span.start, span.size],
+          captured_text: span.url,
+          capture_offset: nil,
+          hyperlink: true,
+        )
+      end
+
+      result = hyperlinks.dup
+
+      # An empty pattern list would compile to a regex matching everywhere,
+      # which is what `--patterns hyperlink` on its own leaves us with.
+      unless patterns.empty?
+        line.scan(pattern) do |match|
+          candidate = candidate_from_match(match)
+
+          # A hyperlinked url matches the url pattern too. Hinting it twice
+          # would put two hints on the same cells, so the hyperlink wins.
+          next if hyperlinks.any? { |hyperlink| overlap?(hyperlink, candidate) }
+
+          result << candidate
+        end
+      end
+
+      result.sort_by!(&.start)
+    end
+
+    private def candidate_from_match(match : Regex::MatchData) : Candidate
       captured_text = captured_text_for_match(match)
-      relative_capture_offset = relative_capture_offset_for_match(match, captured_text)
+
+      Candidate.new(
+        start: match.begin(0),
+        text: match[0],
+        captured_text: captured_text,
+        capture_offset: relative_capture_offset_for_match(match, captured_text),
+      )
+    end
+
+    private def overlap?(a : Candidate, b : Candidate)
+      a.start < b.start + b.size && b.start < a.start + a.size
+    end
+
+    private def hyperlinks_for(line_index) : Array(HyperlinkSpan)
+      @hyperlinks[line_index]? || EMPTY_HYPERLINKS
+    end
+
+    def replace(candidate : Candidate, line_index)
+      text = candidate.text
+      captured_text = candidate.captured_text
+      relative_capture_offset = candidate.capture_offset
 
       absolute_offset = {
         line_index,
-        match.begin(0) + (relative_capture_offset ? relative_capture_offset[0] : 0)
+        candidate.start + (relative_capture_offset ? relative_capture_offset[0] : 0)
       }
 
       hint = hint_for_text(captured_text)
 
       # hint is longer than highlighted text, put it back in hint stack
-      if hint.size > captured_text.size
+      if hint.size > candidate.hint_capacity
         hints.push(hint)
         return text
       end
@@ -133,12 +256,16 @@ module Fingers
         return text
       end
 
-      formatter.format(
+      formatter_for(candidate).format(
         hint: hint,
         highlight: text,
         selected: state.selected_hints.includes?(hint),
         offset: relative_capture_offset
       )
+    end
+
+    private def formatter_for(candidate : Candidate) : Formatter
+      candidate.hyperlink? ? hyperlink_formatter : formatter
     end
 
     def captured_text_for_match(match)
@@ -209,27 +336,15 @@ module Fingers
     def count_unique_matches
       match_set = Set(String).new
 
-      lines.each do |line|
-        line.scan(pattern) do |match|
-          match_set.add(captured_text_for_match(match))
-        end
+      candidates_by_line.each do |candidates|
+        candidates.each { |candidate| match_set.add(candidate.captured_text) }
       end
-
-      @n_matches = match_set.size
 
       match_set.size
     end
 
     def count_matches
-      result = 0
-
-      lines.each do |line|
-        line.scan(pattern) do |match|
-          result += 1
-        end
-      end
-
-      result
+      candidates_by_line.sum(&.size)
     end
 
     def tab_positions_for(line)

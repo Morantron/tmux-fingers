@@ -10,6 +10,7 @@ define_bool_option :enable_bindings, true
 define_bool_option :benchmark_mode, false
 define_bool_option :show_copied_notification, true
 define_bool_option :skip_wizard, false
+define_bool_option :hyperlinks, true
 
 define_enum_option :hint_position, %w(left right), "left"
 define_enum_option :keyboard_layout, Fingers::ALPHABET_MAP.keys, "qwerty"
@@ -25,6 +26,13 @@ define_style_option :highlight, Tmux.style_printer.print("fg=yellow")
 define_style_option :selected_hint, Tmux.style_printer.print("fg=blue,bold")
 define_style_option :selected_highlight, Tmux.style_printer.print("fg=blue")
 define_style_option :backdrop, ""
+
+# Empty means "follow the regular style", resolved at render time so that
+# customising the regular one keeps both in step.
+define_style_option :hyperlink_hint, ""
+define_style_option :hyperlink_highlight, ""
+define_style_option :hyperlink_selected_hint, ""
+define_style_option :hyperlink_selected_highlight, ""
 
 define_string_option :tmux_version, ""
 

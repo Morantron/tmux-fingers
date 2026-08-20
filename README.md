@@ -90,10 +90,15 @@ NOTE: for changes to take effect, you'll need to source again your `.tmux.conf` 
 * [@fingers-backdrop-style](#fingers-backdrop-style)
 * [@fingers-selected-hint-style](#fingers-selected-hint-style)
 * [@fingers-selected-highlight-style](#fingers-selected-highlight-style)
+* [@fingers-hyperlink-hint-style](#fingers-hyperlink-hint-style)
+* [@fingers-hyperlink-highlight-style](#fingers-hyperlink-highlight-style)
+* [@fingers-hyperlink-selected-hint-style](#fingers-hyperlink-selected-hint-style)
+* [@fingers-hyperlink-selected-highlight-style](#fingers-hyperlink-selected-highlight-style)
 * [@fingers-hint-position](#fingers-hint-position)
 * [@fingers-keyboard-layout](#fingers-keyboard-layout)
 * [@fingers-show-copied-notification](#fingers-show-copied-notification)
 * [@fingers-enabled-builtin-patterns](#fingers-enabled-builtin-patterns)
+* [@fingers-hyperlinks](#fingers-hyperlinks)
 * [@fingers-use-system-clipboard](#fingers-use-system-clipboard)
 * [@fingers-enable-bindings](#fingers-enable-bindings)
 
@@ -224,6 +229,19 @@ Format for hints in selected matches in multimode.
 
 Format for selected matches in multimode.
 
+## @fingers-hyperlink-hint-style
+## @fingers-hyperlink-highlight-style
+## @fingers-hyperlink-selected-hint-style
+## @fingers-hyperlink-selected-highlight-style
+
+`default: unset, follows the regular style`
+
+Separate styles for [hyperlink](#fingers-hyperlinks) hints, so they can be told
+apart from pattern matches.
+
+Each one falls back to its regular counterpart while unset.
+Same syntax as [@fingers-hint-style](#fingers-hint-style).
+
 ## @fingers-hint-position
 
 `default: "left"`
@@ -284,6 +302,23 @@ A list of comma separated pattern names. Built-in patterns are the following:
 | git-status-branch | will match branch name in the output of git status        | `Your branch is up to date withname-of-branch` |
 | diff              | will match paths in diff output                           | `+++ a/path/to/file`                           |
 
+## @fingers-hyperlinks
+
+`default: 1`
+
+Hint [OSC 8 hyperlinks](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda)
+as well as pattern matches. Programs such as `ls --hyperlink`, `gcc` or many
+test runners emit these: the terminal shows a piece of anchor text, and the URL
+travels alongside it invisibly.
+
+The hint is placed over the anchor text, and selecting it yields the URL, not
+the anchor. Since the two are unrelated, this reaches things no pattern can
+match, such as a bare filename that carries a `file://` URL.
+
+Set to `0` to disable. Note that a link wrapping the pane edge is highlighted up
+to the wrap point only, though the URL you get is still complete, and that an
+anchor too short to fit a hint is skipped.
+
 ## @fingers-use-system-clipboard
 
 `default: 1`
@@ -316,7 +351,7 @@ Arguments:
 
 Options:
         --mode              can be "jump" or "default" (default: default)
-        --patterns          comma separated list of pattern names
+        --patterns          comma separated list of pattern names, plus "hyperlink" to hint OSC 8 hyperlinks
         --main-action       command to which the output will be piped
         --ctrl-action       command to which the output will be piped when holding CTRL key
         --alt-action        command to which the output will be piped when holding ALT key
