@@ -103,9 +103,12 @@ module Fingers::Commands
         exit(0)
       end
 
-      handle_input
-      process_result
-      teardown
+      begin
+        handle_input
+        process_result
+      ensure
+        teardown
+      end
     end
 
     private def patterns_from_options(pattern_names_option : String)
